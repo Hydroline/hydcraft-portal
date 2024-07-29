@@ -1,0 +1,10 @@
+assets/media/** filter=lfs diff=lfs merge=lfs -text
+assets/resources/routes-map/** filter=lfs diff=lfs merge=lfs -text
+assets/resources/routes-system/** filter=lfs diff=lfs merge=lfs -text
+assets/resources/meetups/** filter=lfs diff=lfs merge=lfs -text
+assets/resources/material/** filter=lfs diff=lfs merge=lfs -text
+assets/resources/livelihood/** filter=lfs diff=lfs merge=lfs -text
+assets/resources/homepage/** filter=lfs diff=lfs merge=lfs -text
+assets/resources/content/timeline/** filter=lfs diff=lfs merge=lfs -text
+assets/resources/minecraft-gallery/** filter=lfs diff=lfs merge=lfs -text
+public/newspapers/** filter=lfs diff=lfs merge=lfs -text
