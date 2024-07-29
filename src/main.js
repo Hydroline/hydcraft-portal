@@ -8,7 +8,7 @@ import 'material-icons/iconfont/material-icons.css'
 Vue.config.productionTip = false
 
 new Vue({
-  Vuex,
-  router,
-  render: h => h(App)
+    Vuex,
+    router,
+    render: h => h(App)
 }).$mount('#app')
