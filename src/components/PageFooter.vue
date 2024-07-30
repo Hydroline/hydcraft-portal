@@ -2,10 +2,18 @@
     <footer>
         <div class="hydstart-footer">
             <div class="hydstart-footer-register">
-                <img src="../assets/images/mps_ns_logo.png" alt="备案">
+                <img src="@/assets/images/logo_mps_register.png" alt="备案">
                 ICP 备案号:
-                <span class="hydstart-footer-register__icp">闽ICP备2023007345号-1</span>
-                <span class="hydstart-footer-register__mps">闽公网安备35010202001677号</span>
+                <span class="hydstart-footer-register__icp">
+                    <a href="https://beian.miit.gov.cn/">
+                        闽ICP备2023007345号-1
+                    </a>
+                </span>
+                <span class="hydstart-footer-register__mps">
+                    <a href="https://www.beian.gov.cn/portal/registersysteminfo?recordcode=35010202001677">
+                        闽公网安备35010202001677号
+                    </a>
+                </span>
             </div>
             <div class="hydstart-footer-desc">氢气工艺标志登记于国家版权局，本站由 AurLemon 基于 Vue.js 和 ThinkPHP 设计。我们欢迎所有想与我们交流技术的网友，我们相信：代码改变世界！</div>
             <div class="hydstart-footer-copyright">Copyright © 2018 - 2024 Hydrlab Studio. All Rights Reserved. 氢气实验室 版权所有</div>
@@ -22,7 +30,7 @@
 <style lang="scss" scoped>
     @use "sass:math";
 
-    @import '../assets/styles/global.scss';
+    @import '@/assets/styles/global.scss';
 
     footer {
         position: fixed;
@@ -38,18 +46,26 @@
     .hydstart-footer-register {
         display: flex;
         align-items: center;
+
+        img {
+            $image-length: 13px;
+            display: block;
+            width: $image-length;
+            height: $image-length;
+            margin-right: 4px;
+            user-select: none;
+        }
+
+        [class^="hydstart-footer-register__"]:not(:last-child) {
+            margin-right: 4px;
+        }
     }
 
-    .hydstart-footer-register img {
-        $image-length: 13px;
-        display: block;
-        width: $image-length;
-        height: $image-length;
-        margin-right: 4px;
-        user-select: none;
+    a {
+        color: inherit;
     }
 
-    .hydstart-footer-register [class^="hydstart-footer-register__"] {
-        margin-left: 6px;
+    a:hover {
+        color: var(--color-surface-3);
     }
 </style>
