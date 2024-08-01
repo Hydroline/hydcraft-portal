@@ -34,6 +34,8 @@
     --color-surface-4__s: 10%;
     --color-surface-4__l: 74%;
     --color-primary: hsl(var(--color-primary__h), var(--color-primary__s), var(--color-primary__l));
+    --color-primary--hover: hsl(var(--color-primary__h),var(--color-primary__s),calc(var(--color-primary__l) * 1.2));
+    --color-primary--active: hsl(var(--color-primary__h), var(--color-primary__s), calc(var(--color-primary__l) * 0.8));
     --color-surface-0: hsl(var(--color-primary__h), var(--color-surface-0__s), var(--color-surface-0__l));
     --color-surface-1: hsl(var(--color-primary__h), var(--color-surface-1__s), var(--color-surface-1__l));
     --color-surface-2: hsl(var(--color-primary__h), var(--color-surface-2__s), var(--color-surface-2__l));
@@ -41,6 +43,10 @@
     --color-surface-4: hsl(var(--color-primary__h), var(--color-surface-4__s), var(--color-surface-4__l));
     --color-light: var(--color-primary__h), var(--color-surface-0__s), var(--color-surface-0__l);
     --color-dark: var(--color-primary__h), 20%, 10%;
+    --background-color-primary--hover: hsl(var(--color-primary__h), var(--color-primary__s), 95%);
+    --background-color-primary--active: hsl(var(--color-primary__h), var(--color-primary__s), 90%);
+    --background-color-overlay: hsla(var(--color-primary__h), var(--color-surface-0__s), var(--color-surface-0__l), 0.95);
+    --background-color-overlay--lighter: hsla(var(--color-primary__h), var(--color-surface-0__s), var(--color-surface-0__l), 0.6);
     --background-light--0: hsla(var(--color-light), 0.1);
     --background-light--0-active: hsla(var(--color-light), 0.05);
     --background-light--1: hsla(var(--color-light), 0.3);

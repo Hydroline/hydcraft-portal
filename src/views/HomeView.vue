@@ -91,6 +91,7 @@
     }
 
     .hydstart-home-buttons {
+        $button-transition-delay: 150ms;        
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
@@ -106,6 +107,18 @@
             border-radius: 16px;
             padding: 6px 20px;
             flex: 1 1 100%;
+            cursor: pointer;
+            transition: all $button-transition-delay $page-transition-type;
+
+            &:hover {
+                background-color: var(--color-primary--hover);
+            }
+
+            &:active {
+                background-color: var(--color-primary--active);
+                border-radius: 24px;
+                transform: scale(0.98);
+            }
         }
 
         .hydstart-home-subbutton {

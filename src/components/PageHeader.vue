@@ -158,17 +158,58 @@
         justify-content: center;
 
         .hydstart-header-route {
-            user-select: none;
-        }
+            a {
+                display: block;
+                color: var(--color-text--weaken);
+                text-decoration: none;
+                position: relative;
+                z-index: 10;
+                user-select: none;
+                cursor: pointer;
+                transition: all 150ms $page-transition-type;
 
-        a {
-            color: var(--color-text--weaken);
-            text-decoration: none;
-        }
+                &:hover {
+                    color: var(--color-surface-3);
 
-        a.router-link-exact-active {
-            color: var(--color-text--subtle);
-            font-weight: 600;
+                    &::after {
+                        opacity: 1;
+                        transform: translateY(0px) scale(1);
+                    }
+                }
+
+                &:active {
+                    transform: scale(0.98);
+
+                    &::after {
+                        opacity: 1;
+                    }
+                }
+
+                &::after {
+                    $subbutton-icons-offset-value: 3px;
+                    content: '';
+                    background-color: var(--color-primary--hover);
+                    border-radius: 4px;
+                    position: absolute;
+                    top: calc(100% + 2px);
+                    left: $subbutton-icons-offset-value * -1;
+                    right: $subbutton-icons-offset-value * -1;
+                    height: 2px;
+                    z-index: 8;
+                    opacity: 0;
+                    transition: all 150ms $page-transition-type;
+                    transform: translateY(4px) scale(0.96);
+                }
+
+                &.router-link-exact-active {
+                    color: var(--color-text--subtle);
+                    font-weight: 600;
+
+                    &::after {
+                        background-color: var(--color-text--subtle);
+                    }
+                }
+            }
         }
     }
 

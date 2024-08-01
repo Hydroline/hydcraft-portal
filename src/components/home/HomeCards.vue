@@ -174,6 +174,7 @@
                     width: 120%;
                     height: 100%;
                     object-fit: cover;
+                    filter: brightness(0.85) saturate(0.95);
                     transition: all $card-transition-animation-value $page-transition-type;
                     transition-delay: $card-transition-delay-value;
                 }
@@ -184,7 +185,7 @@
                 justify-content: space-between;
                 flex-direction: column;
                 padding: 15px;
-                background: linear-gradient(220deg, transparent 50%, var(--background-light--2) 90%);
+                background: linear-gradient(220deg, transparent 50%, var(--background-light--2) 110%);
                 z-index: 30;
             }
 
@@ -200,6 +201,7 @@
                 transform: scale(1.04);
 
                 .hydstart-home-card__background img {
+                    filter: brightness(1) saturate(1.5);
                     transform: translateX(-20px) scale(1.03);
                     transition-duration: 500ms;
                     transition-delay: 80ms;
@@ -293,14 +295,6 @@
 
                 .hydstart-home-card__background img {
                     object-position: left;
-                }
-
-                &:hover {
-                    .hydstart-home-card__background img {
-                        width: 100%;
-                        object-position: center;
-                        transform: translateX(0px) scale(1.03);
-                    }
                 }
             }
 
