@@ -49,20 +49,21 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-    }
+        
+        .hydstart-home-main {
+            margin: auto;
+        }
 
-    .hydstart-home-main {
-        margin: auto;
-    }
-
-    .hydstart-home-info {
-        margin: 1rem auto 6rem auto;
+        .hydstart-home-info {
+            margin: 1rem auto 6rem auto;
+        }
     }
 
     .hydstart-home-text {
         display: flex;
         align-items: center;
         flex-direction: column;
+        gap: 5px;
 
         .hydstart-home-text__title {
             text-align: center;
@@ -82,7 +83,7 @@
         }
 
         .hydstart-home-text__subtitle {
-            
+            color: var(--color-text--subtle);
             font-size: 20px;
             text-align: center;
             max-width: 700px;
@@ -110,6 +111,40 @@
         .hydstart-home-subbutton {
             color: var(--color-text--subtle);
             font-size: 14px;
+            position: relative;
+            z-index: 10;
+            user-select: none;
+            cursor: pointer;
+            transition: all 150ms $page-transition-type;
+
+            &:hover {
+                &::after {
+                    opacity: 1;
+                }
+            }
+
+            &:active {
+                transform: scale(0.98);
+
+                &::after {
+                    opacity: 1;
+                }
+            }
+
+            &::after {
+                $subbutton-icons-offset-value: 4px;
+                content: '';
+                background-color: var(--background-dark--0);
+                border-radius: 12px;
+                position: absolute;
+                top: $subbutton-icons-offset-value * -1;
+                left: $subbutton-icons-offset-value * -1;
+                right: $subbutton-icons-offset-value * -1;
+                bottom: $subbutton-icons-offset-value * -1;
+                z-index: 8;
+                opacity: 0;
+                transition: all 150ms $page-transition-type;
+            }
         }
     }
 

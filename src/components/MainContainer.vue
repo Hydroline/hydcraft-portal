@@ -37,6 +37,7 @@
         display: flex;
         justify-content: center;
         align-items: flex-end;
+        width: 100%;
         height: 100%;
         position: relative;
         user-select: none;
@@ -49,7 +50,7 @@
             max-height: 680px;
             position: relative;
             z-index: 10;
-            filter: opacity(0.75) grayscale(0) contrast(0) brightness(0) invert(0.98);
+            filter: blur(4px) opacity(0.8) grayscale(0) contrast(0) brightness(0) invert(1);
             object-fit: cover;
             object-position: top;
             transition: filter $page-transition-delay $page-transition-type;

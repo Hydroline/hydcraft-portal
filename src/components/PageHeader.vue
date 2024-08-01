@@ -115,9 +115,10 @@
             user-select: none;
             position: relative;
             z-index: 10;
+            transition: transform 150ms $page-transition-type;
 
             &:hover {
-                transform: scale(1.04);
+                transform: scale(1.02);
 
                 &::after {
                     opacity: 1;
@@ -127,10 +128,12 @@
 
             &:active {
                 transform: scale(0.98);
+                transition-duration: 80ms;
 
                 &::after {
                     opacity: 1;
                     transform: scale(1.1);
+                    transition-duration: 80ms;
                 }
             }
 
@@ -165,6 +168,7 @@
 
         a.router-link-exact-active {
             color: var(--color-text--subtle);
+            font-weight: 600;
         }
     }
 
