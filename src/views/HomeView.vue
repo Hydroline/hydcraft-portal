@@ -1,5 +1,5 @@
 <template>
-    <MainContainer :background="require('@/assets/images/image_home_background_240730.webp')" :video="true">
+    <MainContainer @dialog="executeDialog" :background="require('@/assets/images/image_home_background_240730.webp')" :video="true">
         <div class="hydstart-home">
             <div class="hydstart-home-main">
                 <div class="hydstart-home-text">
@@ -9,13 +9,17 @@
 
                 <div class="hydstart-home-buttons">
                     <button class="hydstart-home-button main">来都来了，不妨来了解一下我们</button>
-                    <div class="hydstart-home-subbutton overview">🥺我还是想直接看概览</div>
-                    <div class="hydstart-home-subbutton join">😋只想进服快给我群号</div>
+                    <div class="hydstart-home-subbutton overview">
+                        <span>🥺我还是想直接看概览</span>
+                    </div>
+                    <div class="hydstart-home-subbutton join">
+                        <span>😋只想进服快给我群号</span>
+                    </div>
                 </div>
             </div>
 
             <div class="hydstart-home-info">
-                <HomeCards />
+                <HomeCards @dialog="executeDialog"/>
 
                 <div class="hydstart-home-belong">
                     隶属于
@@ -24,24 +28,57 @@
                         Hydrlab Studio
                     </span>
                 </div>
+
+                <div class="hydstart-home-dialog">
+                    <CardContainer v-show="showHeliumCard" @close="closeHeliumCard">
+                        
+                    </CardContainer>
+
+                    <CardContainer v-show="showNitrogenCard" @close="closeNitrogenCard">
+                        
+                    </CardContainer>
+                </div>
             </div>
         </div>
     </MainContainer>
 </template>
 
 <script>
-    /* eslint-disable */
     export default {
         name: 'HomeView',
         data() {
             return {
-                currentCard: null
+                showHeliumCard: false,
+                showNitrogenCard: false
             }
         },
         components: {
             MainContainer: () => import('@/components/MainContainer.vue'),
             HomeCards: () => import('@/components/home/HomeCards.vue'),
-            CardContainer: () => import('@/components/CardContainer.vue')
+            CardContainer: () => import('@/components/home/CardContainer.vue')
+        },
+        methods: {
+            executeDialog(data) {
+                if(data.type === 'card') {
+                    switch(data.index) {
+                        case 0:
+                            this.showHeliumCard = true;
+                            console.log(this.showHeliumCard);
+                            break;
+                        case 1:
+                            this.showNitrogenCard = true;
+                            break;
+                        default:
+                            return;
+                    }
+                }
+            },
+            closeHeliumCard() {
+                this.showHeliumCard = false;
+            },
+            closeNitrogenCard() {
+                this.showNitrogenCard = false;
+            }
         }
     }
 </script>
@@ -132,7 +169,6 @@
             color: var(--color-text--subtle);
             font-size: 14px;
             position: relative;
-            z-index: 10;
             user-select: none;
             cursor: pointer;
             transition: all 150ms $value-transition-function;
@@ -154,16 +190,21 @@
             &::after {
                 $subbutton-icons-offset-value: 4px;
                 content: '';
-                background-color: var(--background-dark--0);
+                background-color: var(--background-dark-0);
                 border-radius: 12px;
                 position: absolute;
+                z-index: 8;
                 top: $subbutton-icons-offset-value * -1;
                 left: $subbutton-icons-offset-value * -1;
                 right: $subbutton-icons-offset-value * -1;
                 bottom: $subbutton-icons-offset-value * -1;
-                z-index: 8;
                 opacity: 0;
                 transition: all 150ms $value-transition-function;
+            }
+
+            span {
+                position: relative;
+                z-index: 10;
             }
         }
     }

@@ -5,7 +5,7 @@
             <video src="@/assets/images/video_background_240726.webm" v-if="video" autoplay muted loop></video>
         </div>
         <div class="hydstart-main-container__foreground">
-            <slot></slot>
+            <slot :executeDialog="$listeners.dialog"></slot>
         </div>
     </div>
 </template>

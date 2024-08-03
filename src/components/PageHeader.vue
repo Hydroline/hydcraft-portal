@@ -1,8 +1,12 @@
 <template>
     <header>
         <div class="hydstart-header">
-            <div class="hydstart-header-title">
-                <span class="hydstart-header-logo"></span>HydCraft World
+            <div class="hydstart-header-wordmark">
+                <div class="hydstart-header-title">
+                    <span class="hydstart-header-title-wrapper">
+                        <span class="hydstart-header-logo"></span>HydCraft World
+                    </span>
+                </div>
             </div>
             <ul class="hydstart-header-router">
                 <li class="hydstart-header-route">
@@ -53,8 +57,8 @@
         left: 0;
         right: 0;
         z-index: $page-fixed-value-z-index;
-        background: var(--background-light--3);
-        border-bottom: 1px solid var(--background-dark--0);
+        background: var(--background-light-3);
+        border-bottom: 1px solid var(--background-dark-0);
         backdrop-filter: saturate(125%) blur(32px);
     }
 
@@ -93,14 +97,62 @@
         }
     }
 
-    .hydstart-header-title {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        font-size: 18px;
-        font-family: 'Site Wordmark Font';
-        text-transform: uppercase;
-        user-select: none
+    .hydstart-header-wordmark {
+        .hydstart-header-title {
+            $title-value-after-opacity--max: 1;
+            $title-value-transition-duration: 130ms;
+            width: fit-content;
+            position: relative;
+            user-select: none;
+            cursor: pointer;
+            transition: all $title-value-transition-duration $value-transition-function;
+
+            &:hover {
+                .hydstart-header-title-wrapper {
+                    color: var(--color-surface-0);
+                }
+
+                &::after {
+                    opacity: $title-value-after-opacity--max;
+                }
+            }
+
+            &:active {
+                transform: scale(0.98);
+
+                &::after {
+                    opacity: $title-value-after-opacity--max;
+                    background-color: var(--color-primary--active);
+                }
+            }
+
+            &::after {
+                $subbutton-icons-offset-value: 12px;
+                content: '';
+                background-color: var(--color-primary);
+                border-radius: 32px;
+                position: absolute;
+                z-index: 8;
+                top: $subbutton-icons-offset-value * -1;
+                left: $subbutton-icons-offset-value * -1;
+                right: $subbutton-icons-offset-value * -1;
+                bottom: $subbutton-icons-offset-value * -1;
+                opacity: 0;
+                transition: all $title-value-transition-duration $value-transition-function;
+            }
+
+            .hydstart-header-title-wrapper {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                font-size: 18px;
+                font-family: 'Site Wordmark Font';
+                text-transform: uppercase;
+                position: relative;
+                z-index: 10;
+                transition: color $title-value-transition-duration $value-transition-function;
+            }
+        }
     }
 
     $transfer-gap-value: 12px;
@@ -139,7 +191,7 @@
             &::after {
                 $header-link-icons-offset-value: 5px;
                 content: '';
-                background-color: var(--background-dark--0);
+                background-color: var(--background-dark-0);
                 border-radius: 50%;
                 position: absolute;
                 top: $header-link-icons-offset-value * -1;
@@ -174,7 +226,7 @@
                 transition: all 150ms $value-transition-function;
 
                 &:hover {
-                    color: var(--background-dark--1);
+                    color: var(--background-dark-1);
                     text-shadow: 0px 0px 6px var(--color-primary);
 
                     &::after {
@@ -184,7 +236,7 @@
                 }
 
                 &:active {
-                    transform: scale(0.98);
+                    transform: scale(0.94);
 
                     &::after {
                         opacity: 1;
@@ -216,7 +268,7 @@
                     }
 
                     &:hover {
-                        text-shadow: 0px 0px 6px var(--background-dark--2);
+                        text-shadow: 0px 0px 6px var(--background-dark-2);
                     }
                 }
             }

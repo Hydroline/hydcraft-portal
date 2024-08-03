@@ -1,6 +1,6 @@
 <template>
     <div class="hydstart-home-cards">
-        <div class="hydstart-home-card hydstart-home-card-world helium">
+        <div class="hydstart-home-card hydstart-home-card-world helium" @click="showDialog('card', 0)">
             <div class="hydstart-home-card__background">
                 <img src="@/assets/images/home/image_card_background_helium_1.png" />
             </div>
@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <div class="hydstart-home-card hydstart-home-card-world nitrogen">
+        <div class="hydstart-home-card hydstart-home-card-world nitrogen" @click="showDialog('card', 1)">
             <div class="hydstart-home-card__background">
                 <img src="@/assets/images/home/image_card_background_nitrogen_2.png" />
             </div>
@@ -66,12 +66,12 @@
 
 <script>
     import { SkinViewer } from "skinview3d";
-    /* eslint-disable */
+
     export default {
         name: 'HomeCards',
         data() {
             return {
-                skinViewer: null,
+                skinViewer: Object,
                 skinBaseApi: 'https://minotar.net/skin/',
                 skinList: [
                     'Aurora_Lemon',
@@ -86,7 +86,7 @@
                 ],
                 skinListCurrentIndex: 0,
                 skinListTimeoutId: null,
-                skinListDuration: 10000
+                skinListDuration: 8000
             };
         },
         methods: {
@@ -120,6 +120,12 @@
                 this.skinListCurrentIndex = (this.skinListCurrentIndex + 1) % this.skinList.length;
                 this.skinViewer.loadSkin(this.skinBaseApi + this.skinList[this.skinListCurrentIndex]);
                 this.autoChangeSkinViewer();
+            },
+            showDialog(type, index) {
+                this.$emit('dialog', {
+                    type: type,
+                    index: index
+                });
             }
         },
         mounted() {
@@ -149,7 +155,7 @@
             border-radius: 16px;
             background-color: var(--color-surface-0);
             outline: 2px solid transparent;
-            box-shadow: 0 1px 4px var(--background-dark--0);
+            box-shadow: 0 1px 4px var(--background-dark-0);
             transition: all $card-value-transition-duration $value-transition-function;
             transition-delay: $card-value-transition-delay;
             overflow: hidden;
@@ -185,7 +191,7 @@
                 justify-content: space-between;
                 flex-direction: column;
                 padding: 15px;
-                background: linear-gradient(220deg, transparent 50%, var(--background-light--2) 110%);
+                background: linear-gradient(220deg, transparent 50%, var(--background-light-2) 110%);
                 z-index: 30;
             }
 
@@ -243,17 +249,21 @@
                 }
 
                 .hydstart-home-card-world__wordmark {
-                    color: var(--background-light--4);
+                    color: var(--background-light-4);
                     font-size: 54px;
                     font-weight: 700;
                     font-family: 'MiSans Latin';
-                    text-shadow: 0 0 4px var(--background-dark--1);
+                    text-shadow: 0 0 4px var(--background-dark-1);
                     line-height: 1;
                     position: relative;
                 }
 
                 .hydstart-home-card-world__wordmark span {
                     font-size: 20px;
+                }
+
+                &:hover {
+                    width: 240px;
                 }
             }
 
@@ -263,7 +273,7 @@
                 grid-column: 3;
 
                 .hydstart-home-card__foreground {
-                    background: linear-gradient(290deg, transparent 20%, var(--background-light--3) 90%);
+                    background: linear-gradient(290deg, transparent 20%, var(--background-light-3) 90%);
                     transition: all $card-value-transition-duration $value-transition-function;
                     transition-delay: $card-value-transition-delay;
                 }
@@ -295,6 +305,10 @@
                 .hydstart-home-card__background img {
                     object-position: left;
                 }
+
+                &:hover {
+                    width: 180px;
+                }
             }
 
             &.player {
@@ -314,6 +328,15 @@
 
                 canvas {
                     transform: rotate(-25deg) translate(0px, 60px);
+                    transition: transform $card-value-transition-duration $value-transition-function;
+                }
+
+                &:hover {
+                    width: 120px;
+
+                    canvas {
+                        transform: rotate(-25deg) translate(10px, 60px) scale(1.05);
+                    }
                 }
             }
         }
