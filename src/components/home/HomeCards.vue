@@ -66,7 +66,7 @@
 
 <script>
     import { SkinViewer } from "skinview3d";
-
+    /* eslint-disable */
     export default {
         name: 'HomeCards',
         data() {
@@ -144,14 +144,14 @@
         height: 170px;
 
         .hydstart-home-card {
-            $card-transition-animation-value: 250ms;
-            $card-transition-delay-value: 50ms;
+            $card-value-transition-duration: 250ms;
+            $card-value-transition-delay: 50ms;
             border-radius: 16px;
             background-color: var(--color-surface-0);
             outline: 2px solid transparent;
             box-shadow: 0 1px 4px var(--background-dark--0);
-            transition: all $card-transition-animation-value $page-transition-type;
-            transition-delay: $card-transition-delay-value;
+            transition: all $card-value-transition-duration $value-transition-function;
+            transition-delay: $card-value-transition-delay;
             overflow: hidden;
             position: relative;
             cursor: pointer;
@@ -175,8 +175,8 @@
                     height: 100%;
                     object-fit: cover;
                     filter: brightness(0.85) saturate(0.95);
-                    transition: all $card-transition-animation-value $page-transition-type;
-                    transition-delay: $card-transition-delay-value;
+                    transition: all $card-value-transition-duration $value-transition-function;
+                    transition-delay: $card-value-transition-delay;
                 }
             }
 
@@ -192,7 +192,7 @@
             .hydstart-home-card__title {
                 font-size: 22px;
                 font-family: 'Site Wordmark Font';
-                transition: all $card-transition-animation-value $page-transition-type;
+                transition: all $card-value-transition-duration $value-transition-function;
                 transform: translateX(2px);
             }
 
@@ -235,9 +235,9 @@
                 }
 
                 .hydstart-home-card-world__status {
-                    $status-length-value: 10px;
-                    width: $status-length-value;
-                    height: $status-length-value;
+                    $status-value-length: 10px;
+                    width: $status-value-length;
+                    height: $status-value-length;
                     border-radius: 50%;
                     background-color: var(--home-background-status-unknown);
                 }
@@ -258,15 +258,14 @@
             }
 
             &.omec, &.cities {
-                $icon-length-value: 40px;
                 width: 150px;
                 grid-row: 1;
                 grid-column: 3;
 
                 .hydstart-home-card__foreground {
                     background: linear-gradient(290deg, transparent 20%, var(--background-light--3) 90%);
-                    transition: all $card-transition-animation-value $page-transition-type;
-                    transition-delay: $card-transition-delay-value;
+                    transition: all $card-value-transition-duration $value-transition-function;
+                    transition-delay: $card-value-transition-delay;
                 }
 
                 &:hover {
@@ -283,8 +282,8 @@
 
             &.railway, &.player {
                 .hydstart-home-card__foreground {
-                    transition: all $card-transition-animation-value $page-transition-type;
-                    transition-delay: $card-transition-delay-value;
+                    transition: all $card-value-transition-duration $value-transition-function;
+                    transition-delay: $card-value-transition-delay;
                 }
             }
 

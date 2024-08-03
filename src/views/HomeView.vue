@@ -30,11 +30,18 @@
 </template>
 
 <script>
+    /* eslint-disable */
     export default {
         name: 'HomeView',
+        data() {
+            return {
+                currentCard: null
+            }
+        },
         components: {
             MainContainer: () => import('@/components/MainContainer.vue'),
-            HomeCards: () => import('@/components/home/HomeCards.vue')
+            HomeCards: () => import('@/components/home/HomeCards.vue'),
+            CardContainer: () => import('@/components/CardContainer.vue')
         }
     }
 </script>
@@ -74,11 +81,11 @@
             }
 
             span.red {
-                color: var(--color-hydrcraft-red);
+                color: var(--color-hydcraft-red);
             }
 
             span.blue {
-                color: var(--color-hydrcraft-blue);
+                color: var(--color-hydcraft-blue);
             }
         }
 
@@ -108,7 +115,7 @@
             padding: 6px 20px;
             flex: 1 1 100%;
             cursor: pointer;
-            transition: all $button-transition-delay $page-transition-type;
+            transition: all $button-transition-delay $value-transition-function;
 
             &:hover {
                 background-color: var(--color-primary--hover);
@@ -128,7 +135,7 @@
             z-index: 10;
             user-select: none;
             cursor: pointer;
-            transition: all 150ms $page-transition-type;
+            transition: all 150ms $value-transition-function;
 
             &:hover {
                 &::after {
@@ -156,7 +163,7 @@
                 bottom: $subbutton-icons-offset-value * -1;
                 z-index: 8;
                 opacity: 0;
-                transition: all 150ms $page-transition-type;
+                transition: all 150ms $value-transition-function;
             }
         }
     }

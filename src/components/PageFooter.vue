@@ -33,14 +33,15 @@
     @import '@/assets/styles/global.scss';
 
     footer {
+        $footer-value-margin: 10rem;
         position: fixed;
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 100;
+        z-index: $page-fixed-value-z-index;
         color: var(--color-surface-4);
         font-size: 12px;
-        margin: auto $page-value-padding 0.75rem $page-value-padding;
+        margin: auto $footer-value-margin 0.75rem $footer-value-margin;
     }
 
     .hydstart-footer-register {
@@ -56,8 +57,8 @@
             user-select: none;
         }
 
-        [class^="hydstart-footer-register__"]:not(:last-child) {
-            margin-right: 4px;
+        [class^="hydstart-footer-register__"] {
+            margin-left: 4px;
         }
     }
 

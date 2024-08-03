@@ -15,8 +15,7 @@
         name: 'MainContainer',
         props: {
             background: {
-                type: String,
-                default: ''
+                type: String
             },
             video: {
                 type: Boolean,
@@ -53,7 +52,7 @@
             filter: blur(4px) opacity(0.8) grayscale(0) contrast(0) brightness(0) invert(1);
             object-fit: cover;
             object-position: top;
-            transition: filter $page-transition-delay $page-transition-type;
+            transition: filter 300ms $value-transition-function;
         }
 
         video {

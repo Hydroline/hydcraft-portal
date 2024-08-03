@@ -1,5 +1,5 @@
 <template>
-    <nav>
+    <header>
         <div class="hydstart-header">
             <div class="hydstart-header-title">
                 <span class="hydstart-header-logo"></span>HydCraft World
@@ -33,7 +33,7 @@
                 </li>
             </ul>
         </div>
-    </nav>
+    </header>
 </template>
 
 <script>
@@ -47,12 +47,12 @@
 
     $header-logo-border-radius: 2px;
 
-    nav {
+    header {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
-        z-index: 100;
+        z-index: $page-fixed-value-z-index;
         background: var(--background-light--3);
         border-bottom: 1px solid var(--background-dark--0);
         backdrop-filter: saturate(125%) blur(32px);
@@ -84,12 +84,12 @@
 
         &::before {
             border-radius: $header-logo-border-radius 0 0 $header-logo-border-radius;
-            background: var(--color-hydrcraft-red);
+            background: var(--color-hydcraft-red);
         }
 
         &::after {
             border-radius: 0 $header-logo-border-radius $header-logo-border-radius 0;
-            background: var(--color-hydrcraft-blue);
+            background: var(--color-hydcraft-blue);
         }
     }
 
@@ -108,14 +108,13 @@
     .hydstart-header-link {
         justify-content: flex-end;
         
-        .material-icons {
+        [class^="hydstart-header-link__"] {
             display: block;
             color: var(--color-text--subtle);
             cursor: pointer;
             user-select: none;
             position: relative;
-            z-index: 10;
-            transition: transform 150ms $page-transition-type;
+            transition: transform 150ms $value-transition-function;
 
             &:hover {
                 transform: scale(1.02);
@@ -147,9 +146,15 @@
                 left: $header-link-icons-offset-value * -1;
                 right: $header-link-icons-offset-value * -1;
                 bottom: $header-link-icons-offset-value * -1;
-                z-index: 8;
+                z-index: 0;
                 opacity: 0;
-                transition: all 150ms $page-transition-type;
+                transition: all 150ms $value-transition-function;
+            }
+
+            .material-icons {
+                display: block;
+                position: relative;
+                z-index: 10;
             }
         }
     }
@@ -166,10 +171,11 @@
                 z-index: 10;
                 user-select: none;
                 cursor: pointer;
-                transition: all 150ms $page-transition-type;
+                transition: all 150ms $value-transition-function;
 
                 &:hover {
-                    color: var(--color-surface-3);
+                    color: var(--background-dark--1);
+                    text-shadow: 0px 0px 6px var(--color-primary);
 
                     &::after {
                         opacity: 1;
@@ -188,7 +194,7 @@
                 &::after {
                     $subbutton-icons-offset-value: 3px;
                     content: '';
-                    background-color: var(--color-primary--hover);
+                    background-color: var(--color-surface-4);
                     border-radius: 4px;
                     position: absolute;
                     top: calc(100% + 2px);
@@ -197,8 +203,8 @@
                     height: 2px;
                     z-index: 8;
                     opacity: 0;
-                    transition: all 150ms $page-transition-type;
-                    transform: translateY(4px) scale(0.96);
+                    transition: all 150ms $value-transition-function;
+                    transform: translateY(2px) scale(0.9);
                 }
 
                 &.router-link-exact-active {
@@ -206,7 +212,11 @@
                     font-weight: 600;
 
                     &::after {
-                        background-color: var(--color-text--subtle);
+                        background-color: var(--color-primary);
+                    }
+
+                    &:hover {
+                        text-shadow: 0px 0px 6px var(--background-dark--2);
                     }
                 }
             }
