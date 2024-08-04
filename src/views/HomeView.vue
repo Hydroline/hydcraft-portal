@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="hydstart-home-dialog">
-                    <CardContainer v-show="serverStatus.showHeliumCard" @close="closeHeliumCard">
+                    <CardContainer v-show="serverStatus.showHeliumCard" @closeCard="closeHeliumCard">
                         <template v-slot:title>
                             <div class="hydstart-card-world-header">
                                 <div class="hydstart-card-world-header__status"></div>
@@ -70,7 +70,7 @@
                             </div>
                         </div>
                     </CardContainer>
-                    <CardContainer v-show="serverStatus.showNitrogenCard" @close="closeNitrogenCard">
+                    <CardContainer v-show="serverStatus.showNitrogenCard" @closeCard="closeNitrogenCard">
                         <template v-slot:title>
                             <div class="hydstart-card-world-header">
                                 <div class="hydstart-card-world-header__status"></div>
@@ -190,7 +190,7 @@
                 if (newVal === true) {
                     setTimeout(() => {
                         this.serverStatus[dynmapKey] = true;
-                    }, 300);
+                    }, 400);
                 } else {
                     this.serverStatus[dynmapKey] = false;
                 }
@@ -247,6 +247,7 @@
             .hydstart-card-world-overview-wrapper {
                 display: flex;
                 gap: 3rem;
+                flex-wrap: wrap;
 
                 .hydstart-card-world-overview {
                     display: flex;
@@ -293,7 +294,7 @@
                 gap: 2px;
                 color: var(--color-text--subtle);
                 font-size: 16px;
-                padding: 4px 0;
+                padding: 2px 4px;
 
                 .material-icons-outlined {
                     display: block;

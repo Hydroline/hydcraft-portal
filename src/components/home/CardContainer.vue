@@ -34,7 +34,7 @@
         methods: {
             closeCard() {
                 setTimeout(() => {
-                    this.$emit('close');                    
+                    this.$emit('closeCard');                    
                 }, 50);
             },
             afterEnter() {
@@ -73,6 +73,11 @@
             opacity: 0;
         }
 
+        &.fade-leave-to {
+            $card-value-transition-duration: 800ms;
+            transition: all $card-value-transition-duration $value-transition-function, opacity 600ms $value-transition-function, backdrop-filter 200ms $value-transition-function;
+        }
+
         .hydstart-card {
             width: 100%;
             height: 100%;
@@ -85,6 +90,7 @@
             box-shadow: 0 8px 60px var(--background-dark-0);
             outline: 3px solid transparent;
             transition: outline $card-value-transition-duration $value-transition-function;
+            overflow: hidden;
 
             &:hover {
                 outline-color: var(--color-primary);
@@ -106,7 +112,6 @@
                 width: 100%;
                 height: 100%;
                 padding: $foreground-value-padding;
-                position: relative;
                 overflow-y: auto;
 
                 .hydstart-card-close {
@@ -158,6 +163,7 @@
                         content: '';
                         background-color: var(--background-dark-0);
                         border-radius: 50%;
+                        backdrop-filter: blur(8px) saturate(1.25);
                         position: absolute;
                         z-index: 18;
                         top: $subbutton-icons-offset-value * -1;

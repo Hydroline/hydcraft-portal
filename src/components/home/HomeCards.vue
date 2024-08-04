@@ -148,6 +148,8 @@
         grid-gap: 10px;
         margin-top: auto;
         height: 170px;
+        position: relative;
+        z-index: 50;
 
         .hydstart-home-card {
             $card-value-transition-duration: 250ms;

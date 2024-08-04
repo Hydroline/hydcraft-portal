@@ -100,7 +100,7 @@
     .hydstart-header-wordmark {
         .hydstart-header-title {
             $title-value-after-opacity--max: 1;
-            $title-value-transition-duration: 130ms;
+            $title-value-transition-duration: 300ms;
             width: fit-content;
             position: relative;
             user-select: none;
