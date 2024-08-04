@@ -30,12 +30,56 @@
                 </div>
 
                 <div class="hydstart-home-dialog">
-                    <CardContainer v-show="showHeliumCard" @close="closeHeliumCard">
-                        
+                    <CardContainer v-show="serverStatus.showHeliumCard" @close="closeHeliumCard">
+                        <template v-slot:title>
+                            <div class="hydstart-card-world-header">
+                                <div class="hydstart-card-world-header__status"></div>
+                                <div class="hydstart-card-world-header__title">
+                                    六周目
+                                    <div class="hydstart-card-world-header__codename">Helium</div>
+                                </div>
+                            </div>
+                        </template>
+                        <div class="hydstart-card-world-container">
+                            <div class="hydstart-card-world-overview-wrapper">
+                                <div class="hydstart-card-world-overview hydstart-card-world-overview--online">
+                                    <div class="hydstart-card-world-label">在线人数<span class="material-icons-outlined">info</span></div>
+                                    <div class="hydstart-card-world-value">
+                                        {{serverStatus.helium.online}}<span class="weaken"> / {{ serverStatus.helium.max }}</span>
+                                    </div>
+                                </div>
+                                <div class="hydstart-card-world-overview hydstart-card-world-overview--status">
+                                    <div class="hydstart-card-world-label">运行状态</div>
+                                    <div class="hydstart-card-world-value">{{ serverStatus.helium.status === 3 ? '正常' : '异常' }}</div>
+                                </div>
+                                <div class="hydstart-card-world-overview hydstart-card-world-overview--days">
+                                    <div class="hydstart-card-world-label">运行天数<span class="material-icons-outlined">info</span></div>
+                                    <div class="hydstart-card-world-value">{{ daysAgo(serverStatus.helium.created_time) }}</div>
+                                </div>
+                                <div class="hydstart-card-world-overview hydstart-card-world-overview--related">
+                                    <div class="hydstart-card-world-label">相关话题</div>
+                                    <div class="hydstart-card-world-value">
+                                        <a class="weaken" v-for="(item, index) in serverStatus.helium.related_keywords" :key="index" :href="item.link">{{ item.name }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hydstart-card-world-map">
+                                <div class="hydstart-card-world-label">卫星地图</div>
+                                <iframe src="https://map.helium.hydcraft.cn" frameborder="0" v-show="serverStatus.showHeliumCard"></iframe>
+                            </div>
+                        </div>
                     </CardContainer>
-
-                    <CardContainer v-show="showNitrogenCard" @close="closeNitrogenCard">
-                        
+                    <CardContainer v-show="serverStatus.showNitrogenCard" @close="closeNitrogenCard">
+                        <template v-slot:title>
+                            <div class="hydstart-card-world-header">
+                                <div class="hydstart-card-world-header__status"></div>
+                                <div class="hydstart-card-world-header__title">
+                                    七周目
+                                    <div class="hydstart-card-world-header__codename">Nitrogen</div>
+                                </div>
+                            </div>
+                        </template>
+                        233
                     </CardContainer>
                 </div>
             </div>
@@ -44,12 +88,33 @@
 </template>
 
 <script>
+    import dayjs from 'dayjs';
+
     export default {
         name: 'HomeView',
         data() {
             return {
-                showHeliumCard: false,
-                showNitrogenCard: false
+                serverStatus: {
+                    showHeliumCard: false,
+                    showNitrogenCard: false,
+                    helium: {
+                        created_time: '2022-02-17',
+                        status: 3,
+                        online: 0,
+                        max: 20,
+                        related_keywords: [
+                            { name: '南屿' , link: 'https://wiki.hydcraft.cn/南屿都' },
+                            { name: '宜兰' , link: 'https://wiki.hydcraft.cn/宜兰' },
+                            { name: '赫尔海姆' , link: 'https://wiki.hydcraft.cn/赫尔海姆' }
+                        ]
+                    },
+                    nitrogen: {
+                        created_time: '2023-08-07',
+                        status: 3,
+                        online: 0,
+                        max: 20
+                    }
+                }
             }
         },
         components: {
@@ -59,36 +124,148 @@
         },
         methods: {
             executeDialog(data) {
-                if(data.type === 'card') {
-                    switch(data.index) {
-                        case 0:
-                            this.showHeliumCard = true;
-                            console.log(this.showHeliumCard);
-                            break;
-                        case 1:
-                            this.showNitrogenCard = true;
-                            break;
-                        default:
-                            return;
-                    }
-                }
+                setTimeout(() => {
+                    if(data.type === 'card') {
+                        switch(data.index) {
+                            case 0:
+                                this.serverStatus.showHeliumCard = true;
+                                break;
+                            case 1:
+                                this.serverStatus.showNitrogenCard = true;
+                                break;
+                            default:
+                                return;
+                        }
+                    }                    
+                }, 120);
             },
             closeHeliumCard() {
-                this.showHeliumCard = false;
+                this.serverStatus.showHeliumCard = false;
             },
             closeNitrogenCard() {
-                this.showNitrogenCard = false;
+                this.serverStatus.showNitrogenCard = false;
+            },
+            daysAgo(dateString) {
+                const date = dayjs(dateString);
+                const now = dayjs();
+                return now.diff(date, 'day');
             }
         }
     }
 </script>
 
+<style lang="scss" scoped>
+    .hydstart-home-dialog {
+        .hydstart-card-world-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            .hydstart-card-world-header__status {
+                $card-world-header-value-status: 14px;
+                width: $card-world-header-value-status;
+                height: $card-world-header-value-status;
+                background-color: var(--home-background-status-unknown);
+                border-radius: 50%;
+            }
+
+            .hydstart-card-world-header__title {
+                display: flex;
+                align-items: baseline;
+                gap: 12px;
+                font-size: 28px;
+                font-weight: 600;
+            }
+
+            .hydstart-card-world-header__codename {
+                color: var(--color-text--weaken);
+                font-size: 22px;
+                font-family: 'Site Wordmark Font';
+                font-weight: normal;
+            }
+        }
+
+        .hydstart-card-world-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+
+            .hydstart-card-world-overview-wrapper {
+                display: flex;
+                gap: 3rem;
+
+                .hydstart-card-world-overview {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+
+                    &.hydstart-card-world-overview--related {
+                        flex: 1;
+
+                        .hydstart-card-world-value {
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            row-gap: 6px;
+                            column-gap: 12px;
+                            flex-wrap: wrap;
+
+                            a {
+                                color: var(--color-text);
+                                transition: opacity 250ms ease;
+
+                                &:hover {
+                                    opacity: 0.6;
+                                }
+
+                                &::before {
+                                    content: '#';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .hydstart-card-world-label {
+                display: flex;
+                align-items: center;
+                gap: 2px;
+                color: var(--color-text--subtle);
+                font-size: 16px;
+                padding: 4px 0;
+
+                .material-icons-outlined {
+                    display: block;
+                    font-size: 16px;
+                }
+            }
+
+            .hydstart-card-world-value {
+                font-size: 54px;
+                line-height: 1;
+
+                .weaken {
+                    font-size: 28px;
+                }
+            }
+
+            iframe {
+                width: 100%;
+                min-height: 600px;
+                margin-top: 4px;
+                border-radius: 12px;
+                user-select: none;
+            }
+        }
+    }
+</style>
 
 <style lang="scss" scoped>
     @import '@/assets/styles/global.scss';
 
     $page-home-gap-value: 2rem;
-
+    
     .hydstart-home {
         display: flex;
         flex-direction: column;

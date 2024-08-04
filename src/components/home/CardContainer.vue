@@ -1,5 +1,5 @@
 <template>
-    <transition name="fade">
+    <transition name="fade" @enter="afterEnter">
         <div class="hydstart-card-wrapper">
             <div class="hydstart-card">
                 <div class="hydstart-card-background">
@@ -35,7 +35,10 @@
             closeCard() {
                 setTimeout(() => {
                     this.$emit('close');                    
-                }, 150);
+                }, 50);
+            },
+            afterEnter() {
+                this.isWrapperVisible = true;
             }
         }
     }
@@ -44,15 +47,13 @@
 <style lang="scss" scoped>
     @import '@/assets/styles/global.scss';
 
-    $card-value-transition-duration: 250ms;
-
-    .fade-enter, .fade-leave-to {
-        opacity: 0;
-    }
+    $card-value-transition-duration: 450ms;
 
     .hydstart-card-wrapper {
         $card-value-margin-horizon: 10rem;
         $card-value-margin-vertical: 8rem;
+        display: flex;
+        justify-content: center;
         position: absolute;
         top: $page-header-width;
         left: 0;
@@ -60,15 +61,25 @@
         bottom: 0;
         z-index: 80;
         padding: ($card-value-margin-vertical * 0.5) $card-value-margin-horizon $card-value-margin-vertical $card-value-margin-horizon;
-        background-color: var(--background-dark-1);
-        backdrop-filter: blur(32px) saturate(0.8);
-        transition: opacity $card-value-transition-duration $value-transition-function, transform $card-value-transition-duration $value-transition-function;
+        backdrop-filter: blur(48px) saturate(0.6) brightness(0.95);
+        transition: all $card-value-transition-duration $value-transition-function, opacity 350ms $value-transition-function, backdrop-filter 2000ms $value-transition-function;
+
+        &.fade-enter, &.fade-leave-to {
+            backdrop-filter: blur(0px) saturate(1) brightness(1);
+            top: 70%;
+            left: 50%;
+            right: 50%;
+            bottom: 50%;
+            opacity: 0;
+        }
 
         .hydstart-card {
+            width: 100%;
             height: 100%;
             border-radius: 24px;
             background: var(--color-surface-0);
             position: relative;
+            opacity: 1;
             transition: all 300ms $value-transition-function;
             box-shadow: 0 8px 60px var(--background-dark-0);
             outline: 3px solid transparent;
@@ -88,11 +99,14 @@
 
             .hydstart-card-foreground-wrapper {
                 $foreground-value-padding: 28px;
+                display: flex;
+                flex-direction: column;
                 font-size: 18px;
                 width: 100%;
                 height: 100%;
                 padding: $foreground-value-padding;
                 position: relative;
+                overflow-y: auto;
 
                 .hydstart-card-close {
                     display: block;
@@ -115,10 +129,10 @@
                     }
 
                     &:hover {
-                        transform: rotate(-45deg);
+                        transform: rotate(-30deg);
 
                         .material-icons {
-                            color: var(--color-text--weaken);
+                            color: var(--color-hydcraft-red);
                         }
 
                         &::after {
@@ -127,10 +141,10 @@
                     }
 
                     &:active {
-                        transform: rotate(-45deg) scale(0.9);
+                        transform: rotate(-30deg) scale(0.8);
 
                         .material-icons {
-                            color: var(--color-text--emphasized);
+                            opacity: 0.7;
                         }
 
                         &::after {
@@ -154,6 +168,14 @@
                     }
                 }
             }
+        }
+
+        .hydstart-card-title {
+            margin-bottom: 12px;
+        }
+
+        .hydstart-card-content {
+            flex: 1;
         }
     }
 </style>

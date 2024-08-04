@@ -66,15 +66,17 @@
 :root {
     --color-hydcraft-red: rgb(211, 47, 47);
     --color-hydcraft-blue: rgb(3, 169, 244);
+    --home-background-status-unknown: #808080;
+    --home-background-status-offline: #ff3c00;
+    --home-background-status-loading: #e4ca23;
+    --home-background-status-online: #008000;
 }
 
 ::selection {
     background: hsla(var(--color-primary__h), 5%, 54%, 22%);
 }
 
-*,
-*::before,
-*::after {
+*, *::before, *::after {
     scrollbar-color: var(--color-surface-4) transparent;
     scrollbar-width: thin;
     box-sizing: border-box;

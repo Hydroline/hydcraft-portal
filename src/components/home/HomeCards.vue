@@ -203,6 +203,7 @@
             }
 
             &:hover {
+                border-radius: 24px;
                 outline-color: var(--color-primary);
                 transform: scale(1.04);
 
@@ -225,10 +226,6 @@
             }
 
             &.hydstart-home-card-world {
-                --home-background-status-unknown: #808080;
-                --home-background-status-offline: #ff3c00;
-                --home-background-status-loading: #e4ca23;
-                --home-background-status-online: #008000;
                 grid-row: 1 / span 2;
                 width: 200px;
 
