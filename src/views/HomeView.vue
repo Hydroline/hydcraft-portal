@@ -60,12 +60,13 @@
                                     <div class="hydstart-card-world-label">相关话题</div>
                                     <div class="hydstart-card-world-value">
                                         <a class="weaken" v-for="(item, index) in serverStatus.helium.related_keywords" :key="index" :href="item.link">{{ item.name }}</a>
+                                        <span v-if="serverStatus.helium.related_keywords == null">无</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="hydstart-card-world-map">
                                 <div class="hydstart-card-world-label">卫星地图</div>
-                                <iframe src="https://map.helium.hydcraft.cn" frameborder="0" v-show="serverStatus.showHeliumCard"></iframe>
+                                <iframe src="https://map.helium.hydcraft.cn" frameborder="0" v-if="serverStatus.showHeliumDynmap"></iframe>
                             </div>
                         </div>
                     </CardContainer>
@@ -79,7 +80,35 @@
                                 </div>
                             </div>
                         </template>
-                        233
+                        <div class="hydstart-card-world-container">
+                            <div class="hydstart-card-world-overview-wrapper">
+                                <div class="hydstart-card-world-overview hydstart-card-world-overview--online">
+                                    <div class="hydstart-card-world-label">在线人数<span class="material-icons-outlined">info</span></div>
+                                    <div class="hydstart-card-world-value">
+                                        {{serverStatus.nitrogen.online}}<span class="weaken"> / {{ serverStatus.nitrogen.max }}</span>
+                                    </div>
+                                </div>
+                                <div class="hydstart-card-world-overview hydstart-card-world-overview--status">
+                                    <div class="hydstart-card-world-label">运行状态</div>
+                                    <div class="hydstart-card-world-value">{{ serverStatus.nitrogen.status === 3 ? '正常' : '异常' }}</div>
+                                </div>
+                                <div class="hydstart-card-world-overview hydstart-card-world-overview--days">
+                                    <div class="hydstart-card-world-label">运行天数<span class="material-icons-outlined">info</span></div>
+                                    <div class="hydstart-card-world-value">{{ daysAgo(serverStatus.nitrogen.created_time) }}</div>
+                                </div>
+                                <div class="hydstart-card-world-overview hydstart-card-world-overview--related">
+                                    <div class="hydstart-card-world-label">相关话题</div>
+                                    <div class="hydstart-card-world-value">
+                                        <a class="weaken" v-for="(item, index) in serverStatus.nitrogen.related_keywords" :key="index" :href="item.link">{{ item.name }}</a>
+                                        <span v-if="serverStatus.nitrogen.related_keywords == null">无</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hydstart-card-world-map">
+                                <div class="hydstart-card-world-label">卫星地图</div>
+                                <iframe src="https://map.nitrogen.hydcraft.cn" frameborder="0" v-if="serverStatus.showNitrogenDynmap"></iframe>
+                            </div>
+                        </div>
                     </CardContainer>
                 </div>
             </div>
@@ -97,6 +126,8 @@
                 serverStatus: {
                     showHeliumCard: false,
                     showNitrogenCard: false,
+                    showHeliumDynmap: false,
+                    showNitrogenDynmap: false,
                     helium: {
                         created_time: '2022-02-17',
                         status: 3,
@@ -112,7 +143,12 @@
                         created_time: '2023-08-07',
                         status: 3,
                         online: 0,
-                        max: 20
+                        max: 20,
+                        related_keywords: [
+                            { name: '新屿' , link: 'https://wiki.hydcraft.cn/新屿' },
+                            { name: '沁京' , link: 'https://wiki.hydcraft.cn/沁京' },
+                            { name: '欧文' , link: 'https://wiki.hydcraft.cn/欧文' }
+                        ]
                     }
                 }
             }
@@ -149,6 +185,23 @@
                 const date = dayjs(dateString);
                 const now = dayjs();
                 return now.diff(date, 'day');
+            },
+            updateDynmap(statusKey, dynmapKey, newVal) {
+                if (newVal === true) {
+                    setTimeout(() => {
+                        this.serverStatus[dynmapKey] = true;
+                    }, 300);
+                } else {
+                    this.serverStatus[dynmapKey] = false;
+                }
+            }
+        },
+        watch: {
+            'serverStatus.showHeliumCard'(newVal) {
+                this.updateDynmap('showHeliumCard', 'showHeliumDynmap', newVal);
+            },
+            'serverStatus.showNitrogenCard'(newVal) {
+                this.updateDynmap('showNitrogenCard', 'showNitrogenDynmap', newVal);
             }
         }
     }
@@ -186,6 +239,7 @@
         }
 
         .hydstart-card-world-container {
+            height: 100%;
             display: flex;
             flex-direction: column;
             gap: 1.25rem;
@@ -227,6 +281,12 @@
                 }
             }
 
+            .hydstart-card-world-map {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+
             .hydstart-card-world-label {
                 display: flex;
                 align-items: center;
@@ -252,9 +312,11 @@
 
             iframe {
                 width: 100%;
-                min-height: 600px;
+                height: 100%;
+                min-height: 300px;
                 margin-top: 4px;
                 border-radius: 12px;
+                background-color: var(--color-surface-3);
                 user-select: none;
             }
         }

@@ -76,6 +76,7 @@
         .hydstart-card {
             width: 100%;
             height: 100%;
+            min-height: 400px;
             border-radius: 24px;
             background: var(--color-surface-0);
             position: relative;
