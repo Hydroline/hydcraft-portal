@@ -44,15 +44,15 @@
         img {
             display: block;
             width: 100%;
-            height: 68%;
-            min-height: 550px;
-            max-height: 680px;
+            height: 75%;
+            min-height: 600px;
+            max-height: 720px;
             position: relative;
             z-index: 10;
-            filter: blur(4px) opacity(0.8) grayscale(0) contrast(0) brightness(0) invert(1);
+            filter: opacity(1) grayscale(0) contrast(0) brightness(0) invert(1);
             object-fit: cover;
             object-position: top;
-            transition: filter 300ms $value-transition-function;
+            transition: filter 3000ms $value-transition-function;
         }
 
         video {
@@ -66,6 +66,11 @@
             bottom: 0;
             z-index: 8;
             filter: opacity(0.25) brightness(1.05) saturate(2);
+            transition: all 150ms $value-transition-function;
+
+            &.fade-enter, &.fade-leave-to {
+                opacity: 0;
+            }
         }
     }
 

@@ -1,25 +1,62 @@
 <template>
-    <MainContainer @dialog="executeDialog" :background="require('@/assets/images/image_home_background_240730.webp')" :video="true">
-        <div class="hydstart-home">
-            <div class="hydstart-home-main">
-                <div class="hydstart-home-text">
-                    <div class="hydstart-home-text__title">……👏你好！这里是<span class="red">氢气</span><span class="blue">工艺</span>。</div>
-                    <div class="hydstart-home-text__subtitle">我们是个 MC 服务器社区，我们凭借共同的爱好走到了一起，这有交通爱好者，科技爱好者，独立开发者…… 总之，我们什么都有。❤</div>
+    <MainContainer @dialog="executeDialog" :video="true">
+        <div class="hydstart-home-wrapper">
+            <div class="hydstart-home">
+                <div class="hydstart-home-main" v-show="!showContentCard">
+                    <div class="hydstart-home-text">
+                        <div class="hydstart-home-text__title">……👏你好！这里是<span class="red">氢气</span><span class="blue">工艺</span>。</div>
+                        <div class="hydstart-home-text__subtitle">我们是个 MC 服务器社区，我们凭借共同的爱好走到了一起，这有交通爱好者，科技爱好者，独立开发者…… 总之，我们什么都有。❤</div>
+                    </div>
+
+                    <div class="hydstart-home-buttons">
+                        <button class="hydstart-home-button main">来都来了，点我看氢气服主写的の小作文</button>
+                        <div class="hydstart-home-subbutton overview">
+                            <span>🥺我还是想自己看看</span>
+                        </div>
+                        <div class="hydstart-home-subbutton join">
+                            <span>😋只想进服快给群号</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="hydstart-home-buttons">
-                    <button class="hydstart-home-button main">来都来了，不妨来了解一下我们</button>
-                    <div class="hydstart-home-subbutton overview">
-                        <span>🥺我还是想直接看概览</span>
-                    </div>
-                    <div class="hydstart-home-subbutton join">
-                        <span>😋只想进服快给我群号</span>
-                    </div>
+                <div class="hydstart-home-content-card" v-show="showContentCard">
+                    <ContentCardContainer :show="showCards.culture.show" @closeCard="closeCard('content-card', 'culture')">
+                        <template v-slot:title>
+                            Culture
+                        </template>
+                        <div class="hydstart-content-card-container">
+                            Test
+                        </div>
+                    </ContentCardContainer>
+                    <ContentCardContainer :show="showCards.cities.show" @closeCard="closeCard('content-card', 'cities')">
+                        <template v-slot:title>
+                            Cities
+                        </template>
+                        <div class="hydstart-content-card-container">
+                            Test
+                        </div>
+                    </ContentCardContainer>
+                    <ContentCardContainer :show="showCards.railway.show" @closeCard="closeCard('content-card', 'railway')">
+                        <template v-slot:title>
+                            Railway
+                        </template>
+                        <div class="hydstart-content-card-container">
+                            Test
+                        </div>
+                    </ContentCardContainer>
+                    <ContentCardContainer :show="showCards.player.show" @closeCard="closeCard('content-card', 'player')">
+                        <template v-slot:title>
+                            Player
+                        </template>
+                        <div class="hydstart-content-card-container">
+                            Test
+                        </div>
+                    </ContentCardContainer>
                 </div>
             </div>
 
             <div class="hydstart-home-info">
-                <HomeCards @dialog="executeDialog"/>
+                <HomeCards @dialog="executeDialog" :active="showContentCard" />
 
                 <div class="hydstart-home-belong">
                     隶属于
@@ -30,7 +67,7 @@
                 </div>
 
                 <div class="hydstart-home-dialog">
-                    <CardContainer v-show="serverStatus.showHeliumCard" @closeCard="closeHeliumCard">
+                    <CardContainer v-show="showCards.world.helium.show" @closeCard="closeCard('card', 'helium')">
                         <template v-slot:title>
                             <div class="hydstart-card-world-header">
                                 <div class="hydstart-card-world-header__status"></div>
@@ -59,18 +96,18 @@
                                 <div class="hydstart-card-world-overview hydstart-card-world-overview--related">
                                     <div class="hydstart-card-world-label">相关话题</div>
                                     <div class="hydstart-card-world-value">
-                                        <a class="weaken" v-for="(item, index) in serverStatus.helium.related_keywords" :key="index" :href="item.link">{{ item.name }}</a>
+                                        <a class="weaken" target="_blank" v-for="(item, index) in serverStatus.helium.related_keywords" :key="index" :href="item.link">{{ item.name }}</a>
                                         <span v-if="serverStatus.helium.related_keywords == null">无</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="hydstart-card-world-map">
                                 <div class="hydstart-card-world-label">卫星地图</div>
-                                <iframe src="https://map.helium.hydcraft.cn" frameborder="0" v-if="serverStatus.showHeliumDynmap"></iframe>
+                                <iframe src="https://map.helium.hydcraft.cn" frameborder="0" v-if="showCards.world.helium.iframe"></iframe>
                             </div>
                         </div>
                     </CardContainer>
-                    <CardContainer v-show="serverStatus.showNitrogenCard" @closeCard="closeNitrogenCard">
+                    <CardContainer v-show="showCards.world.nitrogen.show" @closeCard="closeCard('card', 'nitrogen')">
                         <template v-slot:title>
                             <div class="hydstart-card-world-header">
                                 <div class="hydstart-card-world-header__status"></div>
@@ -99,14 +136,14 @@
                                 <div class="hydstart-card-world-overview hydstart-card-world-overview--related">
                                     <div class="hydstart-card-world-label">相关话题</div>
                                     <div class="hydstart-card-world-value">
-                                        <a class="weaken" v-for="(item, index) in serverStatus.nitrogen.related_keywords" :key="index" :href="item.link">{{ item.name }}</a>
+                                        <a class="weaken" target="_blank" v-for="(item, index) in serverStatus.nitrogen.related_keywords" :key="index" :href="item.link">{{ item.name }}</a>
                                         <span v-if="serverStatus.nitrogen.related_keywords == null">无</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="hydstart-card-world-map">
                                 <div class="hydstart-card-world-label">卫星地图</div>
-                                <iframe src="https://map.nitrogen.hydcraft.cn" frameborder="0" v-if="serverStatus.showNitrogenDynmap"></iframe>
+                                <iframe src="https://map.nitrogen.hydcraft.cn" frameborder="0" v-if="showCards.world.nitrogen.iframe"></iframe>
                             </div>
                         </div>
                     </CardContainer>
@@ -123,11 +160,32 @@
         name: 'HomeView',
         data() {
             return {
+                showContentCard: false,
+                showCards: {
+                    world: {
+                        helium: {
+                            show: false,
+                            iframe: false
+                        },
+                        nitrogen: {
+                            show: false,
+                            iframe: false
+                        }
+                    },
+                    culture: {
+                        show: false
+                    },
+                    cities: {
+                        show: false
+                    },
+                    railway: {
+                        show: false
+                    },
+                    player: {
+                        show: false
+                    }
+                },
                 serverStatus: {
-                    showHeliumCard: false,
-                    showNitrogenCard: false,
-                    showHeliumDynmap: false,
-                    showNitrogenDynmap: false,
                     helium: {
                         created_time: '2022-02-17',
                         status: 3,
@@ -136,7 +194,8 @@
                         related_keywords: [
                             { name: '南屿' , link: 'https://wiki.hydcraft.cn/南屿都' },
                             { name: '宜兰' , link: 'https://wiki.hydcraft.cn/宜兰' },
-                            { name: '赫尔海姆' , link: 'https://wiki.hydcraft.cn/赫尔海姆' }
+                            { name: '赫尔海姆' , link: 'https://wiki.hydcraft.cn/赫尔海姆' },
+                            { name: '北港' , link: 'https://wiki.hydcraft.cn/北港' }
                         ]
                     },
                     nitrogen: {
@@ -145,9 +204,10 @@
                         online: 0,
                         max: 20,
                         related_keywords: [
-                            { name: '新屿' , link: 'https://wiki.hydcraft.cn/新屿' },
-                            { name: '沁京' , link: 'https://wiki.hydcraft.cn/沁京' },
-                            { name: '欧文' , link: 'https://wiki.hydcraft.cn/欧文' }
+                            { name: '新屿' , link: 'https://wiki.hydcraft.cn/新屿都' },
+                            { name: '沁京' , link: 'https://wiki.hydcraft.cn/沁京都' },
+                            { name: '欧文' , link: 'https://wiki.hydcraft.cn/欧文州' },
+                            { name: '蒲田' , link: 'https://wiki.hydcraft.cn/蒲田县' }
                         ]
                     }
                 }
@@ -156,53 +216,117 @@
         components: {
             MainContainer: () => import('@/components/MainContainer.vue'),
             HomeCards: () => import('@/components/home/HomeCards.vue'),
-            CardContainer: () => import('@/components/home/CardContainer.vue')
+            CardContainer: () => import('@/components/home/CardContainer.vue'),
+            ContentCardContainer: () => import('@/components/home/ContentCardContainer.vue')
         },
         methods: {
             executeDialog(data) {
                 setTimeout(() => {
-                    if(data.type === 'card') {
+                    this.resetShows([data.index]);
+
+                    if (data.type === 'card') {
                         switch(data.index) {
-                            case 0:
-                                this.serverStatus.showHeliumCard = true;
+                            case 'helium':
+                                this.showCards.world.helium.show = true;
                                 break;
-                            case 1:
-                                this.serverStatus.showNitrogenCard = true;
+                            case 'nitrogen':
+                                this.showCards.world.nitrogen.show = true;
                                 break;
                             default:
                                 return;
                         }
-                    }                    
+                    } else if (data.type === 'content-card') {
+                        this.showContentCard = true;
+
+                        switch(data.index) {
+                            case 'culture':
+                                this.showCards.culture.show = true;
+                                break;
+                            case 'cities':
+                                this.showCards.cities.show = true;
+                                break;
+                            case 'railway':
+                                this.showCards.railway.show = true;
+                                break;
+                            case 'player':
+                                this.showCards.player.show = true;
+                                break;
+                            default:
+                                return;
+                        }
+                    } else
+                        return;
                 }, 120);
             },
-            closeHeliumCard() {
-                this.serverStatus.showHeliumCard = false;
+            closeCard(type, index) {
+                this.resetShows([index]);
+
+                if (type === 'content-card')
+                    this.showContentCard = false;
+
+                switch(index) {
+                    case 'helium':
+                        this.showCards.world.helium.show = false;
+                        break;
+                    case 'nitrogen':
+                        this.showCards.world.nitrogen.show = false;
+                        break;
+                    case 'culture':
+                        this.showCards.culture.show = false;
+                        break;
+                    case 'cities':
+                        this.showCards.cities.show = false;
+                        break;
+                    case 'railway':
+                        this.showCards.railway.show = false;
+                        break;
+                    case 'player':
+                        this.showCards.player.show = false;
+                        break;
+                    default:
+                        return;
+                }
             },
-            closeNitrogenCard() {
-                this.serverStatus.showNitrogenCard = false;
+            resetShows(keepShow = [], obj = this.showCards) {
+                Object.keys(obj).forEach(key => {
+                    if (typeof obj[key] === 'object' && obj[key] !== null) {
+                        if (key === 'world') {
+                            this.resetShows(keepShow, obj[key]);
+                        } else if (!keepShow.includes(key)) {
+                            this.resetShows(keepShow, obj[key]);
+                        }
+                    } else if (key === 'show' && obj[key] === true) {
+                        if (!keepShow.includes(key) && !(keepShow.includes('helium') && key === 'helium') && !(keepShow.includes('nitrogen') && key === 'nitrogen')) {
+                            obj[key] = false;
+                        }
+                    }
+                });
             },
             daysAgo(dateString) {
                 const date = dayjs(dateString);
                 const now = dayjs();
                 return now.diff(date, 'day');
             },
-            updateDynmap(statusKey, dynmapKey, newVal) {
+            updateDynmap(world, statusKey, dynmapKey, newVal) {
                 if (newVal === true) {
                     setTimeout(() => {
-                        this.serverStatus[dynmapKey] = true;
-                    }, 400);
+                        this.showCards.world[world][dynmapKey] = true;
+                    }, 500);
                 } else {
-                    this.serverStatus[dynmapKey] = false;
+                    this.showCards.world[world][dynmapKey] = false;
                 }
             }
         },
         watch: {
-            'serverStatus.showHeliumCard'(newVal) {
-                this.updateDynmap('showHeliumCard', 'showHeliumDynmap', newVal);
+            'showCards.world.helium.show'(newVal) {
+                this.updateDynmap('helium', 'show', 'iframe', newVal);
             },
-            'serverStatus.showNitrogenCard'(newVal) {
-                this.updateDynmap('showNitrogenCard', 'showNitrogenDynmap', newVal);
+            'showCards.world.nitrogen.show'(newVal) {
+                this.updateDynmap('nitrogen', 'show', 'iframe', newVal);
             }
+        },
+        mounted() {
+            this.$eventBus.$emit('updateFooter', { showMain: true });
         }
     }
 </script>
@@ -261,7 +385,7 @@
                             height: 100%;
                             display: flex;
                             align-items: center;
-                            row-gap: 6px;
+                            row-gap: 9px;
                             column-gap: 12px;
                             flex-wrap: wrap;
 
@@ -329,12 +453,13 @@
 
     $page-home-gap-value: 2rem;
     
-    .hydstart-home {
+    .hydstart-home-wrapper {
         display: flex;
         flex-direction: column;
         height: 100%;
         
-        .hydstart-home-main {
+        .hydstart-home {
+            width: 100%;
             margin: auto;
         }
 
@@ -388,6 +513,7 @@
             font-size: 18px;
             background-color: var(--color-primary);
             border: none;
+            outline: none;
             border-radius: 16px;
             padding: 6px 20px;
             flex: 1 1 100%;
@@ -457,6 +583,8 @@
         font-size: 18px;
         letter-spacing: 0.125rem;
         margin-top: $page-home-gap-value;
+        position: relative;
+        z-index: 60;
 
         .hydstart-home-belong__hydrlab {
             display: inline-flex;

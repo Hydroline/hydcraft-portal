@@ -1,6 +1,6 @@
 <template>
-    <div class="hydstart-home-cards">
-        <div class="hydstart-home-card hydstart-home-card-world helium" @click="showDialog('card', 0)">
+    <div class="hydstart-home-cards" :class="{ active: active}">
+        <div class="hydstart-home-card hydstart-home-card-world helium" @click="showCard('card', 'helium')">
             <div class="hydstart-home-card__background">
                 <img src="@/assets/images/home/image_card_background_helium_1.png" />
             </div>
@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <div class="hydstart-home-card hydstart-home-card-world nitrogen" @click="showDialog('card', 1)">
+        <div class="hydstart-home-card hydstart-home-card-world nitrogen" @click="showCard('card', 'nitrogen')">
             <div class="hydstart-home-card__background">
                 <img src="@/assets/images/home/image_card_background_nitrogen_2.png" />
             </div>
@@ -26,16 +26,16 @@
             </div>
         </div>
 
-        <div class="hydstart-home-card hydstart-home-card-culture omec">
+        <div class="hydstart-home-card hydstart-home-card-culture culture" @click="showCard('content-card', 'culture')">
             <div class="hydstart-home-card__background">
-                <img src="@/assets/images/home/image_card_background_omec_1.png" />
+                <img src="@/assets/images/home/image_card_background_culture_1.png" />
             </div>
             <div class="hydstart-home-card__foreground">
-                <div class="hydstart-home-card__title">OMEC</div>
+                <div class="hydstart-home-card__title">Culture</div>
             </div>
         </div>
 
-        <div class="hydstart-home-card hydstart-home-card-develop cities">
+        <div class="hydstart-home-card hydstart-home-card-develop cities" @click="showCard('content-card', 'cities')">
             <div class="hydstart-home-card__background">
                 <img src="@/assets/images/image_home_background_240730.webp" />
             </div>
@@ -44,7 +44,7 @@
             </div>
         </div>
 
-        <div class="hydstart-home-card hydstart-home-card-develop railway">
+        <div class="hydstart-home-card hydstart-home-card-develop railway" @click="showCard('content-card', 'railway')">
             <div class="hydstart-home-card__background">
                 <img src="@/assets/images/home/image_card_background_railway_1.png" />
             </div>
@@ -79,7 +79,7 @@
                     'Complex_Colors',
                     'TochoShizuku',
                     'Arknights_Chen_',
-                    'Hammurabi',
+                    'Dasmord',
                     'CN_DaJiChi',
                     'larker_package',
                     'QiShui233'
@@ -90,6 +90,9 @@
             };
         },
         methods: {
+            fetchData() {
+
+            },
             initSkinViewer() {
                 this.skinViewer = new SkinViewer({
                     canvas: document.getElementById("skin-container"),
@@ -120,12 +123,19 @@
                 this.skinListCurrentIndex = (this.skinListCurrentIndex + 1) % this.skinList.length;
                 this.skinViewer.loadSkin(this.skinBaseApi + this.skinList[this.skinListCurrentIndex]);
                 this.autoChangeSkinViewer();
+                this.showCard('content-card', 'player');
             },
-            showDialog(type, index) {
+            showCard(type, index) {
                 this.$emit('dialog', {
                     type: type,
                     index: index
                 });
+            }
+        },
+        props: {
+            active: {
+                type: Boolean,
+                default: false
             }
         },
         mounted() {
@@ -142,6 +152,8 @@
     @import '@/assets/styles/global.scss';
 
     .hydstart-home-cards {
+        $card-value-transition-duration: 250ms;
+        $card-value-transition-delay: 50ms;
         display: grid;
         grid-template-rows: repeat(2, 1fr);
         grid-auto-flow: column;
@@ -149,17 +161,28 @@
         margin-top: auto;
         height: 170px;
         position: relative;
-        z-index: 50;
+        z-index: 60;
+        transform-origin: bottom center;
+        transition: transform $card-value-transition-duration $value-transition-function;
+
+        &.active {
+            transform: scale(0.8);
+
+            .hydstart-home-card {
+                background-color: var(--background-color-primary--active);
+
+                &:hover {
+                    width: unset;
+                }
+            }
+        }
 
         .hydstart-home-card {
-            $card-value-transition-duration: 250ms;
-            $card-value-transition-delay: 50ms;
             border-radius: 16px;
             background-color: var(--color-surface-0);
             outline: 2px solid transparent;
             box-shadow: 0 1px 4px var(--background-dark-0);
             transition: all $card-value-transition-duration $value-transition-function;
-            transition-delay: $card-value-transition-delay;
             overflow: hidden;
             position: relative;
             cursor: pointer;
@@ -266,7 +289,7 @@
                 }
             }
 
-            &.omec, &.cities {
+            &.culture, &.cities {
                 width: 150px;
                 grid-row: 1;
                 grid-column: 3;

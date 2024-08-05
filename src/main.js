@@ -8,6 +8,12 @@ import axios from 'axios';
 import 'material-icons/iconfont/material-icons.css';
 
 Vue.prototype.$axios = axios;
+Vue.prototype.$eventBus = new Vue();
+
+router.beforeEach((to, from, next) => {
+    Vue.prototype.$eventBus.$emit('updateFooter', { showMain: false });
+    next();
+});
 
 new Vue({
     Vuex,

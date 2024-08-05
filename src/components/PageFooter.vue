@@ -1,5 +1,5 @@
 <template>
-    <footer>
+    <footer :class="{ main: showMain }">
         <div class="hydstart-footer">
             <div class="hydstart-footer-register">
                 <img src="@/assets/images/logo_mps_register.png" alt="备案">
@@ -23,7 +23,13 @@
 
 <script>
     export default {
-        name: 'PageFooter'
+        name: 'PageFooter',
+        props: {
+            showMain: {
+                type: Boolean,
+                default: false
+            }
+        }
     }
 </script>
 
@@ -42,6 +48,11 @@
         color: var(--color-surface-4);
         font-size: 12px;
         margin: auto $footer-value-margin 0.75rem $footer-value-margin;
+
+        &.main {
+            color: var(--color-surface-1);
+            text-shadow: 0 1px 2px var(--color-surface-4);
+        }
     }
 
     .hydstart-footer-register {
@@ -64,9 +75,10 @@
 
     a {
         color: inherit;
-    }
+        transition: color 250ms $value-transition-function;
 
-    a:hover {
-        color: var(--color-surface-3);
+        &:hover {
+            color: var(--color-primary);
+        }
     }
 </style>

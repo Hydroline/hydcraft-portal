@@ -1,5 +1,5 @@
 <template>
-    <transition name="fade" @enter="afterEnter">
+    <transition name="fade">
         <div class="hydstart-card-wrapper">
             <div class="hydstart-card">
                 <div class="hydstart-card-background">
@@ -36,9 +36,6 @@
                 setTimeout(() => {
                     this.$emit('closeCard');                    
                 }, 50);
-            },
-            afterEnter() {
-                this.isWrapperVisible = true;
             }
         }
     }
@@ -66,16 +63,16 @@
 
         &.fade-enter, &.fade-leave-to {
             backdrop-filter: blur(0px) saturate(1) brightness(1);
-            top: 70%;
-            left: 50%;
-            right: 50%;
-            bottom: 50%;
+            top: 30%;
+            left: 30%;
+            right: 30%;
+            bottom: 30%;
             opacity: 0;
         }
 
         &.fade-leave-to {
-            $card-value-transition-duration: 800ms;
-            transition: all $card-value-transition-duration $value-transition-function, opacity 600ms $value-transition-function, backdrop-filter 200ms $value-transition-function;
+            $card-value-transition-duration: 450ms;
+            transition: all $card-value-transition-duration $value-transition-function, opacity $card-value-transition-duration $value-transition-function, backdrop-filter 250ms $value-transition-function;
         }
 
         .hydstart-card {

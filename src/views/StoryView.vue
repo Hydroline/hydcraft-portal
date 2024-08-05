@@ -1,5 +1,5 @@
 <template>
-    <MainContainer>
+    <MainContainer :background="require('@/assets/images/image_home_background_240730.webp')">
         <div class="hydstart-story">
             
         </div>

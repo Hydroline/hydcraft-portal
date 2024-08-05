@@ -4,16 +4,29 @@
         <main>
             <router-view />
         </main>
-        <PageFooter />
+        <PageFooter :showMain="showMain" />
     </div>
 </template>
 
 <script>
     export default {
         name: 'App',
+        data() {
+            return {
+                showMain: false
+            }
+        },
         components: {
             PageHeader: () => import('./components/PageHeader.vue'),
             PageFooter: () => import('./components/PageFooter.vue')
+        },
+        created() {    
+            this.$eventBus.$on('updateFooter', (data) => {
+                this.showMain = data.showMain;
+            });
+        },
+        beforeDestroy() {
+            this.$eventBus.$off('updateFooter');
         }
     }
 </script>
