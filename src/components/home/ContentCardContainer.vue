@@ -1,27 +1,24 @@
 <template>
-    <transition name="fade">
-        <div class="hydstart-content-card-wrapper" v-if="show">
-            <div class="hydstart-content-card">
-                <div class="hydstart-content-card-background">
-                    <img :src="background" v-if="background" />
-                </div>
-                <div class="hydstart-content-card-foreground">
-                    <div class="hydstart-content-card-foreground-wrapper">
-                        <button class="hydstart-content-card-close" @click="closeCard">
-                            <span class="material-icons">close</span>
-                        </button>
-                        <div class="hydstart-content-card-title">
-                            <slot name="title"></slot>
-                        </div>
-                        <div class="hydstart-content-card-content">
-                            <slot></slot>
-                        </div>
+    <div class="hydstart-content-card-wrapper" v-if="show">
+        <div class="hydstart-content-card">
+            <div class="hydstart-content-card-background">
+                <img :src="background" v-if="background" />
+            </div>
+            <div class="hydstart-content-card-foreground">
+                <div class="hydstart-content-card-foreground-wrapper">
+                    <button class="hydstart-content-card-close" @click="closeCard">
+                        <span class="material-icons">close</span>
+                    </button>
+                    <div class="hydstart-content-card-title">
+                        <slot name="title"></slot>
+                    </div>
+                    <div class="hydstart-content-card-content">
+                        <slot></slot>
                     </div>
                 </div>
             </div>
-            <div class="hydstart-content-card--overlay"></div>
         </div>
-    </transition>
+    </div>
 </template>
 
 <script>
@@ -56,18 +53,6 @@
         flex-direction: column;
         align-items: center;
         transition: all $card-value-transition-duration $value-transition-function;
-
-        &.fade-enter-active, &.fade-leave-active {
-            transition: all $card-value-transition-duration $value-transition-function;
-
-            .hydstart-content-card--overlay {
-                opacity: 0;
-            }
-        }
-
-        &.fade-enter, &.fade-leave-active {
-            opacity: 0;
-        }
 
         .hydstart-content-card {
             display: flex;
@@ -169,18 +154,6 @@
 
         .hydstart-content-card-content {
             flex: 1;
-        }
-
-        .hydstart-content-card--overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 35;
-            background-color: var(--background-light-1);
-            backdrop-filter: blur(16px);
-            transition: all $card-value-transition-duration $value-transition-function;
         }
     }
 </style>

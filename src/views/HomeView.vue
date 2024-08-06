@@ -18,41 +18,43 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="hydstart-home-content-card" v-show="showContentCard">
-                    <ContentCardContainer :show="showCards.culture.show" @closeCard="closeCard('content-card', 'culture')">
-                        <template v-slot:title>
-                            Culture
-                        </template>
-                        <div class="hydstart-content-card-container">
-                            Test
-                        </div>
-                    </ContentCardContainer>
-                    <ContentCardContainer :show="showCards.cities.show" @closeCard="closeCard('content-card', 'cities')">
-                        <template v-slot:title>
-                            Cities
-                        </template>
-                        <div class="hydstart-content-card-container">
-                            Test
-                        </div>
-                    </ContentCardContainer>
-                    <ContentCardContainer :show="showCards.railway.show" @closeCard="closeCard('content-card', 'railway')">
-                        <template v-slot:title>
-                            Railway
-                        </template>
-                        <div class="hydstart-content-card-container">
-                            Test
-                        </div>
-                    </ContentCardContainer>
-                    <ContentCardContainer :show="showCards.player.show" @closeCard="closeCard('content-card', 'player')">
-                        <template v-slot:title>
-                            Player
-                        </template>
-                        <div class="hydstart-content-card-container">
-                            Test
-                        </div>
-                    </ContentCardContainer>
-                </div>
+                
+                <transition name="fade">
+                    <div class="hydstart-home-content-card" v-show="showContentCard">
+                        <ContentCardContainer :show="showCards.culture.show" @closeCard="closeCard('content-card', 'culture')">
+                            <template v-slot:title>
+                                Culture
+                            </template>
+                            <div class="hydstart-content-card-container">
+                                Test
+                            </div>
+                        </ContentCardContainer>
+                        <ContentCardContainer :show="showCards.cities.show" @closeCard="closeCard('content-card', 'cities')">
+                            <template v-slot:title>
+                                Cities
+                            </template>
+                            <div class="hydstart-content-card-container">
+                                Test
+                            </div>
+                        </ContentCardContainer>
+                        <ContentCardContainer :show="showCards.railway.show" @closeCard="closeCard('content-card', 'railway')">
+                            <template v-slot:title>
+                                Railway
+                            </template>
+                            <div class="hydstart-content-card-container">
+                                Test
+                            </div>
+                        </ContentCardContainer>
+                        <ContentCardContainer :show="showCards.player.show" @closeCard="closeCard('content-card', 'player')">
+                            <template v-slot:title>
+                                Player
+                            </template>
+                            <div class="hydstart-content-card-container">
+                                Test
+                            </div>
+                        </ContentCardContainer>
+                    </div>
+                </transition>
             </div>
 
             <div class="hydstart-home-info">
@@ -222,9 +224,10 @@
         methods: {
             executeDialog(data) {
                 setTimeout(() => {
-                    this.resetShows([data.index]);
+                    this.resetShows();
 
                     if (data.type === 'card') {
+                        this.showContentCard = false;
                         switch(data.index) {
                             case 'helium':
                                 this.showCards.world.helium.show = true;
@@ -259,7 +262,7 @@
                 }, 120);
             },
             closeCard(type, index) {
-                this.resetShows([index]);
+                this.resetShows();
 
                 if (type === 'content-card')
                     this.showContentCard = false;
@@ -287,18 +290,12 @@
                         return;
                 }
             },
-            resetShows(keepShow = [], obj = this.showCards) {
+            resetShows(obj = this.showCards) {
                 Object.keys(obj).forEach(key => {
                     if (typeof obj[key] === 'object' && obj[key] !== null) {
-                        if (key === 'world') {
-                            this.resetShows(keepShow, obj[key]);
-                        } else if (!keepShow.includes(key)) {
-                            this.resetShows(keepShow, obj[key]);
-                        }
+                        this.resetShows(obj[key]);
                     } else if (key === 'show' && obj[key] === true) {
-                        if (!keepShow.includes(key) && !(keepShow.includes('helium') && key === 'helium') && !(keepShow.includes('nitrogen') && key === 'nitrogen')) {
-                            obj[key] = false;
-                        }
+                        obj[key] = false;
                     }
                 });
             },
@@ -461,6 +458,35 @@
         .hydstart-home {
             width: 100%;
             margin: auto;
+
+            .hydstart-home-content-card {
+                $card-value-transition-duration: 300ms;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 35;
+                    background-color: var(--background-light-1);
+                    backdrop-filter: blur(16px);
+                    transition: all $card-value-transition-duration $value-transition-function;
+                }
+
+                &.fade-enter-active, &.fade-leave-active {
+                    transition: all $card-value-transition-duration $value-transition-function;
+
+                    &::before {
+                        opacity: 0;
+                    }
+                }
+
+                &.fade-enter, &.fade-leave-active {
+                    opacity: 0;
+                }
+            }
         }
 
         .hydstart-home-info {
