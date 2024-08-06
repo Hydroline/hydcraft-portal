@@ -56,7 +56,7 @@
 
         .hydstart-content-card {
             display: flex;
-            width: 750px;
+            width: 800px;
             min-height: 40vh;
             padding: 24px;
             border-radius: 24px;
@@ -130,7 +130,7 @@
                     &::after {
                         $subbutton-icons-offset-value: 4px;
                         content: '';
-                        background-color: var(--background-dark-1);
+                        background-color: var(--background-dark-0);
                         border-radius: 50%;
                         backdrop-filter: blur(8px) saturate(1.25);
                         position: absolute;

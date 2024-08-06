@@ -1,2 +1,2 @@
 # HydCraft Startpage
-Running on [HydCraft Startpage](https://www.hydcraft.cn/). Designing QwQ
+跑在 HydCraft 主站的项目（[HydCraft Startpage](https://www.hydcraft.cn/)）。还在慢慢写呵呵。

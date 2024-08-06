@@ -1,0 +1,37 @@
+@import '@/assets/styles/global.scss';
+
+.hydstart-content-card-container {
+    .hydstart-content-card-list {
+        display: grid;
+        grid-auto-flow: column;
+        grid-gap: 10px;
+        overflow-x: auto;
+
+        .hydstart-content-card-list__item {
+            min-width: 320px;
+            height: 100%;
+            background: var(--background-light-1);
+            position: relative;
+            overflow: hidden;
+
+            .hydstart-content-card-list__background {
+                img {
+                    display: block;
+                    object-fit: cover;
+                }
+            }
+
+            .hydstart-content-card-list__foreground {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+
+                .hydstart-content-card-list__wrapper {
+                    margin-top: auto;
+                }
+            }
+        }
+    }
+}

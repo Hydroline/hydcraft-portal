@@ -26,7 +26,20 @@
                                 Culture
                             </template>
                             <div class="hydstart-content-card-container">
-                                Test
+                                <div class="hydstart-content-card-list">
+                                    <div class="hydstart-content-card-list__item" v-for="(data, index) in showCards.culture.content" :key="index">
+                                        <div class="hydstart-content-card-list__background">
+                                            <img :src="data.background" v-if="data.background">
+                                        </div>
+                                        <div class="hydstart-content-card-list__foreground">
+                                            <div class="hydstart-content-card-list__wrapper">
+                                                <div class="hydstart-content-card-list__title">{{ data.title }}</div>
+                                                <div class="hydstart-content-card-list__subtitle">{{ data.subtitle }}</div>
+                                                <div class="hydstart-content-card-list__desc">{{ data.description }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </ContentCardContainer>
                         <ContentCardContainer :show="showCards.cities.show" @closeCard="closeCard('content-card', 'cities')">
@@ -175,16 +188,39 @@
                         }
                     },
                     culture: {
-                        show: false
+                        show: false,
+                        content: [
+                            {
+                                title: 'OMEC',
+                                subtitle: '加入光荣的OMEC吧宝宝。',
+                                description: 'OMEC（Oxygen Minecraft Entertainment Competition，氧气游戏竞赛）是由 Oxygen 团队负责的游戏竞赛，由氢运会转隶而成。2024年8月举办了第一届 OMEC，即 OMEC 2024。',
+                                background: '/assets/images/home/image_card_background_culture_1.png'
+                            },
+                            {
+                                title: 'OMEC',
+                                subtitle: '加入光荣的OMEC吧宝宝。',
+                                description: 'OMEC（Oxygen Minecraft Entertainment Competition，氧气游戏竞赛）是由 Oxygen 团队负责的游戏竞赛，由氢运会转隶而成。2024年8月举办了第一届 OMEC，即 OMEC 2024。',
+                                background: '/assets/images/home/image_card_background_culture_1.png'
+                            }
+                        ]
                     },
                     cities: {
-                        show: false
+                        show: false,
+                        content: {
+
+                        }
                     },
                     railway: {
-                        show: false
+                        show: false,
+                        content: {
+
+                        }
                     },
                     player: {
-                        show: false
+                        show: false,
+                        content: {
+
+                        }
                     }
                 },
                 serverStatus: {
@@ -329,120 +365,8 @@
 </script>
 
 <style lang="scss" scoped>
-    .hydstart-home-dialog {
-        .hydstart-card-world-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            .hydstart-card-world-header__status {
-                $card-world-header-value-status: 14px;
-                width: $card-world-header-value-status;
-                height: $card-world-header-value-status;
-                background-color: var(--home-background-status-unknown);
-                border-radius: 50%;
-            }
-
-            .hydstart-card-world-header__title {
-                display: flex;
-                align-items: baseline;
-                gap: 12px;
-                font-size: 28px;
-                font-weight: 600;
-            }
-
-            .hydstart-card-world-header__codename {
-                color: var(--color-text--weaken);
-                font-size: 22px;
-                font-family: 'Site Wordmark Font';
-                font-weight: normal;
-            }
-        }
-
-        .hydstart-card-world-container {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
-
-            .hydstart-card-world-overview-wrapper {
-                display: flex;
-                gap: 3rem;
-                flex-wrap: wrap;
-
-                .hydstart-card-world-overview {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 4px;
-
-                    &.hydstart-card-world-overview--related {
-                        flex: 1;
-
-                        .hydstart-card-world-value {
-                            height: 100%;
-                            display: flex;
-                            align-items: center;
-                            row-gap: 9px;
-                            column-gap: 12px;
-                            flex-wrap: wrap;
-
-                            a {
-                                color: var(--color-text);
-                                transition: opacity 250ms ease;
-
-                                &:hover {
-                                    opacity: 0.6;
-                                }
-
-                                &::before {
-                                    content: '#';
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            .hydstart-card-world-map {
-                display: flex;
-                flex-direction: column;
-                height: 100%;
-            }
-
-            .hydstart-card-world-label {
-                display: flex;
-                align-items: center;
-                gap: 2px;
-                color: var(--color-text--subtle);
-                font-size: 16px;
-                padding: 2px 4px;
-
-                .material-icons-outlined {
-                    display: block;
-                    font-size: 16px;
-                }
-            }
-
-            .hydstart-card-world-value {
-                font-size: 54px;
-                line-height: 1;
-
-                .weaken {
-                    font-size: 28px;
-                }
-            }
-
-            iframe {
-                width: 100%;
-                height: 100%;
-                min-height: 300px;
-                margin-top: 4px;
-                border-radius: 12px;
-                background-color: var(--color-surface-3);
-                user-select: none;
-            }
-        }
-    }
+    @import '@/assets/styles/home/card.scss';
+    @import '@/assets/styles/home/content_card.scss';
 </style>
 
 <style lang="scss" scoped>
@@ -459,6 +383,12 @@
             width: 100%;
             margin: auto;
 
+            .hydstart-home-main {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
             .hydstart-home-content-card {
                 $card-value-transition-duration: 300ms;
 
@@ -471,7 +401,7 @@
                     bottom: 0;
                     z-index: 35;
                     background-color: var(--background-light-1);
-                    backdrop-filter: blur(16px);
+                    backdrop-filter: blur(48px);
                     transition: all $card-value-transition-duration $value-transition-function;
                 }
 
@@ -532,6 +462,7 @@
         flex-wrap: wrap;
         row-gap: 8px;
         column-gap: 12px;
+        width: 550px;
         margin-top: $page-home-gap-value;
 
         .hydstart-home-button {
