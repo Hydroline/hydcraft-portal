@@ -29,7 +29,7 @@
                                 <div class="hydstart-content-card-list">
                                     <div class="hydstart-content-card-list__item" v-for="(data, index) in showCards.culture.content" :key="index">
                                         <div class="hydstart-content-card-list__background">
-                                            <img :src="data.background" v-if="data.background">
+                                            <img :src="require('@/assets/' + data.background)" v-if="data.background">
                                         </div>
                                         <div class="hydstart-content-card-list__foreground">
                                             <div class="hydstart-content-card-list__wrapper">
@@ -194,13 +194,13 @@
                                 title: 'OMEC',
                                 subtitle: '加入光荣的OMEC吧宝宝。',
                                 description: 'OMEC（Oxygen Minecraft Entertainment Competition，氧气游戏竞赛）是由 Oxygen 团队负责的游戏竞赛，由氢运会转隶而成。2024年8月举办了第一届 OMEC，即 OMEC 2024。',
-                                background: '/assets/images/home/image_card_background_culture_1.png'
+                                background: 'images/home/image_card_background_culture_1.png'
                             },
                             {
                                 title: 'OMEC',
                                 subtitle: '加入光荣的OMEC吧宝宝。',
                                 description: 'OMEC（Oxygen Minecraft Entertainment Competition，氧气游戏竞赛）是由 Oxygen 团队负责的游戏竞赛，由氢运会转隶而成。2024年8月举办了第一届 OMEC，即 OMEC 2024。',
-                                background: '/assets/images/home/image_card_background_culture_1.png'
+                                background: 'images/home/image_card_background_culture_1.png'
                             }
                         ]
                     },
