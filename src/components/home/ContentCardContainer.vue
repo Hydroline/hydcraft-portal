@@ -88,6 +88,7 @@
                     position: absolute;
                     top: $foreground-value-padding * 0.75;
                     right: $foreground-value-padding * 0.75;
+                    z-index: 40;
                     padding: 0;
                     border: none;
                     outline: none;
