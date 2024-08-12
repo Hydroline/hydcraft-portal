@@ -38,19 +38,21 @@
 
         .hydstart-content-card-list {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-flow: column;
             grid-gap: 10px;
             height: 100%;
             padding: 3px;
             overflow-x: auto;
-            filter: drop-shadow(0 2px 12px var(--background-dark-0));
 
             .hydstart-content-card-list__item {
                 $content-card-value-transition-duration: 500ms;
-                height: 290px;
+                width: 230px;
+                height: 100%;
                 background: var(--background-light-3);
                 position: relative;
                 overflow: hidden;
+                margin: auto;
                 border-radius: 16px;
                 outline: 1.5px solid transparent;
                 cursor: pointer;
@@ -94,18 +96,17 @@
                     .hydstart-content-card-list__desc {
                         display: -webkit-box;
                         -webkit-box-orient: vertical;
-                        -webkit-line-clamp: 3;
-                        font-size: 16px;
+                        -webkit-line-clamp: 4;
+                        font-size: 14px;
                         overflow: hidden;
                         text-overflow: ellipsis;
-                        // text-align: justify;
                     }
 
                     .hydstart-content-card-list__link {
                         position: absolute;
                         right: 0;
                         top: 0;
-                        display: inline-block;
+                        display: block;
                         font-size: 12px;
                         text-align: right;
                         padding: 6px 10px;

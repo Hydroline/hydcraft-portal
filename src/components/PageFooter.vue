@@ -48,6 +48,7 @@
         color: var(--color-surface-4);
         font-size: 12px;
         margin: auto $footer-value-margin 0.75rem $footer-value-margin;
+        transition: color 250ms $value-transition-function;
 
         &.main {
             color: var(--color-surface-1);
@@ -75,7 +76,6 @@
 
     a {
         color: inherit;
-        transition: color 250ms $value-transition-function;
 
         &:hover {
             color: var(--color-primary);

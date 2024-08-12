@@ -89,6 +89,7 @@
             return {
                 showContentCard: false,
                 showCards: {
+                    /* 测试数据 */
                     world: {
                         helium: {
                             show: false,
@@ -113,25 +114,82 @@
                                 description: 'OMEC（Oxygen Minecraft Entertainment Competition，氧气游戏竞赛）是由 Oxygen 团队负责的游戏竞赛，由氢运会转隶而成。2024年8月举办了第一届 OMEC，即 OMEC 2024。',
                                 background: 'images/home/image_card_background_culture_1.png',
                                 link: 'https://wiki.hydcraft.cn/HCTV'
+                            },
+                            {
+                                title: 'HCTV',
+                                description: 'OMEC（Oxygen Minecraft Entertainment Competition，氧气游戏竞赛）是由 Oxygen 团队负责的游戏竞赛，由氢运会转隶而成。2024年8月举办了第一届 OMEC，即 OMEC 2024。',
+                                background: 'images/home/image_card_background_culture_1.png',
+                                link: 'https://wiki.hydcraft.cn/HCTV'
                             }
                         ]
                     },
                     cities: {
                         show: false,
                         content: [
-
+                        {
+                                title: 'OMEC',
+                                description: 'OMEC（Oxygen Minecraft Entertainment Competition，氧气游戏竞赛）是由 Oxygen 团队负责的游戏竞赛，由氢运会转隶而成。2024年8月举办了第一届 OMEC，即 OMEC 2024。',
+                                background: 'images/home/image_card_background_culture_1.png',
+                                link: 'https://wiki.hydcraft.cn/氧气工作室'
+                            },
+                            {
+                                title: 'HCTV',
+                                description: 'OMEC（Oxygen Minecraft Entertainment Competition，氧气游戏竞赛）是由 Oxygen 团队负责的游戏竞赛，由氢运会转隶而成。2024年8月举办了第一届 OMEC，即 OMEC 2024。',
+                                background: 'images/home/image_card_background_culture_1.png',
+                                link: 'https://wiki.hydcraft.cn/HCTV'
+                            },
+                            {
+                                title: 'HCTV',
+                                description: 'OMEC（Oxygen Minecraft Entertainment Competition，氧气游戏竞赛）是由 Oxygen 团队负责的游戏竞赛，由氢运会转隶而成。2024年8月举办了第一届 OMEC，即 OMEC 2024。',
+                                background: 'images/home/image_card_background_culture_1.png',
+                                link: 'https://wiki.hydcraft.cn/HCTV'
+                            }
                         ]
                     },
                     railway: {
                         show: false,
                         content: [
-                            
+                        {
+                                title: 'OMEC',
+                                description: 'OMEC（Oxygen Minecraft Entertainment Competition，氧气游戏竞赛）是由 Oxygen 团队负责的游戏竞赛，由氢运会转隶而成。2024年8月举办了第一届 OMEC，即 OMEC 2024。',
+                                background: 'images/home/image_card_background_culture_1.png',
+                                link: 'https://wiki.hydcraft.cn/氧气工作室'
+                            },
+                            {
+                                title: 'HCTV',
+                                description: 'OMEC（Oxygen Minecraft Entertainment Competition，氧气游戏竞赛）是由 Oxygen 团队负责的游戏竞赛，由氢运会转隶而成。2024年8月举办了第一届 OMEC，即 OMEC 2024。',
+                                background: 'images/home/image_card_background_culture_1.png',
+                                link: 'https://wiki.hydcraft.cn/HCTV'
+                            },
+                            {
+                                title: 'HCTV',
+                                description: 'OMEC（Oxygen Minecraft Entertainment Competition，氧气游戏竞赛）是由 Oxygen 团队负责的游戏竞赛，由氢运会转隶而成。2024年8月举办了第一届 OMEC，即 OMEC 2024。',
+                                background: 'images/home/image_card_background_culture_1.png',
+                                link: 'https://wiki.hydcraft.cn/HCTV'
+                            }
                         ]
                     },
                     player: {
                         show: false,
                         content: [
-                            
+                        {
+                                title: 'OMEC',
+                                description: 'OMEC（Oxygen Minecraft Entertainment Competition，氧气游戏竞赛）是由 Oxygen 团队负责的游戏竞赛，由氢运会转隶而成。2024年8月举办了第一届 OMEC，即 OMEC 2024。',
+                                background: 'images/home/image_card_background_culture_1.png',
+                                link: 'https://wiki.hydcraft.cn/氧气工作室'
+                            },
+                            {
+                                title: 'HCTV',
+                                description: 'OMEC（Oxygen Minecraft Entertainment Competition，氧气游戏竞赛）是由 Oxygen 团队负责的游戏竞赛，由氢运会转隶而成。2024年8月举办了第一届 OMEC，即 OMEC 2024。',
+                                background: 'images/home/image_card_background_culture_1.png',
+                                link: 'https://wiki.hydcraft.cn/HCTV'
+                            },
+                            {
+                                title: 'HCTV',
+                                description: 'OMEC（Oxygen Minecraft Entertainment Competition，氧气游戏竞赛）是由 Oxygen 团队负责的游戏竞赛，由氢运会转隶而成。2024年8月举办了第一届 OMEC，即 OMEC 2024。',
+                                background: 'images/home/image_card_background_culture_1.png',
+                                link: 'https://wiki.hydcraft.cn/HCTV'
+                            }
                         ]
                     }
                 },
@@ -174,6 +232,9 @@
             ContentCardTemplate: () => import('@/components/home/ContentCardTemplate.vue')
         },
         methods: {
+            fetchData() {
+
+            },
             executeDialog(data) {
                 setTimeout(() => {
                     this.resetShows();
@@ -270,6 +331,7 @@
         },
         mounted() {
             this.$eventBus.$emit('updateFooter', { showMain: true });
+            this.fetchData();
         }
     }
 </script>

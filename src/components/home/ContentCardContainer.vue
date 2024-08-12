@@ -57,7 +57,7 @@
         .hydstart-content-card {
             display: flex;
             width: 800px;
-            min-height: 40vh;
+            min-height: 45vh;
             padding: 24px;
             border-radius: 24px;
             overflow: hidden;
@@ -155,6 +155,7 @@
 
         .hydstart-content-card-content {
             flex: 1;
+            filter: drop-shadow(0 2px 12px var(--background-dark-0));
         }
     }
 </style>
