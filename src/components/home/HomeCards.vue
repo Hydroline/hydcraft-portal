@@ -163,11 +163,10 @@
         position: relative;
         z-index: 60;
         transform-origin: bottom center;
-        transition: transform $card-value-transition-duration $value-transition-function, filter $card-value-transition-duration $value-transition-function;
+        transition: transform $card-value-transition-duration $value-transition-function;
 
         &.active {
             transform: scale(0.8);
-            filter: opacity(0.75);
 
             .hydstart-home-card {
                 background-color: var(--background-color-primary--active);

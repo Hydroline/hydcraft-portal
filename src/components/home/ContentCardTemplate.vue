@@ -1,14 +1,14 @@
 <template>
     <div class="hydstart-content-card-container">
         <div class="hydstart-content-card-list" v-if="data.length > 0">
-            <div class="hydstart-content-card-list__item" v-for="(data, index) in data" :key="index">
+            <div class="hydstart-content-card-list__item" :class="{ expand: expandCardContent[index] }" v-for="(data, index) in data" :key="index" :data-index="index">
                 <div class="hydstart-content-card-list__background">
                     <img :src="require('@/assets/' + data.background)" v-if="data.background">
                 </div>
                 <div class="hydstart-content-card-list__foreground">
                     <div class="hydstart-content-card-list__wrapper">
                         <div class="hydstart-content-card-list__title">{{ data.title }}</div>
-                        <div class="hydstart-content-card-list__desc">{{ data.description }}</div>
+                        <div class="hydstart-content-card-list__desc" @click="expandCard(index)">{{ data.description }}</div>
                         <a :href="data.link" class="hydstart-content-card-list__link">查看详情</a>
                     </div>
                 </div>
@@ -21,10 +21,20 @@
 <script>
     export default {
         name: 'ContentCardTemplate',
+        data() {
+            return {
+                expandCardContent: []
+            }
+        },
         props: {
             data: {
                 type: Array,
                 require: true
+            }
+        },
+        methods: {
+            expandCard(index) {
+                this.$set(this.expandCardContent, index, !this.expandCardContent[index]);
             }
         }
     }
@@ -88,9 +98,13 @@
                     }
 
                     .hydstart-content-card-list__title {
-                        margin-top: auto;
-                        font-size: 24px;
+                        display: flex;
+                        align-items: flex-end;
+                        flex: 1;
+                        font-size: 26px;
                         font-weight: bold;
+                        margin-bottom: 4px;
+                        transition: flex $content-card-value-transition-duration $value-transition-function;
                     }
 
                     .hydstart-content-card-list__desc {
@@ -100,6 +114,11 @@
                         font-size: 14px;
                         overflow: hidden;
                         text-overflow: ellipsis;
+                        transition: color ($content-card-value-transition-duration - 100ms) $value-transition-function;
+
+                        &:hover {
+                            color: var(--color-primary);
+                        }
                     }
 
                     .hydstart-content-card-list__link {
@@ -111,12 +130,29 @@
                         text-align: right;
                         padding: 6px 10px;
                         border-radius: 16px;
-                        background-color: var(--background-light-4);
+                        background-color: var(--background-color-primary--hover);
+                        box-shadow: 0 1px 2px var(--background-dark-0);
                         transition: background-color 300ms $value-transition-function;
 
                         &:hover {
-                            background-color: var(--background-dark-0);
+                            background-color: var(--background-color-primary--active);
                         }
+                    }
+                }
+
+                &.expand {
+                    .hydstart-content-card-list__foreground {
+                        backdrop-filter: blur(16px) saturate(0.75);
+                    }
+
+                    .hydstart-content-card-list__title {
+                        flex: 0;
+                    }
+
+                    .hydstart-content-card-list__desc {
+                        -webkit-line-clamp: unset;
+                        -webkit-box-orient: unset;
+                        overflow: auto;
                     }
                 }
 

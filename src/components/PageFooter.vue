@@ -39,6 +39,7 @@
     @import '@/assets/styles/global.scss';
 
     footer {
+        $footer-value-transition-duration: 250ms;
         $footer-value-margin: 10rem;
         position: fixed;
         left: 0;
@@ -48,7 +49,7 @@
         color: var(--color-surface-4);
         font-size: 12px;
         margin: auto $footer-value-margin 0.75rem $footer-value-margin;
-        transition: color 250ms $value-transition-function;
+        transition: color $footer-value-transition-duration $value-transition-function, text-shadow $footer-value-transition-duration $value-transition-function;
 
         &.main {
             color: var(--color-surface-1);
