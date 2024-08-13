@@ -83,6 +83,9 @@
 </template>
 
 <script>
+    // eslint-disable-next-line
+    import { get, post } from '@/api/api.js';
+
     export default {
         name: 'HomeView',
         data() {
@@ -233,7 +236,7 @@
         },
         methods: {
             fetchData() {
-
+                // 等后端设计完
             },
             executeDialog(data) {
                 setTimeout(() => {
