@@ -13,3 +13,26 @@
 * 2024.7.18 立项
 * 2024.7.19 画设计图
 * 2024.7.28 开始实现（Vue 2 + 不使用任何 UI 库）
+
+## TODO List
+- Home
+    - [x] World Card
+    - [x] Content Card
+- Story
+    - [ ] Story Page
+    - [ ] Story Content
+- Overview
+    - [ ] Typesetting
+- About
+    - [ ] Info
+- Some component
+    - Sidebar
+        - [ ] Card
+        - [ ] Menu
+        - [ ] Questions
+        - [ ] Dashboard
+        - [ ] Comment
+    - Join
+        - [ ] Invite Card
+    - API
+        - [ ] HydCraft API Sync
