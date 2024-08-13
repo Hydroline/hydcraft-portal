@@ -1,15 +1,15 @@
 <template>
     <div class="hydstart-card-world-container">
         <div class="hydstart-card-world-overview-wrapper">
+            <div class="hydstart-card-world-overview hydstart-card-world-overview--status">
+                <div class="hydstart-card-world-label">运行状态</div>
+                <div class="hydstart-card-world-value">{{ serverStatus.status === 3 ? '正常' : '异常' }}</div>
+            </div>
             <div class="hydstart-card-world-overview hydstart-card-world-overview--online">
                 <div class="hydstart-card-world-label">在线人数<span class="material-icons-outlined">info</span></div>
                 <div class="hydstart-card-world-value">
                     {{serverStatus.online}}<span class="weaken"> / {{ serverStatus.max }}</span>
                 </div>
-            </div>
-            <div class="hydstart-card-world-overview hydstart-card-world-overview--status">
-                <div class="hydstart-card-world-label">运行状态</div>
-                <div class="hydstart-card-world-value">{{ serverStatus.status === 3 ? '正常' : '异常' }}</div>
             </div>
             <div class="hydstart-card-world-overview hydstart-card-world-overview--days">
                 <div class="hydstart-card-world-label">运行天数<span class="material-icons-outlined">info</span></div>
