@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        <div class="hydstart-home-card hydstart-home-card-culture player" @click="changeSkinViewer">
+        <div class="hydstart-home-card hydstart-home-card-culture player" @click="loadSkinViewer">
             <div class="hydstart-home-card__background">
                 <canvas id="skin-container"></canvas>
             </div>
@@ -89,10 +89,17 @@
                 skinListDuration: 8000
             };
         },
-        methods: {
-            fetchData() {
-
+        props: {
+            active: {
+                type: Boolean,
+                default: false
             },
+            showCards: {
+                type: Object,
+                require: true
+            }
+        },
+        methods: {
             initSkinViewer() {
                 this.skinViewer = new SkinViewer({
                     canvas: document.getElementById("skin-container"),
@@ -123,19 +130,17 @@
                 this.skinListCurrentIndex = (this.skinListCurrentIndex + 1) % this.skinList.length;
                 this.skinViewer.loadSkin(this.skinBaseApi + this.skinList[this.skinListCurrentIndex]);
                 this.autoChangeSkinViewer();
-                this.showCard('content-card', 'player');
             },
             showCard(type, index) {
                 this.$emit('dialog', {
                     type: type,
                     index: index
                 });
-            }
-        },
-        props: {
-            active: {
-                type: Boolean,
-                default: false
+            },
+            loadSkinViewer() {
+                this.showCard('content-card', 'player');
+                if (this.showCards.player.show)
+                    this.changeSkinViewer();
             }
         },
         mounted() {

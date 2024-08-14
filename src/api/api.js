@@ -15,12 +15,12 @@ export const get = (url, params) => {
 
 export const post = (url, data) => {
     return apiClient.post(url, data);
-};
+}
 
 export const put = (url, data) => {
     return apiClient.put(url, data);
-};
+}
 
 export const del = (url, params) => {
     return apiClient.delete(url, { params });
-};
+}

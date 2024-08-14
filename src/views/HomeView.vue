@@ -41,7 +41,7 @@
             </div>
 
             <div class="hydstart-home-info">
-                <HomeCards @dialog="executeDialog" :active="showContentCard" />
+                <HomeCards @dialog="executeDialog" :active="showContentCard" :showCards="showCards" />
 
                 <div class="hydstart-home-belong">
                     隶属于
