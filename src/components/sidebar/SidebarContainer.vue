@@ -9,7 +9,3 @@
         name: 'SidebarContainer'
     }
 </script>
-
-<style lang="scss" scoped>
-
-</style>
