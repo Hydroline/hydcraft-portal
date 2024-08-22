@@ -1,12 +1,18 @@
 <template>
     <div class="hydstart-sidebar-container">
-        <slot></slot>
+        
     </div>
 </template>
 
 <script>
+    /* eslint-disable */
     export default {
-        name: 'SidebarContainer'
+        name: 'SidebarTemplate',
+        methods: {
+            toggleMenu(tag) {
+                // 等 DOM
+            }
+        }
     }
 </script>
 

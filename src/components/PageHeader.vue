@@ -35,6 +35,8 @@
                 <li class="hydstart-header-link__more">
                     <span class="material-icons">more_vert</span>
                 </li>
+
+                <SidebarTemplate ref="sidebar"/>
             </ul>
         </div>
     </header>
@@ -43,6 +45,14 @@
 <script>
     export default {
         name: "PageHeader",
+        components: {
+            SidebarTemplate: () => import('@/components/sidebar/SidebarTemplate.vue')
+        },
+        methods: {
+            toggleMenu(tag) {
+                this.$refs.sidebar.toggleMenu(tag);
+            }
+        }
     };
 </script>
 
@@ -159,6 +169,7 @@
 
     .hydstart-header-link {
         justify-content: flex-end;
+        position: relative;
         
         [class^="hydstart-header-link__"] {
             display: block;
