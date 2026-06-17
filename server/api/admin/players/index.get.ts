@@ -14,9 +14,9 @@ export default defineEventHandler(async (event) => {
 		page,
 		pageSize,
 		search: getOptionalQueryString(query.search),
-		status: getOptionalQueryString(query.status),
-		source: getOptionalQueryString(query.source),
 		linked: getOptionalQueryString(query.linked),
+		group: getOptionalQueryString(query.group),
+		totp: getOptionalQueryString(query.totp),
 		sortField: getOptionalQueryString(query.sortField),
 		sortDirection: getSortDirection(query.sortDirection),
 	})
