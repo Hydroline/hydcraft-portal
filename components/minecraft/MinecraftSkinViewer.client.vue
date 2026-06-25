@@ -47,6 +47,9 @@ const createViewer = async () => {
 		skin: props.skinUrl,
 	})
 	viewer.controls.enabled = false
+	viewer.controls.enableRotate = false
+	viewer.controls.enableZoom = false
+	viewer.controls.enablePan = false
 	viewer.autoRotate = true
 	viewer.autoRotateSpeed = 1
 	viewer.animation = new IdleAnimation()
