@@ -1,5 +1,6 @@
 {
 	"oauthConsent": {
+		"pageTitle": "Authorize third-party app",
 		"title": "Authorize Hydroline ID",
 		"description": "{client} is requesting access to your Hydroline ID information.",
 		"approve": "Allow",
@@ -8,6 +9,9 @@
 			"openid": "Confirm your Hydroline ID identity",
 			"profile": "Read your public profile information",
 			"email": "Read your email address and verification status",
+			"directory": {
+				"read": "Read directory information"
+			},
 			"hydroline": "Read your Hydroline ID"
 		}
 	}

@@ -20,7 +20,11 @@
 						variant="outline"
 					/>
 				</label>
-				<CapWidget ref="captchaWidgetRef" v-model="captcha.token.value" />
+				<TurnstileWidget
+					ref="captchaWidgetRef"
+					v-model="captcha.token.value"
+					:action="TURNSTILE_ACTIONS.EMAIL_CODE"
+				/>
 			</div>
 			<div v-else key="code" class="overflow-hidden">
 				<div class="space-y-2">
@@ -92,7 +96,11 @@
 </template>
 
 <script setup lang="ts">
-import { normalizePortalRedirectPath } from '~/utils/auth/redirect'
+import { TURNSTILE_ACTIONS } from '~/utils/security/turnstile-actions'
+import {
+	normalizePortalRedirectPath,
+	requiresDocumentNavigation,
+} from '~/utils/auth/redirect'
 
 interface EmailCodeLoginFormProps {
 	intent?: 'LOGIN' | 'REGISTER'
@@ -116,7 +124,7 @@ const submitting = ref(false)
 const resendCountdown = ref(0)
 let resendTimer: number | null = null
 const step = ref<'email' | 'code'>('email')
-const captcha = useCap(true)
+const captcha = useTurnstile(true)
 const captchaWidgetRef = ref<{ reset: () => void } | null>(null)
 const form = reactive<EmailCodeLoginFormState>({
 	email: '',
@@ -156,6 +164,17 @@ const getRedirectPath = (): string =>
 			props.intent === 'REGISTER' ? localePath('/me/profile') : localePath('/'),
 		loginPath: localePath('/login'),
 	})
+
+const continueAfterAuthentication = async (): Promise<void> => {
+	const target = getRedirectPath()
+
+	if (requiresDocumentNavigation(target)) {
+		window.location.assign(target)
+		return
+	}
+
+	await navigateTo(target)
+}
 
 const resetCaptcha = (): void => {
 	captcha.reset(true)
@@ -264,7 +283,7 @@ const confirmCode = async (): Promise<void> => {
 					? t('emailCodeLogin.notifications.registerSuccessTitle')
 					: t('emailCodeLogin.notifications.successTitle'),
 		})
-		await navigateTo(getRedirectPath())
+		await continueAfterAuthentication()
 	} catch (error) {
 		notifyError(error, {
 			title: t('emailCodeLogin.notifications.failedTitle'),

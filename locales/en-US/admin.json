@@ -59,7 +59,7 @@
 					"description": "Enabled {enabled} / configured {configured}"
 				},
 				"portalBridge": {
-					"label": "PortalBridge",
+					"label": "Portal Bridge",
 					"description": "Enabled {enabled} / configured {configured}"
 				}
 			},
@@ -312,7 +312,7 @@
 			},
 			"sections": {
 				"onlinePlayers": "Online players",
-				"portalBridge": "PortalBridge",
+				"portalBridge": "Portal Bridge",
 				"archiveStatus": "Archive status",
 				"serverInfo": "Server info",
 				"dataSources": "Data sources",
@@ -630,7 +630,8 @@
 			},
 			"actions": {
 				"assign": "Assign",
-				"unassign": "Unassign"
+				"unassign": "Unassign",
+				"create": "Add historical player"
 			},
 			"empty": {
 				"unassigned": "Unassigned"
@@ -640,11 +641,23 @@
 				"description": "Enter the Hydroline username to bind.",
 				"username": "Hydroline username"
 			},
+			"createModal": {
+				"title": "Add historical player",
+				"description": "Enter a Minecraft ID to create its historical archive using the offline UUID rule and include matching server data automatically.",
+				"usernamePlaceholder": "Enter Minecraft ID",
+				"waiting": "Enter a Minecraft ID to calculate automatically",
+				"calculating": "Calculating…",
+				"invalidUsername": "Use 3 to 16 letters, numbers, or underscores.",
+				"confirm": "Create historical archive"
+			},
 			"notifications": {
 				"assigned": "Historical archive assigned",
 				"assignFailed": "Failed to assign historical archive",
 				"unassigned": "Historical archive unassigned",
-				"unassignFailed": "Failed to unassign historical archive"
+				"unassignFailed": "Failed to unassign historical archive",
+				"created": "Historical archive created: {uuid}",
+				"existing": "Historical archive already exists: {uuid}",
+				"createFailed": "Failed to create historical archive"
 			}
 		},
 		"users": {
@@ -662,7 +675,8 @@
 				"preferences": "Preferences",
 				"social": "Social Links",
 				"privacy": "Visibility",
-				"achievements": "Achievements and verification"
+				"achievements": "Achievements and verification",
+				"builderRank": "Builder rank"
 			},
 			"fields": {
 				"user": "User",
@@ -938,11 +952,11 @@
 			"sections": {
 				"basic": "Server Basic Info",
 				"basicDescription": "Define the server identity, display names, and access mode.",
-				"mapConfig": "Map configuration",
-				"mapConfigDescription": "Control whether this server exposes map support and whether map tiles are available.",
+				"blueMapConfig": "BlueMap configuration",
+				"blueMapConfigDescription": "Configure the BlueMap asset root for this server.",
 				"periods": "Lifecycle periods",
 				"periodsDescription": "Manually maintain the live, archive, or event periods for this server.",
-				"portalBridge": "PortalBridge",
+				"portalBridge": "Portal Bridge",
 				"portalBridgeDescription": "Configure the Bridge connection details and sync entry for this server.",
 				"authMe": "AuthMe MySQL",
 				"luckPerms": "LuckPerms MySQL",
@@ -966,17 +980,9 @@
 				"description": "Description",
 				"enabled": "Enable this server",
 				"enabledDescription": "When disabled, this server will not be exposed as an active instance.",
-				"mapEnabled": "Enable map",
-				"mapEnabledDescription": "When enabled, this server exposes map support and a default viewport.",
-				"hasTiles": "Enable map tiles",
-				"hasTilesDescription": "When enabled, the frontend will load the map layer from the tile URL.",
-				"tileBaseUrl": "Tiles base URL",
-				"worldName": "World name",
-				"mapName": "Map name",
-				"tileExtension": "Tile extension",
-				"defaultZoom": "Default zoom",
-				"defaultCenterX": "Default center X",
-				"defaultCenterZ": "Default center Z",
+				"assetsBaseUrl": "BlueMap assets base URL",
+				"blueMapDimensions": "World dimensions",
+				"blueMapDimensionId": "World dimension",
 				"periodKind": "Period kind",
 				"periodSortOrder": "Period order",
 				"startedAt": "Started at",
@@ -995,6 +1001,8 @@
 				"keepSecret": "Leave blank to keep unchanged"
 			},
 			"actions": {
+				"addBlueMapDimension": "Add dimension",
+				"removeBlueMapDimension": "Remove dimension",
 				"addPeriod": "Add period",
 				"cancel": "Cancel",
 				"save": "Save Configuration",
@@ -1012,6 +1020,7 @@
 					"test": "Test server"
 				},
 				"serverStatus": {
+					"online": "Online",
 					"planned": "Planned",
 					"live": "Live",
 					"frozen": "Frozen",
@@ -1091,6 +1100,31 @@
 				"createBadge": "Create badge",
 				"editBadge": "Edit badge",
 				"assignBadges": "Grant badges"
+			}
+		},
+		"builderRanks": {
+			"title": "Builder Ranks",
+			"filters": { "search": "Search username, email, or Hydroline ID" },
+			"fields": {
+				"user": "User",
+				"rank": "Rank",
+				"comment": "Current-language comment",
+				"comments": "Custom comments"
+			},
+			"ranks": {
+				"NONE": "No rank",
+				"CHIEF": "Chief Architect",
+				"SENIOR": "Senior Architect",
+				"PRACTICING": "Practicing Architect",
+				"APPRENTICE": "Apprentice Architect"
+			},
+			"actions": { "assign": "Apply to selected", "edit": "Edit rank" },
+			"modal": { "edit": "Edit Builder Rank" },
+			"notifications": {
+				"assigned": "Builder ranks updated",
+				"assignFailed": "Failed to update builder ranks",
+				"saved": "Builder rank saved",
+				"saveFailed": "Failed to save builder rank"
 			}
 		},
 		"oauthClients": {

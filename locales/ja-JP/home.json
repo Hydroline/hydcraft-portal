@@ -1,20 +1,39 @@
 {
 	"home": {
-		"lead": "ビルを建てて、線路を敷いて、街をつくって、のんびり暮らす。じゃあ、どうして MC サーバーの名前が水素なのかって？ それは私にもわからない。",
-		"cards": {
-			"backgroundAlt": "{title} の背景",
-			"comingSoon": "開発中",
-			"nitrogen": {
-				"description": "現在のサーバー周目（1.20.1）"
+		"immersive": {
+			"mapUnavailable": "マップは一時的に利用できません",
+			"serverUnavailable": "デフォルトサーバー",
+			"sceneSwitcher": {
+				"label": "ホームページのシーン",
+				"select": "{name} に切り替える"
 			},
-			"railway": {
-				"description": "鉄道システムと交通ネットワーク"
+			"hero": {
+				"expandDescription": "続きを読む",
+				"collapseDescription": "閉じる"
 			},
-			"players": {
-				"description": "プレイヤーディレクトリと公開表示"
+			"overview": {
+				"responsibleBy": "彼らの傑作です。",
+				"beyondScene": "{name} のほかにも",
+				"communityHasThem": "コミュニティには彼らがいます。",
+				"communityMembers": "コミュニティメンバーの紹介",
+				"scenePlayers": "シーンの建築者",
+				"viewFullIntroduction": "紹介をすべて見る",
+				"noBiography": "プロフィールはまだありません。",
+				"portalProfile": "サイト内プロフィール",
+				"establishedFor": "サーバー設立から",
+				"days": "日",
+				"memberCountPrefix": "管理委員会と元老院のメンバーは計",
+				"people": "人",
+				"back": "戻る",
+				"collapse": "閉じる"
 			},
-			"cities": {
-				"description": "都市計画と建築コミュニティ"
+			"outro": {
+				"description": "建物を建て、線路を敷き、街を造り、のんびり暮らす。なぜ Minecraft サーバーなのに HydCraft という名前なのか？私にも分かりません。",
+				"copyQq": "QQ グループに参加",
+				"screenshotAlt": "HydCraft シーズン8のスクリーンショット {index}"
+			},
+			"credits": {
+				"builder": "建設者"
 			}
 		}
 	}

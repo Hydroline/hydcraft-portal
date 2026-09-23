@@ -1,7 +1,13 @@
-name: Build
+name: CI
 
 on:
   workflow_dispatch:
+    inputs:
+      sync_cnb:
+        description: 'Sync the v2 branch to CNB'
+        required: false
+        default: false
+        type: boolean
   push:
     branches:
       - '**'
@@ -13,21 +19,22 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  test:
+    name: Build
     runs-on: ubuntu-latest
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/hydcraft_portal?schema=public
-      NUXT_SITE_URL: https://hydcraft.example
+      NUXT_PUBLIC_SITE_URL: https://hydcraft.example
       JWT_SECRET: ci-demo-jwt-secret
       CONFIG_ENCRYPTION_KEY: ci-demo-config-encryption-key
       HYDCRAFT_DISABLE_PORTAL_BRIDGE: '1'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '22'
+          node-version: '24'
 
       - name: Enable corepack
         run: corepack enable
@@ -40,3 +47,45 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+  sync:
+    name: Sync CNB
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/v2') || (github.event_name == 'workflow_dispatch' && inputs.sync_cnb)
+    runs-on: ubuntu-latest
+    concurrency:
+      group: cnb-v2-sync
+      cancel-in-progress: false
+    env:
+      CNB_REPOSITORY_SLUG: ${{ vars.CNB_REPOSITORY_SLUG }}
+      CNB_TOKEN: ${{ secrets.CNB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: v2
+          fetch-depth: 0
+
+      - name: Validate CNB configuration
+        run: |
+          test -n "$CNB_REPOSITORY_SLUG" || {
+            echo 'CNB_REPOSITORY_SLUG GitHub Actions variable is required.' >&2
+            exit 1
+          }
+          test -n "$CNB_TOKEN" || {
+            echo 'CNB_TOKEN GitHub Actions secret is required.' >&2
+            exit 1
+          }
+
+      - name: Sync
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:$GITHUB_WORKSPACE" \
+            -w "$GITHUB_WORKSPACE" \
+            -e "PLUGIN_TARGET_URL=https://cnb.cool/$CNB_REPOSITORY_SLUG.git" \
+            -e 'PLUGIN_AUTH_TYPE=https' \
+            -e 'PLUGIN_USERNAME=cnb' \
+            -e "PLUGIN_PASSWORD=$CNB_TOKEN" \
+            -e 'PLUGIN_BRANCH=v2' \
+            -e 'PLUGIN_GIT_USER=cnb' \
+            -e 'PLUGIN_GIT_EMAIL=cnb@cnb.cool' \
+            -e 'PLUGIN_FORCE=true' \
+            tencentcom/git-sync

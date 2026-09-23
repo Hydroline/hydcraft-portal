@@ -49,11 +49,29 @@
 		},
 		"map": {
 			"locationUnavailable": "No recent coordinates are available for this account yet.",
-			"providerUnavailable": "The base map is not configured yet. Set the Dynmap tiles env first."
+			"providerUnavailable": "This server has not configured a BlueMap yet.",
+			"unsupportedDimension": "This location is in a dimension that is not supported yet.",
+			"viewerLoadFailed": "The BlueMap viewer is temporarily unavailable.",
+			"playerCoordinates": "Coordinates {coordinates}",
+			"playerDirection": "Facing {degrees}°",
+			"orientation": {
+				"alignNorth": "Align the map to north",
+				"hint": "Click to face north; double-click to reset to a north-up top view"
+			},
+			"viewMode": "Map view mode",
+			"flat": "Flat",
+			"perspective": "Perspective",
+			"freeFlight": "Free flight"
 		},
 		"toolbar": {
 			"bindTip": "Add binding",
-			"setPrimaryTip": "Set primary"
+			"setPrimaryTip": "Set primary",
+			"tabsLabel": "Profile scope",
+			"viewModeLabel": "Profile view",
+			"immersiveView": "Immersive",
+			"immersiveViewTip": "View profiles over the immersive BlueMap",
+			"listView": "List",
+			"listViewTip": "View profiles as a list of cards"
 		},
 		"tabs": {
 			"overview": "Overview",
@@ -64,7 +82,10 @@
 			"officialEmptyDescription": "Bind a regular Minecraft account first, then official profiles will appear here."
 		},
 		"selector": {
-			"aggregate": "Summary"
+			"aggregate": "Summary",
+			"previousAccount": "Previous profile",
+			"nextAccount": "Next profile",
+			"selectAccount": "Select Minecraft profile"
 		},
 		"history": {
 			"profileSectionTitle": "Historical Archives",
@@ -88,7 +109,20 @@
 			}
 		},
 		"overlay": {
-			"lastLogin": "Last login"
+			"lastLogin": "Last login",
+			"lastLocation": "Last location",
+			"registration": "Registration time",
+			"locatePlayer": "Locate player",
+			"unknownIpLocation": "Unknown location",
+			"unknownIp": "Unknown IP",
+			"hiddenIp": "IP hidden",
+			"showIp": "Show full IP",
+			"hideIp": "Hide full IP",
+			"ipLocation": "IP location",
+			"ipAddress": "IP address",
+			"activityTime": "Time",
+			"boundAccount": "Bound account",
+			"scrollData": "Scroll player data"
 		},
 		"bind": {
 			"title": "Bind another Minecraft account",
@@ -113,6 +147,10 @@
 		"actions": {
 			"setPrimary": "Set as primary",
 			"unbind": "Unbind account"
+		},
+		"unbind": {
+			"targetLabel": "Choose an official profile to unbind",
+			"targetDescription": "Nothing is preselected here. Choose the official profile for this unbind action first, then complete the CAPTCHA."
 		},
 		"empty": {
 			"title": "No Minecraft account is bound yet",

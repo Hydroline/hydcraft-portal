@@ -1,7 +1,6 @@
 import { getHeader } from 'h3'
-import { prisma } from '../../../utils/db/prisma'
 import { createApiError } from '../../../utils/errors'
-import { verifyOAuthAccessToken } from '../../../utils/oauth-provider/tokens'
+import { resolveOAuthAccessToken } from '../../../utils/oauth-provider/tokens'
 
 export default defineEventHandler(async (event) => {
 	const authorization = getHeader(event, 'authorization')
@@ -10,16 +9,11 @@ export default defineEventHandler(async (event) => {
 			statusCode: 401,
 			code: 'OAUTH_ACCESS_TOKEN_INVALID',
 		})
-	const claims = verifyOAuthAccessToken(
+	const token = await resolveOAuthAccessToken(
 		authorization.slice('Bearer '.length).trim(),
 	)
-	const user = await prisma.user.findUnique({ where: { id: claims.sub } })
-	if (!user || user.status !== 'ACTIVE')
-		throw createApiError({
-			statusCode: 401,
-			code: 'OAUTH_ACCESS_TOKEN_INVALID',
-		})
-	const scopes = new Set((claims.scope ?? '').split(' '))
+	const { user } = token
+	const scopes = new Set(token.scopes)
 	const result: Record<string, string | boolean | null> = {
 		sub: user.id,
 		hydroline_id: user.hydrolineId,
@@ -32,6 +26,18 @@ export default defineEventHandler(async (event) => {
 	if (scopes.has('email')) {
 		result.email = user.email
 		result.email_verified = Boolean(user.emailVerifiedAt)
+	}
+	if (scopes.has('hydroline')) {
+		result.role = user.role
+		result.status = user.status
+		result.locale =
+			user.preferences?.language === 'ZH_TW'
+				? 'zh-TW'
+				: user.preferences?.language === 'JA_JP'
+					? 'ja-JP'
+					: user.preferences?.language === 'EN_US'
+						? 'en-US'
+						: 'zh-CN'
 	}
 	return result
 })

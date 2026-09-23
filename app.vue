@@ -14,6 +14,7 @@ import {
 	profileLanguageToLocaleCode,
 	type ProfileLanguage,
 } from '~/utils/profile/edit'
+import { resolvePageContainerVariant } from '~/utils/layout/page-presentation'
 
 type LocaleCode = 'zh-CN' | 'zh-TW' | 'ja-JP' | 'en-US'
 type LocaleNameKey = 'zhCN' | 'zhTW' | 'jaJP' | 'enUS'
@@ -26,6 +27,9 @@ interface NuxtI18nApi {
 const toast = useToast()
 const nuxtApp = useNuxtApp()
 const route = useRoute()
+const isImmersivePage = computed(
+	() => resolvePageContainerVariant(route) === 'immersive',
+)
 const switchLocalePath = useSwitchLocalePath()
 const locale = (nuxtApp.$i18n as { locale: Ref<LocaleCode> }).locale
 const { t } = useI18n({ useScope: 'global' })
@@ -33,6 +37,10 @@ const { user, resolved } = usePortalAuth()
 const explicitRouteTitle = useExplicitRouteTitleState()
 const resolvedRouteTitleDefinition = useResolvedRouteTitleDefinition()
 const normalizedRoutePath = computed(() => normalizeHeaderMenuPath(route.path))
+const isHomePage = computed(() => normalizedRoutePath.value === '/')
+const isViewportLockedImmersivePage = computed(
+	() => isImmersivePage.value && !isHomePage.value,
+)
 const MANUAL_LOCALE_SWITCH_STORAGE_KEY = 'hydcraft:manual-locale-switch-at'
 const MANUAL_LOCALE_SWITCH_GRACE_MS = 1500
 const DEFAULT_LOCALE: LocaleCode = 'zh-CN'
@@ -341,10 +349,18 @@ useHead(() => ({
 			},
 		}"
 	>
-		<div id="app" class="relative flex min-h-[105vh] flex-col">
+		<div
+			id="app"
+			class="relative flex flex-col"
+			:class="
+				isViewportLockedImmersivePage
+					? 'h-dvh min-h-0 overflow-hidden bg-slate-950'
+					: 'min-h-[105vh]'
+			"
+		>
 			<PageHeader />
 			<PageContainer />
-			<PageFooter />
+			<PageFooter v-if="!isViewportLockedImmersivePage" />
 			<PageStatusBar />
 		</div>
 	</UApp>

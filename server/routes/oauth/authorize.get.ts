@@ -1,16 +1,17 @@
 import { getRequestURL, sendRedirect, setCookie } from 'h3'
 import { randomBytes } from 'node:crypto'
-import { getOptionalCurrentUser } from '../../utils/auth/session'
+import { getOptionalCurrentUserWithRefresh } from '../../utils/auth/session'
 import {
 	createAuthorizationCode,
 	createAuthorizationRedirect,
 	hasOAuthGrant,
 	parseAuthorizationRequest,
 } from '../../utils/oauth-provider/service'
+import { getPublicSiteOrigin } from '../../utils/runtime/site-url'
 
 export default defineEventHandler(async (event) => {
 	const { client, request } = await parseAuthorizationRequest(getQuery(event))
-	const user = await getOptionalCurrentUser(event)
+	const user = await getOptionalCurrentUserWithRefresh(event)
 
 	if (!user) {
 		const redirect = `${getRequestURL(event).pathname}${getRequestURL(event).search}`
@@ -30,7 +31,7 @@ export default defineEventHandler(async (event) => {
 			path: '/api/oauth/authorize/approve',
 			maxAge: 10 * 60,
 		})
-		const consentUrl = new URL('/oauth/consent', getRequestURL(event).origin)
+		const consentUrl = new URL('/oauth/consent', getPublicSiteOrigin())
 		consentUrl.searchParams.set('client_id', request.clientId)
 		consentUrl.searchParams.set('client_name', client.name)
 		consentUrl.searchParams.set('redirect_uri', request.redirectUri)
@@ -39,7 +40,6 @@ export default defineEventHandler(async (event) => {
 		consentUrl.searchParams.set('code_challenge_method', 'S256')
 		consentUrl.searchParams.set('consent_nonce', consentNonce)
 		if (request.state) consentUrl.searchParams.set('state', request.state)
-		if (request.nonce) consentUrl.searchParams.set('nonce', request.nonce)
 		return sendRedirect(event, consentUrl.toString(), 302)
 	}
 
@@ -48,7 +48,6 @@ export default defineEventHandler(async (event) => {
 		clientId: client.id,
 		redirectUri: request.redirectUri,
 		scopes: request.scopes,
-		nonce: request.nonce,
 		codeChallenge: request.codeChallenge,
 	})
 

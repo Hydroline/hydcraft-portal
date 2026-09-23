@@ -32,8 +32,6 @@ interface AdminServerConfigModalProps {
 		| 'map'
 		| 'periods'
 		| 'portalBridge'
-		| 'authMe'
-		| 'luckPerms'
 		| 'sync'
 }
 
@@ -48,15 +46,11 @@ const modalTitle = computed(() => {
 		case 'basic':
 			return t('admin.serverConfig.sections.basic')
 		case 'map':
-			return t('admin.serverConfig.sections.mapConfig')
+			return t('admin.serverConfig.sections.blueMapConfig')
 		case 'periods':
 			return t('admin.serverConfig.sections.periods')
 		case 'portalBridge':
 			return t('admin.serverConfig.sections.portalBridge')
-		case 'authMe':
-			return t('admin.serverConfig.sections.authMe')
-		case 'luckPerms':
-			return t('admin.serverConfig.sections.luckPerms')
 		case 'sync':
 			return t('admin.serverConfig.sections.sync')
 		case 'create':

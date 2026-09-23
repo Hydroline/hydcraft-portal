@@ -9,10 +9,8 @@ import type {
 import { prisma } from '../db/prisma'
 import { createApiError } from '../errors'
 import { emitEvent } from '../events/event-bus'
-import {
-	getAttachmentService,
-	getPublicAttachmentUrl,
-} from '../attachment/runtime'
+import { queuePostCommitEvent } from '../events/post-commit'
+import { getPublicAttachmentUrl } from '../attachment/runtime'
 import { findPrimaryVariant } from '../attachment/variants'
 import type { PartnerSummary, PartnersPublicResponse } from './types'
 import {
@@ -31,7 +29,7 @@ const partnerInclude = {
 			serverId: true,
 			code: true,
 			nameZhCn: true,
-			enabled: true,
+			status: true,
 		},
 	},
 	coreMembers: {
@@ -108,7 +106,7 @@ type PartnerWithRelations = PartnerEntry & {
 		serverId: string
 		code: string
 		nameZhCn: string
-		enabled: boolean
+		status: 'ONLINE' | 'ARCHIVED'
 	} | null
 	editors?: (PartnerEditor & {
 		user: {
@@ -157,7 +155,7 @@ const summarizePartner = (
 				serverId: partner.linkedMinecraftServer.serverId,
 				code: partner.linkedMinecraftServer.code,
 				name: partner.linkedMinecraftServer.nameZhCn,
-				enabled: partner.linkedMinecraftServer.enabled,
+				enabled: partner.linkedMinecraftServer.status === 'ONLINE',
 			}
 		: null,
 	enabled: partner.enabled,
@@ -430,7 +428,7 @@ const handlePartnerAttachmentReplacements = async (
 			activeAttachmentId: input.avatarAttachmentId,
 			updatedAt: partner.updatedAt,
 		})
-		await getAttachmentService().deletePartnerAttachmentsExcept({
+		queuePostCommitEvent('partner.attachments.cleanup', {
 			partnerId: partner.id,
 			purpose: 'partner-avatar',
 			activeAttachmentId: input.avatarAttachmentId,
@@ -444,7 +442,7 @@ const handlePartnerAttachmentReplacements = async (
 			activeAttachmentId: input.coverAttachmentId,
 			updatedAt: partner.updatedAt,
 		})
-		await getAttachmentService().deletePartnerAttachmentsExcept({
+		queuePostCommitEvent('partner.attachments.cleanup', {
 			partnerId: partner.id,
 			purpose: 'partner-cover',
 			activeAttachmentId: input.coverAttachmentId,

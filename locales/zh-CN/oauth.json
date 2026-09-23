@@ -1,5 +1,6 @@
 {
 	"oauthConsent": {
+		"pageTitle": "授权第三方应用",
 		"title": "授权 Hydroline ID",
 		"description": "{client} 请求访问你的 Hydroline ID 信息。",
 		"approve": "允许",
@@ -8,6 +9,9 @@
 			"openid": "确认你的 Hydroline ID 身份",
 			"profile": "读取公开档案信息",
 			"email": "读取邮箱及验证状态",
+			"directory": {
+				"read": "读取目录信息"
+			},
 			"hydroline": "读取 Hydroline ID"
 		}
 	}

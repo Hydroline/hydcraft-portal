@@ -59,7 +59,7 @@
 					"description": "已启用 {enabled} / 已配置 {configured}"
 				},
 				"portalBridge": {
-					"label": "PortalBridge",
+					"label": "Portal Bridge",
 					"description": "已启用 {enabled} / 已配置 {configured}"
 				}
 			},
@@ -312,7 +312,7 @@
 			},
 			"sections": {
 				"onlinePlayers": "在线人数",
-				"portalBridge": "PortalBridge",
+				"portalBridge": "Portal Bridge",
 				"archiveStatus": "存档状态",
 				"serverInfo": "服务器信息",
 				"dataSources": "数据源",
@@ -630,7 +630,8 @@
 			},
 			"actions": {
 				"assign": "指派",
-				"unassign": "取消指派"
+				"unassign": "取消指派",
+				"create": "添加历史玩家"
 			},
 			"empty": {
 				"unassigned": "未指派"
@@ -640,11 +641,23 @@
 				"description": "输入要绑定的 Hydroline 用户名。",
 				"username": "Hydroline 用户名"
 			},
+			"createModal": {
+				"title": "添加历史玩家",
+				"description": "输入 Minecraft ID 后，系统会按离线 UUID 规则创建历史档案，并自动纳入已有服务器数据汇总。",
+				"usernamePlaceholder": "输入 Minecraft ID",
+				"waiting": "输入 Minecraft ID 后自动计算",
+				"calculating": "正在计算…",
+				"invalidUsername": "请输入 3 到 16 位字母、数字或下划线。",
+				"confirm": "创建历史档案"
+			},
 			"notifications": {
 				"assigned": "历史档案已指派",
 				"assignFailed": "历史档案指派失败",
 				"unassigned": "历史档案已取消指派",
-				"unassignFailed": "取消历史档案指派失败"
+				"unassignFailed": "取消历史档案指派失败",
+				"created": "历史档案已创建：{uuid}",
+				"existing": "历史档案已存在：{uuid}",
+				"createFailed": "创建历史档案失败"
 			}
 		},
 		"users": {
@@ -662,7 +675,8 @@
 				"preferences": "偏好",
 				"social": "社交链接",
 				"privacy": "公开信息",
-				"achievements": "成就与认证"
+				"achievements": "成就与认证",
+				"builderRank": "建筑职阶"
 			},
 			"fields": {
 				"user": "用户",
@@ -938,11 +952,11 @@
 			"sections": {
 				"basic": "服务器基础信息",
 				"basicDescription": "填写服务端实例的基础标识、展示名称与接入方式。",
-				"mapConfig": "地图配置",
-				"mapConfigDescription": "配置这个服务器是否启用地图，以及是否已经接入地图瓦片。",
+				"blueMapConfig": "BlueMap 配置",
+				"blueMapConfigDescription": "配置这个服务器的 BlueMap 地图数据根地址。",
 				"periods": "生命周期",
 				"periodsDescription": "人工维护该服务器的开启、关闭、存档或活动时间段。",
-				"portalBridge": "PortalBridge",
+				"portalBridge": "Portal Bridge",
 				"portalBridgeDescription": "配置这个服务器的 Bridge 连接信息与同步入口。",
 				"authMe": "AuthMe MySQL",
 				"luckPerms": "LuckPerms MySQL",
@@ -966,17 +980,9 @@
 				"description": "描述",
 				"enabled": "启用该服务器",
 				"enabledDescription": "关闭后，该服务器不会作为可用实例对外启用。",
-				"mapEnabled": "启用地图",
-				"mapEnabledDescription": "开启后，这个服务器会展示地图相关能力与默认视角。",
-				"hasTiles": "启用地图 Tiles",
-				"hasTilesDescription": "开启后，前端会按瓦片地址加载地图图层。",
-				"tileBaseUrl": "Tiles Base URL",
-				"worldName": "世界名",
-				"mapName": "地图名",
-				"tileExtension": "瓦片扩展名",
-				"defaultZoom": "默认缩放",
-				"defaultCenterX": "默认中心 X",
-				"defaultCenterZ": "默认中心 Z",
+				"assetsBaseUrl": "BlueMap Assets Base URL",
+				"blueMapDimensions": "世界维度",
+				"blueMapDimensionId": "世界维度",
 				"periodKind": "时间段类型",
 				"periodSortOrder": "时间段排序",
 				"startedAt": "开始时间",
@@ -995,6 +1001,8 @@
 				"keepSecret": "留空则保持不变"
 			},
 			"actions": {
+				"addBlueMapDimension": "添加维度",
+				"removeBlueMapDimension": "移除维度",
 				"addPeriod": "新增时间段",
 				"cancel": "取消",
 				"save": "保存配置",
@@ -1012,6 +1020,7 @@
 					"test": "测试服务器"
 				},
 				"serverStatus": {
+					"online": "在线",
 					"planned": "计划中",
 					"live": "运行中",
 					"frozen": "冻结",
@@ -1091,6 +1100,31 @@
 				"createBadge": "新建 Badge",
 				"editBadge": "编辑 Badge",
 				"assignBadges": "授予 Badge"
+			}
+		},
+		"builderRanks": {
+			"title": "建筑职阶",
+			"filters": { "search": "搜索用户名、邮箱或 Hydroline ID" },
+			"fields": {
+				"user": "用户",
+				"rank": "职阶",
+				"comment": "当前语言说明",
+				"comments": "自定义说明"
+			},
+			"ranks": {
+				"NONE": "无职阶",
+				"CHIEF": "首席建筑师",
+				"SENIOR": "资深建筑师",
+				"PRACTICING": "执业建筑师",
+				"APPRENTICE": "见习建筑师"
+			},
+			"actions": { "assign": "批量授权", "edit": "编辑职阶" },
+			"modal": { "edit": "编辑建筑职阶" },
+			"notifications": {
+				"assigned": "职阶已更新",
+				"assignFailed": "批量更新职阶失败",
+				"saved": "建筑职阶已保存",
+				"saveFailed": "保存建筑职阶失败"
 			}
 		},
 		"oauthClients": {

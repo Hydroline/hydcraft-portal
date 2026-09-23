@@ -1,4 +1,5 @@
 import type {
+	BuilderRank,
 	MinecraftAccountStatus,
 	TimezoneMode,
 	UserGender,
@@ -80,7 +81,7 @@ export interface MinecraftProfileSummary {
 	status: MinecraftAccountStatus
 }
 
-export interface ServerLocalizedNameSummary extends MinecraftServerLocalizedName {}
+export type ServerLocalizedNameSummary = MinecraftServerLocalizedName
 
 export interface MinecraftPlayerLocationSummary {
 	worldName: string | null
@@ -149,6 +150,15 @@ export interface PublicUserProfile {
 		source: UserAuthActivitySource | 'LEGACY_LOGIN' | null
 	}
 	minecraftSummary?: MinecraftProfileSummary | null
+	builderRank?: {
+		rank: BuilderRank
+		comments: {
+			zhCn: string | null
+			zhTw: string | null
+			enUs: string | null
+			jaJp: string | null
+		}
+	} | null
 	minecraftArchiveSummary?: {
 		totalAccounts: number
 		totalPlayTimeTicks: number

@@ -48,30 +48,10 @@
 						/>
 					</label>
 					<label :class="fieldClass">
-						<span>{{ t('admin.serverConfig.fields.kind') }}</span>
-						<USelect
-							v-model="form.kind"
-							:items="serverKindItems"
-							value-key="value"
-							label-key="label"
-							class="w-full"
-						/>
-					</label>
-					<label :class="fieldClass">
 						<span>{{ t('admin.serverConfig.fields.status') }}</span>
 						<USelect
 							v-model="form.status"
 							:items="serverStatusItems"
-							value-key="value"
-							label-key="label"
-							class="w-full"
-						/>
-					</label>
-					<label :class="fieldClass">
-						<span>{{ t('admin.serverConfig.fields.dataSourceMode') }}</span>
-						<USelect
-							v-model="form.dataSourceMode"
-							:items="dataSourceModeItems"
 							value-key="value"
 							label-key="label"
 							class="w-full"
@@ -91,12 +71,6 @@
 							max="65535"
 						/>
 					</label>
-					<label :class="[fieldClass, 'md:col-span-2']">
-						<div class="flex items-center justify-between gap-3">
-							<span>{{ t('admin.serverConfig.fields.enabled') }}</span>
-							<USwitch v-model="form.enabled" />
-						</div>
-					</label>
 				</div>
 			</section>
 
@@ -105,68 +79,50 @@
 				class="grid w-full gap-3 break-inside-avoid"
 			>
 				<div v-if="showSectionHeading" :class="profileSectionTitleClass">
-					{{ t('admin.serverConfig.sections.mapConfig') }}
+					{{ t('admin.serverConfig.sections.blueMapConfig') }}
 				</div>
 				<div :class="cardClass" class="grid gap-4 md:grid-cols-2">
 					<label :class="[fieldClass, 'md:col-span-2']">
+						<span>{{ t('admin.serverConfig.fields.assetsBaseUrl') }}</span>
+						<UInput v-model="form.blueMapConfig.assetsBaseUrl" class="w-full" />
+					</label>
+					<div class="grid gap-3 md:col-span-2">
 						<div class="flex items-center justify-between gap-3">
-							<span>{{ t('admin.serverConfig.fields.mapEnabled') }}</span>
-							<USwitch v-model="form.mapConfig.enabled" />
+							<span :class="fieldClass">
+								{{ t('admin.serverConfig.fields.blueMapDimensions') }}
+							</span>
+							<UButton
+								type="button"
+								size="xs"
+								color="neutral"
+								variant="soft"
+								icon="i-lucide-plus"
+								@click="addBlueMapDimension"
+							>
+								{{ t('admin.serverConfig.actions.addBlueMapDimension') }}
+							</UButton>
 						</div>
-					</label>
-					<label :class="[fieldClass, 'md:col-span-2']">
-						<div class="flex items-center justify-between gap-3">
-							<span>{{ t('admin.serverConfig.fields.hasTiles') }}</span>
-							<USwitch v-model="form.mapConfig.hasTiles" />
+						<div
+							v-for="(dimension, index) in form.blueMapConfig.dimensions"
+							:key="dimension.localId"
+							class="grid gap-2 md:grid-cols-[minmax(0,1fr)_auto]"
+						>
+							<UInput
+								v-model="dimension.dimension"
+								:placeholder="t('admin.serverConfig.fields.blueMapDimensionId')"
+							/>
+							<UButton
+								type="button"
+								color="error"
+								variant="ghost"
+								icon="i-lucide-trash-2"
+								:aria-label="
+									t('admin.serverConfig.actions.removeBlueMapDimension')
+								"
+								@click="removeBlueMapDimension(index)"
+							/>
 						</div>
-					</label>
-					<label :class="[fieldClass, 'md:col-span-2']">
-						<span>{{ t('admin.serverConfig.fields.tileBaseUrl') }}</span>
-						<UInput v-model="form.mapConfig.tileBaseUrl" class="w-full" />
-					</label>
-					<label :class="fieldClass">
-						<span>{{ t('admin.serverConfig.fields.worldName') }}</span>
-						<UInput v-model="form.mapConfig.worldName" class="w-full" />
-					</label>
-					<label :class="fieldClass">
-						<span>{{ t('admin.serverConfig.fields.mapName') }}</span>
-						<UInput v-model="form.mapConfig.mapName" class="w-full" />
-					</label>
-					<label :class="fieldClass">
-						<span>{{ t('admin.serverConfig.fields.tileExtension') }}</span>
-						<USelect
-							v-model="form.mapConfig.tileExtension"
-							:items="tileExtensionItems"
-							value-key="value"
-							label-key="label"
-							class="w-full"
-						/>
-					</label>
-					<label :class="fieldClass">
-						<span>{{ t('admin.serverConfig.fields.defaultZoom') }}</span>
-						<UInput
-							v-model.number="form.mapConfig.defaultZoom"
-							class="w-full"
-							type="number"
-							min="0"
-						/>
-					</label>
-					<label :class="fieldClass">
-						<span>{{ t('admin.serverConfig.fields.defaultCenterX') }}</span>
-						<UInput
-							v-model.number="form.mapConfig.defaultCenterX"
-							class="w-full"
-							type="number"
-						/>
-					</label>
-					<label :class="fieldClass">
-						<span>{{ t('admin.serverConfig.fields.defaultCenterZ') }}</span>
-						<UInput
-							v-model.number="form.mapConfig.defaultCenterZ"
-							class="w-full"
-							type="number"
-						/>
-					</label>
+					</div>
 				</div>
 			</section>
 
@@ -262,7 +218,7 @@
 			</section>
 
 			<section
-				v-if="visibleSections.portalBridge && !isImportedDataSource"
+				v-if="visibleSections.portalBridge && form.status === 'ONLINE'"
 				class="grid w-full gap-3 break-inside-avoid"
 			>
 				<div v-if="showSectionHeading" :class="profileSectionTitleClass">
@@ -270,28 +226,11 @@
 				</div>
 				<div :class="cardClass" class="grid gap-4">
 					<label :class="fieldClass">
-						<div class="flex items-center justify-between gap-3">
-							<span>{{ t('admin.serverConfig.fields.bridgeEnabled') }}</span>
-							<USwitch
-								v-model="form.portalBridge.enabled"
-								:disabled="form.portalBridge.remove"
-							/>
-						</div>
-					</label>
-					<label
-						v-if="server?.portalBridge"
-						class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300"
-					>
-						<UCheckbox v-model="form.portalBridge.remove" />
-						<span>{{ t('admin.serverConfig.fields.removePortalBridge') }}</span>
-					</label>
-					<label :class="fieldClass">
 						<span>{{ t('admin.serverConfig.fields.bridgeId') }}</span>
 						<UInput
 							v-model="form.portalBridge.bridgeId"
 							class="w-full"
-							:disabled="form.portalBridge.remove"
-							:required="!form.portalBridge.remove"
+							required
 						/>
 					</label>
 					<label :class="fieldClass">
@@ -299,18 +238,12 @@
 						<UInput
 							v-model="form.portalBridge.module"
 							class="w-full"
-							:disabled="form.portalBridge.remove"
-							:required="!form.portalBridge.remove"
+							required
 						/>
 					</label>
 					<label :class="fieldClass">
 						<span>{{ t('admin.serverConfig.fields.wsUrl') }}</span>
-						<UInput
-							v-model="form.portalBridge.wsUrl"
-							class="w-full"
-							:disabled="form.portalBridge.remove"
-							:required="!form.portalBridge.remove"
-						/>
+						<UInput v-model="form.portalBridge.wsUrl" class="w-full" required />
 					</label>
 					<label :class="fieldClass">
 						<span>{{ t('admin.serverConfig.fields.secret') }}</span>
@@ -318,7 +251,6 @@
 							v-model="form.portalBridge.secret"
 							class="w-full"
 							type="password"
-							:disabled="form.portalBridge.remove"
 							:placeholder="
 								server?.portalBridge?.hasSecret
 									? t('admin.serverConfig.placeholders.keepSecret')
@@ -326,46 +258,6 @@
 							"
 						/>
 					</label>
-				</div>
-			</section>
-
-			<section
-				v-if="visibleSections.authMe"
-				class="grid w-full gap-3 break-inside-avoid"
-			>
-				<div v-if="showSectionHeading" :class="profileSectionTitleClass">
-					{{ t('admin.serverConfig.sections.authMe') }}
-				</div>
-				<div :class="cardClass" class="grid gap-4 md:grid-cols-2">
-					<AdminMysqlFields
-						v-model:host="form.authMe.host"
-						v-model:port="form.authMe.port"
-						v-model:database="form.authMe.database"
-						v-model:username="form.authMe.username"
-						v-model:password="form.authMe.password"
-						v-model:enabled="form.authMe.enabled"
-						:has-password="server?.authMe?.hasPassword ?? false"
-					/>
-				</div>
-			</section>
-
-			<section
-				v-if="visibleSections.luckPerms"
-				class="grid w-full gap-3 break-inside-avoid"
-			>
-				<div v-if="showSectionHeading" :class="profileSectionTitleClass">
-					{{ t('admin.serverConfig.sections.luckPerms') }}
-				</div>
-				<div :class="cardClass" class="grid gap-4 md:grid-cols-2">
-					<AdminMysqlFields
-						v-model:host="form.luckPerms.host"
-						v-model:port="form.luckPerms.port"
-						v-model:database="form.luckPerms.database"
-						v-model:username="form.luckPerms.username"
-						v-model:password="form.luckPerms.password"
-						v-model:enabled="form.luckPerms.enabled"
-						:has-password="server?.luckPerms?.hasPassword ?? false"
-					/>
 				</div>
 			</section>
 
@@ -379,35 +271,11 @@
 				<div :class="cardClass" class="grid gap-4 md:grid-cols-2">
 					<label :class="fieldClass">
 						<span
-							>PortalBridge
+							>{{ t('admin.serverConfig.sections.portalBridge') }}
 							{{ t('admin.serverConfig.fields.syncInterval') }}</span
 						>
 						<UInput
 							v-model.number="form.portalBridge.coreSyncIntervalMinutes"
-							class="w-full"
-							type="number"
-							min="1"
-							step="1"
-						/>
-					</label>
-					<label :class="fieldClass">
-						<span
-							>AuthMe {{ t('admin.serverConfig.fields.syncInterval') }}</span
-						>
-						<UInput
-							v-model.number="form.authMe.syncIntervalMinutes"
-							class="w-full"
-							type="number"
-							min="1"
-							step="1"
-						/>
-					</label>
-					<label :class="fieldClass">
-						<span
-							>LuckPerms {{ t('admin.serverConfig.fields.syncInterval') }}</span
-						>
-						<UInput
-							v-model.number="form.luckPerms.syncIntervalMinutes"
 							class="w-full"
 							type="number"
 							min="1"
@@ -443,36 +311,22 @@ import {
 	profileSectionTitleClass,
 } from '~/utils/profile/edit'
 
-interface MysqlForm {
-	host: string
-	port: number
-	database: string
-	username: string
-	password: string
-	enabled: boolean
-	syncIntervalMinutes: number
-}
-
 interface PortalBridgeForm {
 	bridgeId: string
 	module: string
 	wsUrl: string
 	secret: string
-	enabled: boolean
 	coreSyncIntervalMinutes: number
-	remove: boolean
 }
 
-interface ServerMapConfigForm {
-	enabled: boolean
-	hasTiles: boolean
-	tileBaseUrl: string
-	worldName: string
-	mapName: string
-	tileExtension: 'jpg' | 'png'
-	defaultCenterX: number
-	defaultCenterZ: number
-	defaultZoom: number
+interface ServerBlueMapConfigForm {
+	assetsBaseUrl: string
+	dimensions: ServerBlueMapDimensionForm[]
+}
+
+interface ServerBlueMapDimensionForm {
+	localId: string
+	dimension: string
 }
 
 interface ServerPeriodForm {
@@ -495,17 +349,12 @@ interface ServerForm {
 	nameJaJp: string
 	host: string
 	port: number
-	enabled: boolean
-	kind: string
 	status: string
-	dataSourceMode: string
 	isDefault: boolean
 	sortOrder: number
-	mapConfig: ServerMapConfigForm
+	blueMapConfig: ServerBlueMapConfigForm
 	periods: ServerPeriodForm[]
 	portalBridge: PortalBridgeForm
-	authMe: MysqlForm
-	luckPerms: MysqlForm
 }
 
 interface AdminServerConfigFormProps {
@@ -517,8 +366,6 @@ interface AdminServerConfigFormProps {
 		| 'map'
 		| 'periods'
 		| 'portalBridge'
-		| 'authMe'
-		| 'luckPerms'
 		| 'sync'
 	showCancel?: boolean
 	surface?: 'card' | 'plain'
@@ -539,6 +386,7 @@ const { notifyError } = useAdminToast()
 const saving = ref(false)
 const originalServerId = ref('')
 let periodCounter = 0
+let blueMapDimensionCounter = 0
 const submitMode = computed(() => (props.server ? 'edit' : 'create'))
 const formMode = computed(() => props.mode)
 const visibleSections = computed(() => ({
@@ -549,12 +397,9 @@ const visibleSections = computed(() => ({
 	map: formMode.value === 'all' || formMode.value === 'map',
 	periods: formMode.value === 'all' || formMode.value === 'periods',
 	portalBridge: formMode.value === 'all' || formMode.value === 'portalBridge',
-	authMe: false,
-	luckPerms: false,
 	sync: formMode.value === 'sync',
 }))
 const fieldClass = adminFieldClass
-const isCreateMode = computed(() => formMode.value === 'create')
 const showSectionHeading = computed(() => props.surface !== 'plain')
 const cardClass = computed(() =>
 	props.surface === 'plain' ? 'grid w-full gap-4' : profileCardClass,
@@ -565,51 +410,15 @@ const sectionsContainerClass = computed(() =>
 		: 'grid w-full gap-6',
 )
 
-const serverKindItems = computed(() => [
-	{ label: t('admin.serverConfig.values.serverKind.main'), value: 'MAIN' },
-	{
-		label: t('admin.serverConfig.values.serverKind.archive'),
-		value: 'ARCHIVE',
-	},
-	{ label: t('admin.serverConfig.values.serverKind.event'), value: 'EVENT' },
-	{ label: t('admin.serverConfig.values.serverKind.test'), value: 'TEST' },
-])
 const serverStatusItems = computed(() => [
 	{
-		label: t('admin.serverConfig.values.serverStatus.planned'),
-		value: 'PLANNED',
-	},
-	{ label: t('admin.serverConfig.values.serverStatus.live'), value: 'LIVE' },
-	{
-		label: t('admin.serverConfig.values.serverStatus.frozen'),
-		value: 'FROZEN',
+		label: t('admin.serverConfig.values.serverStatus.online'),
+		value: 'ONLINE',
 	},
 	{
 		label: t('admin.serverConfig.values.serverStatus.archived'),
 		value: 'ARCHIVED',
 	},
-	{
-		label: t('admin.serverConfig.values.serverStatus.hidden'),
-		value: 'HIDDEN',
-	},
-])
-const dataSourceModeItems = computed(() => [
-	{
-		label: t('admin.serverConfig.values.dataSourceMode.portalBridge'),
-		value: 'PORTAL_BRIDGE',
-	},
-	{
-		label: t('admin.serverConfig.values.dataSourceMode.imported'),
-		value: 'IMPORTED',
-	},
-	{
-		label: t('admin.serverConfig.values.dataSourceMode.mixed'),
-		value: 'MIXED',
-	},
-])
-const tileExtensionItems = computed(() => [
-	{ label: 'JPG', value: 'jpg' },
-	{ label: 'PNG', value: 'png' },
 ])
 const periodKindItems = computed(() => [
 	{ label: t('admin.serverConfig.values.periodKind.live'), value: 'LIVE' },
@@ -650,6 +459,19 @@ const createPeriodForm = (index = 0): ServerPeriodForm => ({
 	sortOrder: index,
 })
 
+const createBlueMapDimensionForm = (): ServerBlueMapDimensionForm => ({
+	localId: `bluemap-dimension-${blueMapDimensionCounter++}`,
+	dimension: '',
+})
+
+const addBlueMapDimension = (): void => {
+	form.blueMapConfig.dimensions.push(createBlueMapDimensionForm())
+}
+
+const removeBlueMapDimension = (index: number): void => {
+	form.blueMapConfig.dimensions.splice(index, 1)
+}
+
 const createEmptyForm = (): ServerForm => ({
 	serverId: '',
 	code: '',
@@ -660,22 +482,12 @@ const createEmptyForm = (): ServerForm => ({
 	nameJaJp: '',
 	host: '',
 	port: 25565,
-	enabled: true,
-	kind: 'MAIN',
-	status: 'LIVE',
-	dataSourceMode: 'PORTAL_BRIDGE',
+	status: 'ONLINE',
 	isDefault: false,
 	sortOrder: 0,
-	mapConfig: {
-		enabled: false,
-		hasTiles: false,
-		tileBaseUrl: '',
-		worldName: 'world',
-		mapName: 'flat',
-		tileExtension: 'jpg',
-		defaultCenterX: 811,
-		defaultCenterZ: 2933,
-		defaultZoom: 0,
+	blueMapConfig: {
+		assetsBaseUrl: '',
+		dimensions: [],
 	},
 	periods: [],
 	portalBridge: {
@@ -683,40 +495,13 @@ const createEmptyForm = (): ServerForm => ({
 		module: '',
 		wsUrl: '',
 		secret: '',
-		enabled: false,
 		coreSyncIntervalMinutes: 30,
-		remove: false,
-	},
-	authMe: {
-		host: '',
-		port: 3306,
-		database: '',
-		username: '',
-		password: '',
-		enabled: false,
-		syncIntervalMinutes: 30,
-	},
-	luckPerms: {
-		host: '',
-		port: 3306,
-		database: '',
-		username: '',
-		password: '',
-		enabled: false,
-		syncIntervalMinutes: 30,
 	},
 })
 
-const secondsToMinutes = (value: number | undefined): number =>
-	Math.max(1, Math.floor((value ?? 1800) / 60))
-
 const form = reactive<ServerForm>(createEmptyForm())
-const isImportedDataSource = computed(() => form.dataSourceMode === 'IMPORTED')
 const showAddressFields = computed(
-	() =>
-		visibleSections.value.core &&
-		!isCreateMode.value &&
-		!isImportedDataSource.value,
+	() => visibleSections.value.core && form.status === 'ONLINE',
 )
 
 const resetForm = (): void => {
@@ -732,23 +517,16 @@ const resetForm = (): void => {
 				nameJaJp: source.nameJaJp ?? source.nameZhCn,
 				host: source.host,
 				port: source.port,
-				enabled: source.enabled,
-				kind: source.kind,
 				status: source.status,
-				dataSourceMode: source.dataSourceMode,
 				isDefault: source.isDefault,
 				sortOrder: source.sortOrder,
-				mapConfig: {
-					enabled: source.mapConfig?.enabled ?? false,
-					hasTiles: source.mapConfig?.hasTiles ?? false,
-					tileBaseUrl: source.mapConfig?.tileBaseUrl ?? '',
-					worldName: source.mapConfig?.worldName ?? 'world',
-					mapName: source.mapConfig?.mapName ?? 'flat',
-					tileExtension:
-						source.mapConfig?.tileExtension === 'png' ? 'png' : 'jpg',
-					defaultCenterX: source.mapConfig?.defaultCenterX ?? 811,
-					defaultCenterZ: source.mapConfig?.defaultCenterZ ?? 2933,
-					defaultZoom: source.mapConfig?.defaultZoom ?? 0,
+				blueMapConfig: {
+					assetsBaseUrl: source.blueMapConfig?.assetsBaseUrl ?? '',
+					dimensions:
+						source.blueMapConfig?.dimensions.map((dimension) => ({
+							localId: `bluemap-dimension-${blueMapDimensionCounter++}`,
+							dimension,
+						})) ?? [],
 				},
 				periods: source.periods.map((period, index) => ({
 					id: period.id,
@@ -764,32 +542,8 @@ const resetForm = (): void => {
 					module: source.portalBridge?.module ?? 'portalbridge-core',
 					wsUrl: source.portalBridge?.wsUrl ?? '',
 					secret: '',
-					enabled: source.portalBridge?.enabled ?? false,
 					coreSyncIntervalMinutes:
 						source.portalBridge?.coreSyncIntervalMinutes ?? 30,
-					remove: false,
-				},
-				authMe: {
-					host: source.authMe?.host ?? '',
-					port: source.authMe?.port ?? 3306,
-					database: source.authMe?.database ?? '',
-					username: source.authMe?.username ?? '',
-					password: '',
-					enabled: source.authMe?.enabled ?? false,
-					syncIntervalMinutes: secondsToMinutes(
-						source.authMe?.syncIntervalSeconds,
-					),
-				},
-				luckPerms: {
-					host: source.luckPerms?.host ?? '',
-					port: source.luckPerms?.port ?? 3306,
-					database: source.luckPerms?.database ?? '',
-					username: source.luckPerms?.username ?? '',
-					password: '',
-					enabled: source.luckPerms?.enabled ?? false,
-					syncIntervalMinutes: secondsToMinutes(
-						source.luckPerms?.syncIntervalSeconds,
-					),
 				},
 			}
 		: createEmptyForm()
@@ -816,26 +570,18 @@ const buildPayload = () => ({
 							port: form.port,
 						}
 					: {}),
-				enabled: form.enabled,
-				kind: form.kind,
 				status: form.status,
-				dataSourceMode: form.dataSourceMode,
 				isDefault: form.isDefault,
 				sortOrder: form.sortOrder,
 			}
 		: {}),
 	...(visibleSections.value.map
 		? {
-				mapConfig: {
-					enabled: form.mapConfig.enabled,
-					hasTiles: form.mapConfig.hasTiles,
-					tileBaseUrl: form.mapConfig.tileBaseUrl || null,
-					worldName: form.mapConfig.worldName,
-					mapName: form.mapConfig.mapName,
-					tileExtension: form.mapConfig.tileExtension,
-					defaultCenterX: form.mapConfig.defaultCenterX,
-					defaultCenterZ: form.mapConfig.defaultCenterZ,
-					defaultZoom: form.mapConfig.defaultZoom,
+				blueMapConfig: {
+					assetsBaseUrl: form.blueMapConfig.assetsBaseUrl || null,
+					dimensions: form.blueMapConfig.dimensions.map(
+						(dimension) => dimension.dimension,
+					),
 				},
 			}
 		: {}),
@@ -853,19 +599,15 @@ const buildPayload = () => ({
 					.filter((period) => Boolean(period.startedAt)),
 			}
 		: {}),
-	...(visibleSections.value.portalBridge && !isImportedDataSource.value
+	...(visibleSections.value.portalBridge && form.status === 'ONLINE'
 		? {
-				portalBridge: form.portalBridge.remove
-					? null
-					: {
-							bridgeId: form.portalBridge.bridgeId,
-							module: form.portalBridge.module,
-							wsUrl: form.portalBridge.wsUrl,
-							secret: form.portalBridge.secret || undefined,
-							enabled: form.portalBridge.enabled,
-							coreSyncIntervalMinutes:
-								form.portalBridge.coreSyncIntervalMinutes,
-						},
+				portalBridge: {
+					bridgeId: form.portalBridge.bridgeId,
+					module: form.portalBridge.module,
+					wsUrl: form.portalBridge.wsUrl,
+					secret: form.portalBridge.secret || undefined,
+					coreSyncIntervalMinutes: form.portalBridge.coreSyncIntervalMinutes,
+				},
 			}
 		: visibleSections.value.sync
 			? {

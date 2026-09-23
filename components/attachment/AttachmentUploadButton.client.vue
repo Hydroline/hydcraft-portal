@@ -82,6 +82,7 @@ interface AttachmentPolicyMetadata {
 	allowedContentTypes: string[]
 	maxSizeBytes: number
 	requiresCrop: boolean
+	directUploadContentTypes: string[]
 	aspectRatio?: number | null
 	category: string
 	visibility: string
@@ -95,10 +96,18 @@ const { t } = useI18n()
 const toast = useToast()
 const { notifyError } = useAdminToast()
 const uploader = useAttachmentUploader()
+const fileInput = ref<HTMLInputElement | null>(null)
+const openFilePicker = (): void => {
+	fileInput.value?.click()
+}
+
+defineExpose({
+	openFilePicker,
+})
+
 const { data: policyData } = await useFetch<AttachmentPoliciesResponse>(
 	'/api/attachments/policies',
 )
-const fileInput = ref<HTMLInputElement | null>(null)
 const selectedFile = shallowRef<File | null>(null)
 const cropperOpen = ref(false)
 const uploading = ref(false)
@@ -125,14 +134,6 @@ const resetSelection = (): void => {
 		fileInput.value.value = ''
 	}
 }
-
-const openFilePicker = (): void => {
-	fileInput.value?.click()
-}
-
-defineExpose({
-	openFilePicker,
-})
 
 const validateFile = (file: File): boolean => {
 	if (!policy.value) {
@@ -213,7 +214,10 @@ const handleFileChange = (event: Event): void => {
 
 	selectedFile.value = file
 
-	if (policy.value?.requiresCrop) {
+	if (
+		policy.value?.requiresCrop &&
+		!policy.value.directUploadContentTypes.includes(file.type)
+	) {
 		cropperOpen.value = true
 		return
 	}

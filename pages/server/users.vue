@@ -43,6 +43,15 @@
 				:placeholder="t('admin.sort.field')"
 			/>
 			<USelect
+				v-if="filters.sortField === 'builderRank'"
+				v-model="filters.builderRank"
+				:items="builderRankItems"
+				:placeholder="
+					t('content.serverOverview.directories.users.filters.builderRank')
+				"
+			/>
+			<USelect
+				v-else
 				v-model="filters.sortDirection"
 				:items="sortDirectionItems"
 				:placeholder="t('admin.sort.direction')"
@@ -138,7 +147,9 @@
 					class="flex flex-wrap items-center gap-1.5"
 				>
 					<UTooltip
-						v-for="account in row.original.minecraftAccounts"
+						v-for="account in visibleMinecraftAccounts(
+							row.original.minecraftAccounts,
+						)"
 						:key="account.mcid"
 						:text="account.username"
 					>
@@ -155,6 +166,43 @@
 							/>
 						</NuxtLink>
 					</UTooltip>
+					<UPopover
+						v-if="hasOverflowMinecraftAccounts(row.original.minecraftAccounts)"
+						:popper="{ placement: 'bottom-start' }"
+					>
+						<UButton
+							type="button"
+							color="neutral"
+							variant="link"
+							icon="i-lucide-ellipsis"
+							class="h-7 rounded-md p-0 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+						/>
+
+						<template #content>
+							<div class="flex min-w-40 flex-col gap-1 p-2">
+								<NuxtLink
+									v-for="account in overflowMinecraftAccounts(
+										row.original.minecraftAccounts,
+									)"
+									:key="account.mcid"
+									:to="localePath(`/players/${account.mcid}`)"
+									class="inline-flex items-center gap-2 rounded-md px-1 py-1 text-sm text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
+								>
+									<SkeletonImage
+										:src="getMinecraftHeadRendererUrl(account.username)"
+										:alt="account.username"
+										class="size-7 shrink-0 overflow-hidden rounded-md"
+										image-class="size-7 object-cover"
+										skeleton-class="rounded-md"
+									/>
+									<span class="truncate">{{ account.username }}</span>
+								</NuxtLink>
+							</div>
+						</template>
+					</UPopover>
+					<span class="text-sm text-slate-500 dark:text-slate-400">
+						({{ row.original.minecraftAccounts.length }})
+					</span>
 				</div>
 				<span v-else class="text-sm text-slate-500">
 					{{ t('content.serverOverview.states.notAvailable') }}
@@ -187,12 +235,17 @@ import PageInlineException from '~/components/common/PageInlineException.vue'
 import type {
 	ServerDirectoryUserBadgeSummary,
 	ServerDirectoryUserItem,
+	ServerDirectoryUserMinecraftSummary,
 	ServerDirectoryUserVerifiedSummary,
 	ServerDirectoryUsersResponse,
 } from '~/utils/server/directories'
 import { useExplicitRouteTitle } from '~/utils/layout/route-display'
 import { getMinecraftHeadRendererUrl } from '~/utils/minecraft/body-renderer'
 import { getProfileBadgeStyle } from '~/utils/profile/badges'
+import {
+	builderRankValues,
+	type BuilderRank,
+} from '~/utils/profile/builder-ranks'
 
 definePageMeta({
 	headerVariant: 'solid',
@@ -201,18 +254,26 @@ definePageMeta({
 const { locale, t } = useI18n()
 const { getErrorCode } = useApiError()
 const localePath = useLocalePath()
+type BuilderRankFilter = BuilderRank | 'UNASSIGNED' | 'ALL'
+
 const page = ref(1)
 const pageSize = ref(20)
 const filters = reactive({
 	search: '',
 	sortField: 'joinedAt',
 	sortDirection: 'desc',
+	builderRank: 'ALL' as BuilderRankFilter,
 })
 const query = computed(() => ({
 	page: page.value,
 	pageSize: pageSize.value,
 	search: filters.search || undefined,
-	sortField: filters.sortField,
+	builderRank:
+		filters.sortField === 'builderRank' && filters.builderRank !== 'ALL'
+			? filters.builderRank
+			: undefined,
+	sortField:
+		filters.sortField === 'builderRank' ? 'joinedAt' : filters.sortField,
 	sortDirection: filters.sortDirection,
 }))
 const { data, pending, error, refresh } =
@@ -252,10 +313,15 @@ const columns = [
 		header: t('content.serverOverview.directories.users.fields.joinedAt'),
 	},
 ]
+const MAX_VISIBLE_MINECRAFT_ACCOUNTS = 3
 const sortFieldItems = [
 	{
 		label: t('content.serverOverview.directories.users.fields.registeredAt'),
 		value: 'createdAt',
+	},
+	{
+		label: t('content.serverOverview.directories.users.filters.builderRank'),
+		value: 'builderRank',
 	},
 	{
 		label: t('content.serverOverview.directories.users.fields.playTime'),
@@ -272,6 +338,24 @@ const sortFieldItems = [
 	{ label: t('admin.users.fields.username'), value: 'username' },
 	{ label: t('admin.users.fields.displayName'), value: 'displayName' },
 	{ label: t('admin.sort.fields.updatedAt'), value: 'updatedAt' },
+]
+const builderRankItems = [
+	{
+		label: t(
+			'content.serverOverview.directories.users.filters.allBuilderRanks',
+		),
+		value: 'ALL',
+	},
+	{
+		label: t(
+			'content.serverOverview.directories.users.filters.unassignedBuilderRank',
+		),
+		value: 'UNASSIGNED',
+	},
+	...builderRankValues.map((rank) => ({
+		label: t(`profile.public.builderRanks.ranks.${rank}`),
+		value: rank,
+	})),
 ]
 const sortDirectionItems = [
 	{ label: t('admin.sort.desc'), value: 'desc' },
@@ -329,6 +413,20 @@ const formatPlayTime = (ticks: number, hasPlayTime: boolean): string => {
 	return `${Math.round(hours * 10) / 10}h`
 }
 
+const visibleMinecraftAccounts = (
+	accounts: ServerDirectoryUserMinecraftSummary[],
+): ServerDirectoryUserMinecraftSummary[] =>
+	accounts.slice(0, MAX_VISIBLE_MINECRAFT_ACCOUNTS)
+
+const overflowMinecraftAccounts = (
+	accounts: ServerDirectoryUserMinecraftSummary[],
+): ServerDirectoryUserMinecraftSummary[] =>
+	accounts.slice(MAX_VISIBLE_MINECRAFT_ACCOUNTS)
+
+const hasOverflowMinecraftAccounts = (
+	accounts: ServerDirectoryUserMinecraftSummary[],
+): boolean => accounts.length > MAX_VISIBLE_MINECRAFT_ACCOUNTS
+
 const visibleBadges = (
 	user: ServerDirectoryUserItem,
 ): ServerDirectoryUserBadgeSummary[] => [
@@ -376,6 +474,7 @@ const resetFilters = (): void => {
 	filters.search = ''
 	filters.sortField = 'joinedAt'
 	filters.sortDirection = 'desc'
+	filters.builderRank = 'ALL'
 }
 
 const setPageSize = (value: number): void => {

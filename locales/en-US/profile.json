@@ -130,6 +130,22 @@
 			"actions": {
 				"viewMinecraftProfile": "View Minecraft profile"
 			},
+			"builderRanks": {
+				"title": "Builder Rank",
+				"viewSystem": "View ranks",
+				"ranks": {
+					"CHIEF": "Chief Architect",
+					"SENIOR": "Senior Architect",
+					"PRACTICING": "Practicing Architect",
+					"APPRENTICE": "Apprentice Architect"
+				},
+				"fallback": {
+					"CHIEF": "With mature style and exceptional finish, this architect represents the server’s building standard.",
+					"SENIOR": "A long-term contributor with consistent work and a clear personal style.",
+					"PRACTICING": "Able to complete projects independently and an essential part of everyday construction.",
+					"APPRENTICE": "Gains experience through practice and collaboration while steadily developing building skills."
+				}
+			},
 			"empty": {
 				"unavailable": "This profile is not accessible",
 				"bio": "This user has not added a bio yet.",
@@ -252,7 +268,22 @@
 			"empty": { "loadFailed": "Failed to load connections" },
 			"sections": {
 				"oauth": "Third-party sign-in",
+				"oidc": "OIDC authorizations",
 				"minecraft": "Minecraft profile"
+			},
+			"oidc": {
+				"empty": "No OIDC authorizations",
+				"status": { "authorized": "Authorized" },
+				"fields": {
+					"scopes": "Granted scopes",
+					"grantedAt": "Granted at",
+					"updatedAt": "Last updated"
+				},
+				"actions": { "revoke": "Revoke authorization" },
+				"notifications": {
+					"revoked": "OIDC authorization revoked",
+					"revokeFailed": "Failed to revoke OIDC authorization"
+				}
 			},
 			"status": {
 				"connected": "Linked",

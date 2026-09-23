@@ -24,6 +24,7 @@
 
 	--font-family: var(--font-sans);
 	--site-shell-max-width: 80rem;
+	--immersive-site-shell-max-width: 112rem;
 
 	line-height: 1.75;
 	font-family: var(--font-sans);
@@ -36,6 +37,27 @@
 
 .site-shell {
 	max-width: var(--site-shell-max-width);
+}
+
+.immersive-site-shell {
+	width: 100%;
+	max-width: var(--immersive-site-shell-max-width);
+	margin-inline: auto;
+	padding-inline: clamp(1.5rem, 3.5vw, 4rem);
+}
+
+@media (min-width: 64rem) {
+	.header-site-shell {
+		transition:
+			max-width 520ms cubic-bezier(0.22, 1, 0.36, 1),
+			padding-inline 520ms cubic-bezier(0.22, 1, 0.36, 1);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.header-site-shell {
+		transition: none;
+	}
 }
 
 html[lang='ja-JP'],
@@ -139,6 +161,16 @@ body {
 	transform: translateY(0);
 }
 
+.immersive-page-enter-active,
+.immersive-page-leave-active {
+	transition: opacity 300ms ease;
+}
+
+.immersive-page-enter-from,
+.immersive-page-leave-to {
+	opacity: 0;
+}
+
 .home-hero-video-enter-active,
 .home-hero-video-leave-active {
 	transition:
@@ -191,6 +223,11 @@ body {
 	.page-enter-to,
 	.page-leave-from {
 		transform: none;
+	}
+
+	.immersive-page-enter-active,
+	.immersive-page-leave-active {
+		transition: none;
 	}
 
 	.home-hero-video-enter-active,

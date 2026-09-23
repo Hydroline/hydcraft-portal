@@ -121,10 +121,11 @@
 					</div>
 				</div>
 
-				<CapWidget
+				<TurnstileWidget
 					v-if="passwordCaptcha.required.value"
 					ref="passwordCaptchaWidgetRef"
 					v-model="passwordCaptcha.token.value"
+					:action="TURNSTILE_ACTIONS.LOGIN"
 				/>
 
 				<UButton
@@ -202,9 +203,10 @@
 					</label>
 				</div>
 
-				<CapWidget
+				<TurnstileWidget
 					ref="minecraftCaptchaWidgetRef"
 					v-model="minecraftCaptcha.token.value"
+					:action="TURNSTILE_ACTIONS.MINECRAFT_LOGIN"
 				/>
 
 				<UButton
@@ -235,7 +237,11 @@
 </template>
 
 <script setup lang="ts">
-import { normalizePortalRedirectPath } from '~/utils/auth/redirect'
+import { TURNSTILE_ACTIONS } from '~/utils/security/turnstile-actions'
+import {
+	normalizePortalRedirectPath,
+	requiresDocumentNavigation,
+} from '~/utils/auth/redirect'
 
 interface LoginFormState {
 	handleOrEmail: string
@@ -261,17 +267,18 @@ const parseAuthMode = (value: unknown): LoginAuthMode =>
 const route = useRoute()
 const localePath = useLocalePath()
 const { t } = useI18n()
-const { login, loginWithMinecraft } = usePortalAuth()
+const { isLoggedIn, login, loginWithMinecraft } = usePortalAuth()
 const { notifyError, notifySuccess } = useAdminToast()
 const { getErrorCode } = useApiError()
 const submitting = ref(false)
+const redirectingAfterAuthentication = ref(false)
 const rememberMe = ref(true)
 const passwordVisible = ref(false)
 const gamePasswordVisible = ref(false)
 const authMode = ref<LoginAuthMode>(parseAuthMode(route.query.mode))
-const passwordCaptcha = useCap(false)
+const passwordCaptcha = useTurnstile(false)
 const passwordCaptchaWidgetRef = ref<{ reset: () => void } | null>(null)
-const minecraftCaptcha = useCap(true)
+const minecraftCaptcha = useTurnstile(true)
 const minecraftCaptchaWidgetRef = ref<{ reset: () => void } | null>(null)
 const passwordForm = reactive<LoginFormState>({
 	handleOrEmail: '',
@@ -367,6 +374,44 @@ const getRedirectPath = (): string => {
 	})
 }
 
+const continueAfterAuthentication = async (): Promise<void> => {
+	if (redirectingAfterAuthentication.value) {
+		return
+	}
+
+	redirectingAfterAuthentication.value = true
+	const target = getRedirectPath()
+
+	if (requiresDocumentNavigation(target)) {
+		window.location.assign(target)
+		return
+	}
+
+	try {
+		await navigateTo(target)
+	} finally {
+		redirectingAfterAuthentication.value = false
+	}
+}
+
+watch(
+	isLoggedIn,
+	(isLoggedIn) => {
+		if (!isLoggedIn || !requiresDocumentNavigation(getRedirectPath())) {
+			return
+		}
+
+		void continueAfterAuthentication().catch((error: unknown) => {
+			redirectingAfterAuthentication.value = false
+			notifyError(error, {
+				title: t('login.notifications.failedTitle'),
+				description: t('login.notifications.failedDescription'),
+			})
+		})
+	},
+	{ immediate: true, flush: 'post' },
+)
+
 const resetPasswordCaptcha = (): void => {
 	passwordCaptcha.reset()
 	passwordCaptchaWidgetRef.value?.reset()
@@ -424,7 +469,7 @@ const submitPasswordLogin = async (): Promise<void> => {
 		notifySuccess({
 			title: t('login.notifications.successTitle'),
 		})
-		await navigateTo(getRedirectPath())
+		await continueAfterAuthentication()
 	} catch (error) {
 		handlePasswordAuthFailure(
 			error,
@@ -452,7 +497,7 @@ const submitMinecraftLogin = async (): Promise<void> => {
 		notifySuccess({
 			title: t('minecraftLogin.notifications.successTitle'),
 		})
-		await navigateTo(getRedirectPath())
+		await continueAfterAuthentication()
 	} catch (error) {
 		const errorCode = getErrorCode(error)
 		const registrationTokenCandidate = (error as ApiErrorWithData | null)?.data

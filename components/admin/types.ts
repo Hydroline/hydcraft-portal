@@ -33,17 +33,11 @@ export interface MinecraftServerPeriodSummary {
 	updatedAt: string
 }
 
-export interface MinecraftServerMapConfigSummary {
+export interface MinecraftServerBlueMapConfigSummary {
 	id: string
-	enabled: boolean
-	hasTiles: boolean
-	tileBaseUrl: string | null
-	worldName: string
-	mapName: string
-	tileExtension: string
-	defaultCenterX: number
-	defaultCenterZ: number
-	defaultZoom: number
+	assetsBaseUrl: string
+	defaultAssetsBaseUrl: string
+	dimensions: string[]
 	createdAt: string
 	updatedAt: string
 }
@@ -72,16 +66,13 @@ export interface MinecraftServerSummary {
 	nameJaJp: string
 	host: string
 	port: number
-	enabled: boolean
-	kind: string
 	status: string
-	dataSourceMode: string
 	isDefault: boolean
 	sortOrder: number
 	createdAt: string
 	updatedAt: string
 	portalBridge: PortalBridgeSummary | null
-	mapConfig: MinecraftServerMapConfigSummary | null
+	blueMapConfig: MinecraftServerBlueMapConfigSummary | null
 	periods: MinecraftServerPeriodSummary[]
 	authMe: MysqlSourceSummary | null
 	luckPerms: MysqlSourceSummary | null
@@ -477,6 +468,7 @@ export interface PortalBridgeInspectResponse {
 
 export type AdminUserRole = 'USER' | 'MEMBER' | 'ADMIN' | 'OWNER'
 export type AdminUserStatus = 'PENDING' | 'ACTIVE' | 'DISABLED' | 'BANNED'
+export type AdminBuilderRank = 'CHIEF' | 'SENIOR' | 'PRACTICING' | 'APPRENTICE'
 
 export interface AdminUser {
 	id: string
@@ -493,6 +485,16 @@ export interface AdminUser {
 	location: string | null
 	countryOrRegion: string | null
 	birthday: string | null
+	builderRank: {
+		rank: AdminBuilderRank | null
+		comments: {
+			zhCn: string | null
+			zhTw: string | null
+			enUs: string | null
+			jaJp: string | null
+		}
+		managedByAdmin: boolean
+	}
 	role: AdminUserRole
 	status: AdminUserStatus
 	statusReason: string | null

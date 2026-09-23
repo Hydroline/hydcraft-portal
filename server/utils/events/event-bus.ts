@@ -19,6 +19,11 @@ interface EventMap {
 		scopes: string[]
 		grantedAt: Date
 	}
+	'oauth.client.revoked': {
+		clientId: string
+		userId: string
+		revokedAt: Date
+	}
 	'user.auth-activity.observed': {
 		userId: string
 		observedAt: Date
@@ -64,11 +69,9 @@ interface EventMap {
 		snapshotId: string
 		observedAt: Date
 	}
-	'minecraft-server.portal-bridge-config.saved': {
-		configId: string
-	}
-	'minecraft-server.portal-bridge-config.deleted': {
-		configId: string
+	'minecraft-server.lifecycle.updated': {
+		serverId: string
+		status: 'ONLINE' | 'ARCHIVED'
 	}
 	'user.profile.updated': {
 		userId: string
@@ -87,7 +90,7 @@ interface EventMap {
 	}
 	'user.profile.attachment-replaced': {
 		userId: string
-		purpose: 'user-avatar' | 'user-cover' | 'external-account-avatar'
+		purpose: 'user-avatar' | 'user-cover'
 		activeAttachmentId: string | null
 		updatedAt: Date
 	}
@@ -140,6 +143,8 @@ interface EventMap {
 		userId: string
 		externalAccountId: string
 		activeAttachmentId: string | null
+		previousAvatarUrl: string | null
+		activeAvatarUrl: string | null
 		updatedAt: Date
 	}
 	'user.oauth.unlinked': {

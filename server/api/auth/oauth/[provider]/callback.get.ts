@@ -2,11 +2,12 @@ import { createHash } from 'node:crypto'
 import { sendRedirect } from 'h3'
 import type { Prisma, User } from '~/generated/prisma/client'
 import { createRegistrationTicket } from '../../../../utils/auth/registration-ticket'
+import { normalizePortalRedirectPath } from '../../../../../utils/auth/redirect'
 import { issueAuthCookies } from '../../../../utils/auth/session'
 import { normalizeEmail } from '../../../../utils/auth/validation'
 import { prisma } from '../../../../utils/db/prisma'
 import { createApiError, createBadRequestError } from '../../../../utils/errors'
-import { emitEvent } from '../../../../utils/events/event-bus'
+import { queuePostCommitEvent } from '../../../../utils/events/post-commit'
 import {
 	getOAuthProviderConfig,
 	parseOAuthProvider,
@@ -59,6 +60,15 @@ const getLocalizedRegisterPath = (locale: string): string => {
 			return '/register'
 	}
 }
+
+const getSafeOAuthRedirectPath = (
+	value: string | null | undefined,
+	fallbackPath: string,
+): string =>
+	normalizePortalRedirectPath(value, {
+		fallbackPath,
+		loginPath: '/login',
+	})
 
 const parseTokenResponse = (value: unknown): TokenResponse => {
 	if (typeof value === 'string') {
@@ -158,10 +168,13 @@ const syncExternalAccountAvatar = async (input: {
 	proxyEnabled: boolean
 	ownerType?: 'external-account' | 'registration-ticket'
 	expiresAt?: Date
+	createInitialUserAvatar?: boolean
 }): Promise<{
 	synced: boolean
 	avatarAttachmentId: string | null
 	avatarUrl: string | null
+	initialAvatarAttachmentId: string | null
+	initialAvatarUrl: string | null
 }> => {
 	try {
 		const asset = await fetchOAuthAvatarAsset({
@@ -170,6 +183,17 @@ const syncExternalAccountAvatar = async (input: {
 			avatarUrl: input.profileAvatarUrl,
 			proxyEnabled: input.proxyEnabled,
 		})
+
+		if (!asset) {
+			return {
+				synced: false,
+				avatarAttachmentId: null,
+				avatarUrl: null,
+				initialAvatarAttachmentId: null,
+				initialAvatarUrl: null,
+			}
+		}
+
 		const result = await syncOAuthAvatarAttachment({
 			user: input.user,
 			account: input.account,
@@ -177,10 +201,30 @@ const syncExternalAccountAvatar = async (input: {
 			expiresAt: input.expiresAt,
 			asset,
 		})
+		let initialAvatar = {
+			avatarAttachmentId: null as string | null,
+			avatarUrl: null as string | null,
+		}
+
+		if (input.createInitialUserAvatar) {
+			try {
+				initialAvatar = await syncOAuthAvatarAttachment({
+					account: input.account,
+					ownerType: input.ownerType,
+					expiresAt: input.expiresAt,
+					asset,
+					purpose: 'user-avatar',
+				})
+			} catch (error) {
+				console.error('OAUTH_INITIAL_AVATAR_SYNC_FAILED', error)
+			}
+		}
 
 		return {
 			synced: true,
 			...result,
+			initialAvatarAttachmentId: initialAvatar.avatarAttachmentId,
+			initialAvatarUrl: initialAvatar.avatarUrl,
 		}
 	} catch (error) {
 		console.error('OAUTH_AVATAR_SYNC_FAILED', error)
@@ -189,6 +233,8 @@ const syncExternalAccountAvatar = async (input: {
 			synced: false,
 			avatarAttachmentId: null,
 			avatarUrl: null,
+			initialAvatarAttachmentId: null,
+			initialAvatarUrl: null,
 		}
 	}
 }
@@ -349,11 +395,12 @@ export default defineEventHandler(async (event) => {
 					avatarUrl: syncedAvatar.avatarUrl,
 				},
 			})
-			await emitEvent('user.oauth.attachment-replaced', {
+			queuePostCommitEvent('user.oauth.attachment-replaced', {
 				userId: user.id,
 				externalAccountId: existing.id,
 				activeAttachmentId: syncedAvatar.avatarAttachmentId,
-				updatedAt: new Date(),
+				previousAvatarUrl: existing.avatarUrl,
+				activeAvatarUrl: syncedAvatar.avatarUrl,
 			})
 		}
 		await prisma.oAuthStateToken.update({
@@ -369,7 +416,11 @@ export default defineEventHandler(async (event) => {
 			description: profile.username,
 		})
 
-		return sendRedirect(event, stateToken.redirectTo || '/me/profile', 302)
+		return sendRedirect(
+			event,
+			getSafeOAuthRedirectPath(stateToken.redirectTo, '/me/profile'),
+			302,
+		)
 	}
 
 	if (!stateToken.userId) {
@@ -398,6 +449,7 @@ export default defineEventHandler(async (event) => {
 			proxyEnabled: config.proxyEnabled,
 			ownerType: 'registration-ticket',
 			expiresAt: ticket.expiresAt,
+			createInitialUserAvatar: true,
 		})
 
 		if (syncedAvatar.synced) {
@@ -412,6 +464,8 @@ export default defineEventHandler(async (event) => {
 						providerEmail: normalizeOAuthEmail(profile.email),
 						avatarAttachmentId: syncedAvatar.avatarAttachmentId,
 						avatarUrl: syncedAvatar.avatarUrl,
+						initialAvatarAttachmentId: syncedAvatar.initialAvatarAttachmentId,
+						initialAvatarUrl: syncedAvatar.initialAvatarUrl,
 						accessToken,
 						scope: token.scope ?? config.scopes.join(' '),
 						rawProfile: profile.raw,
@@ -423,7 +477,9 @@ export default defineEventHandler(async (event) => {
 			where: { id: stateToken.id },
 			data: { consumedAt: new Date() },
 		})
-		const redirectTo = stateToken.redirectTo?.trim() || ''
+		const redirectTo = stateToken.redirectTo
+			? getSafeOAuthRedirectPath(stateToken.redirectTo, '/me/profile')
+			: ''
 		const registerPath = getLocalizedRegisterPath(stateToken.locale)
 		const params = new URLSearchParams({
 			mode: 'oauth',
@@ -462,7 +518,6 @@ export default defineEventHandler(async (event) => {
 		update: {
 			providerUsername: profile.username,
 			providerEmail: profile.email,
-			avatarUrl: profile.avatarUrl,
 			scope: token.scope ?? config.scopes.join(' '),
 			rawProfile: profile.raw,
 			lastUsedAt: new Date(),
@@ -488,13 +543,12 @@ export default defineEventHandler(async (event) => {
 		})
 
 		for (const replacedAccount of replacedAccounts) {
-			await emitEvent('user.oauth.unlinked', {
+			queuePostCommitEvent('user.oauth.unlinked', {
 				userId: stateToken.userId!,
 				provider,
 				externalAccountId: replacedAccount.id,
 				avatarAttachmentId: replacedAccount.avatarAttachmentId,
 				avatarUrl: replacedAccount.avatarUrl,
-				updatedAt: new Date(),
 			})
 		}
 	}
@@ -517,11 +571,12 @@ export default defineEventHandler(async (event) => {
 				avatarUrl: syncedAvatar.avatarUrl,
 			},
 		})
-		await emitEvent('user.oauth.attachment-replaced', {
+		queuePostCommitEvent('user.oauth.attachment-replaced', {
 			userId: stateToken.userId!,
 			externalAccountId: account.id,
 			activeAttachmentId: syncedAvatar.avatarAttachmentId,
-			updatedAt: new Date(),
+			previousAvatarUrl: existing?.avatarUrl ?? null,
+			activeAvatarUrl: syncedAvatar.avatarUrl,
 		})
 	}
 
@@ -545,17 +600,12 @@ export default defineEventHandler(async (event) => {
 			providerAccountId: profile.id,
 		},
 	})
-	await emitEvent('user.oauth.linked', {
-		userId: stateToken.userId!,
-		provider,
-		providerAccountId: account.providerAccountId,
-		externalAccountId: account.id,
-		updatedAt: new Date(),
-	})
-
 	return sendRedirect(
 		event,
-		stateToken.redirectTo || '/me/connections?oauth=linked',
+		getSafeOAuthRedirectPath(
+			stateToken.redirectTo,
+			'/me/connections?oauth=linked',
+		),
 		302,
 	)
 })

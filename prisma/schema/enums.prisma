@@ -20,9 +20,16 @@ enum UserProfileLanguage {
 }
 
 enum UserGender {
-  UNSPECIFIED
-  MALE
-  FEMALE
+	UNSPECIFIED
+	MALE
+	FEMALE
+}
+
+enum BuilderRank {
+	CHIEF
+	SENIOR
+	PRACTICING
+	APPRENTICE
 }
 
 enum TimezoneMode {
@@ -91,25 +98,9 @@ enum MinecraftAccountSource {
   OTHER
 }
 
-enum MinecraftServerKind {
-  MAIN
-  ARCHIVE
-  EVENT
-  TEST
-}
-
 enum MinecraftServerStatus {
-  PLANNED
-  LIVE
-  FROZEN
+  ONLINE
   ARCHIVED
-  HIDDEN
-}
-
-enum MinecraftServerDataSourceMode {
-  PORTAL_BRIDGE
-  IMPORTED
-  MIXED
 }
 
 enum MinecraftServerPeriodKind {
@@ -203,9 +194,16 @@ enum UserActivityEventType {
 }
 
 enum UserAuthActivitySource {
-  LOGIN
-  REFRESH
-  AUTHENTICATED_REQUEST
+	LOGIN
+	REFRESH
+	AUTHENTICATED_REQUEST
+}
+
+enum PostCommitEventStatus {
+	PENDING
+	PROCESSING
+	COMPLETED
+	FAILED
 }
 
 enum ExternalSyncSource {

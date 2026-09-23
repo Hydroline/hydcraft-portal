@@ -1,15 +1,74 @@
 import type {
 	MinecraftServer,
-	MinecraftServerMapConfig,
+	MinecraftServerBlueMapConfig,
 	MinecraftServerPeriod,
 	PortalBridgeConfig,
 } from '~/generated/prisma/client'
 
+export const toBlueMapDimensions = (value: unknown): string[] => {
+	if (!Array.isArray(value)) return []
+
+	const dimensions = new Map<string, string>()
+	for (const item of value) {
+		const legacyDimension =
+			item && typeof item === 'object'
+				? (item as Record<string, unknown>).dimension
+				: null
+		const dimension =
+			typeof item === 'string'
+				? item.trim()
+				: typeof legacyDimension === 'string'
+					? legacyDimension.trim()
+					: ''
+		if (dimension) dimensions.set(dimension.toLowerCase(), dimension)
+	}
+
+	return [...dimensions.values()]
+}
+
+export const resolveBlueMapDimensionAssetsUrl = (
+	assetsBaseUrl: string,
+	dimension: string,
+): string =>
+	`${assetsBaseUrl.replace(/\/+$/, '')}/${dimension.replace(/^\/+/, '')}`
+
 interface ServerWithConfigs extends MinecraftServer {
 	portalBridge: PortalBridgeConfig | null
-	mapConfig: MinecraftServerMapConfig | null
+	blueMapConfig: MinecraftServerBlueMapConfig | null
 	periods: MinecraftServerPeriod[]
 }
+
+type LauncherServerDirectoryItem = Pick<
+	MinecraftServer,
+	| 'id'
+	| 'serverId'
+	| 'code'
+	| 'shortCode'
+	| 'nameZhCn'
+	| 'nameZhTw'
+	| 'nameEnUs'
+	| 'nameJaJp'
+	| 'status'
+	| 'isDefault'
+	| 'sortOrder'
+>
+
+export const toPublicLauncherServerDirectoryItem = (
+	server: LauncherServerDirectoryItem,
+) => ({
+	id: server.id,
+	serverId: server.serverId,
+	code: server.code,
+	shortCode: server.shortCode,
+	nameZhCn: server.nameZhCn,
+	nameZhTw: server.nameZhTw,
+	nameEnUs: server.nameEnUs,
+	nameJaJp: server.nameJaJp,
+	enabled: true,
+	status: server.status,
+	isDefault: server.isDefault,
+	sortOrder: server.sortOrder,
+})
 
 export const toMinecraftServerSummary = (server: ServerWithConfigs) => ({
 	id: server.id,
@@ -22,10 +81,7 @@ export const toMinecraftServerSummary = (server: ServerWithConfigs) => ({
 	nameJaJp: server.nameJaJp,
 	host: server.host,
 	port: server.port,
-	enabled: server.enabled,
-	kind: server.kind,
 	status: server.status,
-	dataSourceMode: server.dataSourceMode,
 	isDefault: server.isDefault,
 	sortOrder: server.sortOrder,
 	createdAt: server.createdAt.toISOString(),
@@ -36,7 +92,6 @@ export const toMinecraftServerSummary = (server: ServerWithConfigs) => ({
 				bridgeId: server.portalBridge.bridgeId,
 				module: server.portalBridge.module,
 				wsUrl: server.portalBridge.wsUrl,
-				enabled: server.portalBridge.enabled,
 				requestedTopics: server.portalBridge.requestedTopics,
 				allowedTopics: server.portalBridge.allowedTopics,
 				coreSyncIntervalMinutes: server.portalBridge.coreSyncIntervalMinutes,
@@ -49,21 +104,21 @@ export const toMinecraftServerSummary = (server: ServerWithConfigs) => ({
 				hasSecret: Boolean(server.portalBridge.encryptedSecret),
 			}
 		: null,
-	mapConfig: server.mapConfig
-		? {
-				id: server.mapConfig.id,
-				enabled: server.mapConfig.enabled,
-				hasTiles: server.mapConfig.hasTiles,
-				tileBaseUrl: server.mapConfig.tileBaseUrl,
-				worldName: server.mapConfig.worldName,
-				mapName: server.mapConfig.mapName,
-				tileExtension: server.mapConfig.tileExtension,
-				defaultCenterX: server.mapConfig.defaultCenterX,
-				defaultCenterZ: server.mapConfig.defaultCenterZ,
-				defaultZoom: server.mapConfig.defaultZoom,
-				createdAt: server.mapConfig.createdAt.toISOString(),
-				updatedAt: server.mapConfig.updatedAt.toISOString(),
-			}
+	blueMapConfig: server.blueMapConfig
+		? (() => {
+				const dimensions = toBlueMapDimensions(server.blueMapConfig.dimensions)
+				return {
+					id: server.blueMapConfig.id,
+					assetsBaseUrl: server.blueMapConfig.assetsBaseUrl,
+					defaultAssetsBaseUrl: resolveBlueMapDimensionAssetsUrl(
+						server.blueMapConfig.assetsBaseUrl,
+						dimensions[0] ?? '',
+					),
+					dimensions,
+					createdAt: server.blueMapConfig.createdAt.toISOString(),
+					updatedAt: server.blueMapConfig.updatedAt.toISOString(),
+				}
+			})()
 		: null,
 	periods: server.periods.map((period) => ({
 		id: period.id,

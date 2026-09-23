@@ -49,22 +49,43 @@
 		},
 		"map": {
 			"locationUnavailable": "このアカウントにはまだ表示できる最近の座標がありません。",
-			"providerUnavailable": "ベースマップが未設定です。先に Dynmap tiles の環境変数を設定してください。"
+			"providerUnavailable": "このサーバーには BlueMap マップが設定されていません。",
+			"unsupportedDimension": "現在の座標はまだ対応していないディメンションにあります。",
+			"viewerLoadFailed": "BlueMap マップを一時的に読み込めません。",
+			"playerCoordinates": "座標 {coordinates}",
+			"playerDirection": "向き {degrees}°",
+			"orientation": {
+				"alignNorth": "マップを北向きにする",
+				"hint": "クリックで北向き、ダブルクリックで真上から北向きにリセット"
+			},
+			"viewMode": "マップ視点",
+			"flat": "平面",
+			"perspective": "透視",
+			"freeFlight": "自由飛行"
 		},
 		"toolbar": {
 			"bindTip": "バインドを追加",
-			"setPrimaryTip": "メイン設定"
+			"setPrimaryTip": "メイン設定",
+			"tabsLabel": "プロフィール範囲",
+			"viewModeLabel": "プロフィール表示",
+			"immersiveView": "没入表示",
+			"immersiveViewTip": "BlueMap の没入表示でプロフィールを見る",
+			"listView": "リスト表示",
+			"listViewTip": "カードリストでプロフィールを見る"
 		},
 		"tabs": {
 			"overview": "概要",
-			"official": "正式プロフィール",
-			"historical": "履歴アーカイブ",
-			"all": "すべてのアーカイブ",
+			"official": "正式",
+			"historical": "履歴",
+			"all": "すべて",
 			"officialEmptyTitle": "正式プロフィールはまだありません",
 			"officialEmptyDescription": "先に通常の Minecraft アカウントを紐付けると、正式プロフィールがここに表示されます。"
 		},
 		"selector": {
-			"aggregate": "総合情報"
+			"aggregate": "総合情報",
+			"previousAccount": "前のプロフィール",
+			"nextAccount": "次のプロフィール",
+			"selectAccount": "Minecraft プロフィールを選択"
 		},
 		"history": {
 			"profileSectionTitle": "履歴アーカイブ",
@@ -88,7 +109,20 @@
 			}
 		},
 		"overlay": {
-			"lastLogin": "前回ログイン"
+			"lastLogin": "前回ログイン",
+			"lastLocation": "最終位置",
+			"registration": "登録日時",
+			"locatePlayer": "プレイヤーの位置へ移動",
+			"unknownIpLocation": "所在地不明",
+			"unknownIp": "IP 不明",
+			"hiddenIp": "IP は非表示です",
+			"showIp": "完全な IP を表示",
+			"hideIp": "完全な IP を隠す",
+			"ipLocation": "IP 所在地",
+			"ipAddress": "IP アドレス",
+			"activityTime": "日時",
+			"boundAccount": "連携アカウント",
+			"scrollData": "プレイヤーデータをスクロール"
 		},
 		"bind": {
 			"title": "別の Minecraft アカウントをバインド",
@@ -113,6 +147,10 @@
 		"actions": {
 			"setPrimary": "メインに設定",
 			"unbind": "バインドを解除"
+		},
+		"unbind": {
+			"targetLabel": "解除する正式プロフィールを選択",
+			"targetDescription": "ここではどのプロフィールも事前選択されません。今回解除する正式プロフィールを手動で選んでから、CAPTCHA を完了してください。"
 		},
 		"empty": {
 			"title": "まだ Minecraft アカウントがバインドされていません",

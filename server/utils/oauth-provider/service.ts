@@ -1,15 +1,15 @@
 import { createHash, randomBytes } from 'node:crypto'
-import type { OAuthClient, User } from '~/generated/prisma/client'
+import type { OAuthClient, Prisma, User } from '~/generated/prisma/client'
 import { prisma } from '../db/prisma'
 import { createApiError } from '../errors'
 import { emitEvent } from '../events/event-bus'
 import { hashPassword, verifyPassword } from '../auth/password'
 
 export const oauthSupportedScopes = [
-	'openid',
 	'profile',
 	'email',
 	'hydroline',
+	'directory.read',
 ] as const
 
 export type OAuthScope = (typeof oauthSupportedScopes)[number]
@@ -30,12 +30,13 @@ export interface OAuthAuthorizationRequest {
 	redirectUri: string
 	scopes: OAuthScope[]
 	state: string | null
-	nonce: string | null
 	codeChallenge: string
 }
 
 const AUTHORIZATION_CODE_TTL_MS = 5 * 60 * 1000
 const CLIENT_ID_PREFIX = 'hydcraft_'
+
+type OAuthDbClient = Prisma.TransactionClient | typeof prisma
 
 const toOAuthClientSummary = (client: OAuthClient): OAuthClientSummary => ({
 	id: client.id,
@@ -57,7 +58,7 @@ const getRequiredString = (value: unknown, code: string): string => {
 }
 
 const normalizeScope = (value: string | null | undefined): OAuthScope[] => {
-	const scopes = (value ?? 'openid').split(/\s+/).filter(Boolean)
+	const scopes = (value ?? 'profile').split(/\s+/).filter(Boolean)
 
 	if (
 		!scopes.length ||
@@ -67,17 +68,6 @@ const normalizeScope = (value: string | null | undefined): OAuthScope[] => {
 	}
 
 	return [...new Set(scopes)] as OAuthScope[]
-}
-
-const normalizeNonce = (value: unknown): string | null => {
-	if (typeof value !== 'string' || !value.trim()) return null
-
-	const nonce = value.trim()
-	if (nonce.length > 255) {
-		throw createApiError({ statusCode: 400, code: 'OAUTH_NONCE_INVALID' })
-	}
-
-	return nonce
 }
 
 const getEnabledClient = async (clientId: string): Promise<OAuthClient> => {
@@ -143,9 +133,6 @@ export const parseAuthorizationRequest = async (
 	const scopes = normalizeScope(
 		typeof query.scope === 'string' ? query.scope : null,
 	)
-	if (!scopes.includes('openid')) {
-		throw createApiError({ statusCode: 400, code: 'OAUTH_SCOPE_INVALID' })
-	}
 	validateScopes(client, scopes)
 
 	return {
@@ -156,7 +143,6 @@ export const parseAuthorizationRequest = async (
 			scopes,
 			state:
 				typeof query.state === 'string' && query.state ? query.state : null,
-			nonce: normalizeNonce(query.nonce),
 			codeChallenge,
 		},
 	}
@@ -192,12 +178,77 @@ export const grantOAuthClientAccess = async (
 	})
 }
 
+export const revokeOAuthClientGrant = async (
+	userId: string,
+	grantId: string,
+): Promise<void> => {
+	const revokedAt = new Date()
+	const grant = await prisma.$transaction(async (tx) => {
+		const existing = await tx.oAuthClientGrant.findFirst({
+			where: {
+				id: grantId,
+				userId,
+			},
+		})
+
+		if (!existing) {
+			throw createApiError({
+				statusCode: 404,
+				code: 'OAUTH_GRANT_NOT_FOUND',
+			})
+		}
+
+		await tx.oAuthClientGrant.delete({
+			where: {
+				id: existing.id,
+			},
+		})
+		await tx.oAuthAuthorizationCode.updateMany({
+			where: {
+				clientId: existing.clientId,
+				userId,
+				consumedAt: null,
+			},
+			data: {
+				consumedAt: revokedAt,
+			},
+		})
+		await tx.oAuthAccessToken.updateMany({
+			where: {
+				clientId: existing.clientId,
+				userId,
+				revokedAt: null,
+			},
+			data: {
+				revokedAt,
+			},
+		})
+		await tx.oAuthRefreshToken.updateMany({
+			where: {
+				clientId: existing.clientId,
+				userId,
+				revokedAt: null,
+			},
+			data: {
+				revokedAt,
+			},
+		})
+
+		return existing
+	})
+
+	await emitEvent('oauth.client.revoked', {
+		clientId: grant.clientId,
+		userId,
+		revokedAt,
+	})
+}
+
 export const createAuthorizationCode = async (input: {
 	userId: string
 	clientId: string
 	redirectUri: string
 	scopes: OAuthScope[]
-	nonce: string | null
 	codeChallenge: string
 }): Promise<string> => {
 	const code = randomBytes(48).toString('base64url')
@@ -209,7 +260,6 @@ export const createAuthorizationCode = async (input: {
 			clientId: input.clientId,
 			redirectUri: input.redirectUri,
 			scopes: input.scopes,
-			nonce: input.nonce,
 			codeChallenge: input.codeChallenge,
 			codeChallengeMethod: 'S256',
 			expiresAt: new Date(Date.now() + AUTHORIZATION_CODE_TTL_MS),
@@ -239,15 +289,23 @@ export const consumeAuthorizationCode = async (input: {
 	clientId: string
 	redirectUri: string
 	codeVerifier: string
-}): Promise<{ user: User; scopes: string[]; nonce: string | null }> => {
+	db?: OAuthDbClient
+}): Promise<{
+	user: User & {
+		preferences: { language: 'ZH_CN' | 'ZH_TW' | 'EN_US' | 'JA_JP' } | null
+	}
+	scopes: string[]
+}> => {
+	const db = input.db ?? prisma
+
 	if (!/^[A-Za-z0-9._~-]{43,128}$/.test(input.codeVerifier)) {
 		throw createApiError({ statusCode: 400, code: 'OAUTH_PKCE_INVALID' })
 	}
 
 	const codeHash = createHash('sha256').update(input.code).digest('hex')
-	const record = await prisma.oAuthAuthorizationCode.findUnique({
+	const record = await db.oAuthAuthorizationCode.findUnique({
 		where: { codeHash },
-		include: { user: true, client: true },
+		include: { user: { include: { preferences: true } }, client: true },
 	})
 
 	if (
@@ -271,7 +329,7 @@ export const consumeAuthorizationCode = async (input: {
 		throw createApiError({ statusCode: 400, code: 'OAUTH_PKCE_INVALID' })
 	}
 
-	const updated = await prisma.oAuthAuthorizationCode.updateMany({
+	const updated = await db.oAuthAuthorizationCode.updateMany({
 		where: { id: record.id, consumedAt: null },
 		data: { consumedAt: new Date() },
 	})
@@ -283,7 +341,7 @@ export const consumeAuthorizationCode = async (input: {
 		})
 	}
 
-	return { user: record.user, scopes: record.scopes, nonce: record.nonce }
+	return { user: record.user, scopes: record.scopes }
 }
 
 export const authenticateOAuthClient = async (input: {
@@ -331,7 +389,7 @@ export const createOAuthClient = async (input: {
 		})
 	}
 
-	if (!allowedScopes.includes('openid')) {
+	if (!allowedScopes.length) {
 		throw createApiError({ statusCode: 400, code: 'OAUTH_SCOPE_INVALID' })
 	}
 
@@ -432,7 +490,7 @@ export const updateOAuthClient = async (
 						oauthSupportedScopes.includes(scope as OAuthScope),
 				)
 			: []
-		if (!scopes.includes('openid'))
+		if (!scopes.length)
 			throw createApiError({ statusCode: 400, code: 'OAUTH_SCOPE_INVALID' })
 		patch.allowedScopes = [...new Set(scopes)]
 	}

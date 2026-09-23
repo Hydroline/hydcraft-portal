@@ -56,12 +56,10 @@
 					"cta": "如果你也愿意为服务器的长期运转添一份力，欢迎来爱发电支持我们。",
 					"action": "前往爱发电"
 				},
-				"seasonEightTerrain": {
-					"title": "八周目地形锐意制作中，新周目将于 7 月底正式启动！",
-					"subtitle": "地形大手子 —— CatPillager 将为服务器献上最优秀的地图设计！",
-					"openPreview": "查看八周目计划地形图",
-					"previewAlt": "八周目计划地形图",
-					"previewCaption": "八周目计划地形图"
+				"seasonEight": {
+					"title": "八周目已于 2026 年 7 月 15 日正式启动！",
+					"subtitle": "机械动力、机械动力航空学、MTR 4、沉浸载具、YSM、媒体放映器、时装工坊…… 开飞机、造飞机、造模组、看电影、聊天，还有大到根本建不完的地图、玩法更加丰富的模组，都在氢气工艺八周目！",
+					"openMap": "打开八周目地图"
 				},
 				"users": {
 					"title": "用户",
@@ -142,7 +140,10 @@
 						"joinedAt": "加入时间"
 					},
 					"filters": {
-						"search": "搜索用户名、显示名或简介"
+						"search": "搜索用户名、显示名或简介",
+						"builderRank": "建筑职阶",
+						"allBuilderRanks": "全部职阶",
+						"unassignedBuilderRank": "未授予职阶"
 					}
 				},
 				"players": {
@@ -161,8 +162,8 @@
 						"historical": "历史档案"
 					},
 					"counts": {
-						"formal": "{count} 个正式档案",
-						"historical": "{count} 个历史档案"
+						"formal": "{count} 正式",
+						"historical": "{count} 历史"
 					},
 					"filters": {
 						"search": "搜索玩家名、登录名或绑定用户",

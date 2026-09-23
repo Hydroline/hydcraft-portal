@@ -87,9 +87,10 @@
 					</label>
 				</div>
 
-				<CapWidget
+				<TurnstileWidget
 					ref="gameCaptchaWidgetRef"
 					v-model="gameCaptcha.token.value"
+					:action="TURNSTILE_ACTIONS.MINECRAFT_REGISTER"
 				/>
 
 				<UButton
@@ -214,9 +215,10 @@
 						</UInput>
 					</label>
 
-					<CapWidget
+					<TurnstileWidget
 						ref="detailsCaptchaWidgetRef"
 						v-model="detailsCaptcha.token.value"
+						:action="TURNSTILE_ACTIONS.EMAIL_CODE"
 					/>
 				</div>
 
@@ -304,10 +306,11 @@
 					>
 						{{ resendLabel }}
 					</UButton>
-					<CapWidget
+					<TurnstileWidget
 						v-if="showCodeStepCaptcha"
 						ref="detailsCaptchaWidgetRef"
 						v-model="detailsCaptcha.token.value"
+						:action="TURNSTILE_ACTIONS.EMAIL_CODE"
 					/>
 				</div>
 
@@ -355,11 +358,15 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import SkeletonImage from '~/components/common/SkeletonImage.vue'
+import { TURNSTILE_ACTIONS } from '~/utils/security/turnstile-actions'
 import type {
 	PortalIpLocationSummary,
 	PortalRegistrationTicketSummary,
 } from '~/composables/usePortalAuth'
-import { normalizePortalRedirectPath } from '~/utils/auth/redirect'
+import {
+	normalizePortalRedirectPath,
+	requiresDocumentNavigation,
+} from '~/utils/auth/redirect'
 import { getMinecraftHeadRendererUrl } from '~/utils/minecraft/body-renderer'
 
 interface RegisterFormState {
@@ -404,9 +411,9 @@ const ticketToken = ref('')
 const ticketPreview = ref<PortalRegistrationTicketSummary | null>(null)
 const checkedHandle = ref('')
 let resendTimer: number | null = null
-const gameCaptcha = useCap(true)
+const gameCaptcha = useTurnstile(true)
 const gameCaptchaWidgetRef = ref<{ reset: () => void } | null>(null)
-const detailsCaptcha = useCap(true)
+const detailsCaptcha = useTurnstile(true)
 const detailsCaptchaWidgetRef = ref<{ reset: () => void } | null>(null)
 const form = reactive<RegisterFormState>({
 	gameUsername: '',
@@ -749,6 +756,17 @@ const getRedirectPath = (): string => {
 	})
 }
 
+const continueAfterAuthentication = async (): Promise<void> => {
+	const target = getRedirectPath()
+
+	if (requiresDocumentNavigation(target)) {
+		window.location.assign(target)
+		return
+	}
+
+	await navigateTo(target)
+}
+
 const goBack = async (): Promise<void> => {
 	if (step.value === 'code') {
 		resetCodeStep()
@@ -939,7 +957,7 @@ const confirmRegister = async (): Promise<void> => {
 					? t('register.notifications.successDescription')
 					: t('register.notifications.ticketSuccessDescription'),
 		})
-		await navigateTo(getRedirectPath())
+		await continueAfterAuthentication()
 	} catch (error) {
 		if (getErrorCode(error) === 'USERNAME_TAKEN') {
 			step.value = 'details'

@@ -9,6 +9,8 @@ const INVALID_MDC_OPTIMIZE_DEPS = new Set([
 	'@nuxtjs/mdc > unist-util-visit',
 	'@nuxtjs/mdc > unified',
 	'@nuxtjs/mdc > extend',
+	'@nuxtjs/mdc > parse5',
+	'@nuxtjs/mdc > debug',
 ])
 const analyticsPlugins =
 	process.env.NODE_ENV === 'production'
@@ -21,10 +23,14 @@ const analyticsPlugins =
 export default defineNuxtConfig({
 	compatibilityDate: '2024-04-03',
 	ssr: true,
+	routeRules: {
+		'/**': { prerender: false },
+	},
 	devtools: { enabled: false },
 	plugins: [...analyticsPlugins],
 	modules: [
 		'@nuxt/eslint',
+		'@nuxtjs/turnstile',
 		'nuxt-svgo',
 		[
 			'@nuxtjs/i18n',
@@ -192,10 +198,11 @@ export default defineNuxtConfig({
 				'lucide:monitor-smartphone',
 				'lucide:smartphone',
 				'lucide:tablet-smartphone',
+				'simple-icons:xiaohongshu',
 			],
 		},
 		serverBundle: {
-			collections: ['lucide'],
+			collections: ['lucide', 'simple-icons'],
 		},
 		fallbackToApi: false,
 	},
@@ -206,14 +213,6 @@ export default defineNuxtConfig({
 	svgo: {
 		global: false,
 		defaultImport: 'component',
-	},
-	nitro: {
-		serverAssets: [
-			{
-				baseName: 'ip2region',
-				dir: './data/ip2region',
-			},
-		],
 	},
 	seo: {
 		enabled: false,
@@ -261,13 +260,10 @@ export default defineNuxtConfig({
 		},
 	},
 	site: {
-		url:
-			process.env.NUXT_PUBLIC_SITE_URL ??
-			process.env.NUXT_SITE_URL ??
-			'http://localhost:3000',
+		url: process.env.NUXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
 		name: 'HydCraft Portal',
 		description:
-			'氢气工艺 HydCraft 是一个以城市建设和铁路建设为核心的 Minecraft 服务器，一个可以修楼、铺轨、造城、养老的服务器。至于为什么一个 MC 服务器用氢气命名？我也不知道。',
+			'氢气工艺 HydCraft 是一个围绕城市建设、铁路交通与机械动力持续发展的 Minecraft 社区。',
 		defaultLocale: 'zh-CN',
 	},
 	runtimeConfig: {
@@ -275,9 +271,6 @@ export default defineNuxtConfig({
 			userId: '',
 			apiKey: '',
 			baseUrl: 'https://afdian.com',
-		},
-		cap: {
-			baseUrl: '',
 		},
 		cos: {
 			secretId: '',
@@ -288,18 +281,8 @@ export default defineNuxtConfig({
 		},
 		public: {
 			siteUrl: '',
-			capBaseUrl: '',
 			baiduStatKey: '',
 			msClarityId: '',
-			minecraftMap: {
-				dynmapTileBaseUrl: '',
-				dynmapWorldName: 'world',
-				dynmapMapName: 'flat',
-				dynmapTileExtension: 'jpg',
-				defaultCenterX: '811',
-				defaultCenterZ: '2933',
-				defaultZoom: '0',
-			},
 		},
 	},
 	content: {
@@ -308,6 +291,23 @@ export default defineNuxtConfig({
 		},
 	},
 	nitro: {
+		// Portal is SSR-only. Disabling crawl prevents Nitro from spawning an
+		// otherwise-unused prerender worker, whose Windows ESM URL generation is
+		// not compatible with paths on a drive letter.
+		prerender: {
+			crawlLinks: false,
+		},
+		hooks: {
+			'prerender:routes'(routes) {
+				routes.clear()
+			},
+		},
+		serverAssets: [
+			{
+				baseName: 'ip2region',
+				dir: './data/ip2region',
+			},
+		],
 		experimental: {
 			tasks: true,
 		},
@@ -321,12 +321,34 @@ export default defineNuxtConfig({
 	],
 	vite: {
 		plugins: [tailwindcss()],
-		vue: {
-			template: {
-				compilerOptions: {
-					isCustomElement: (tag) => tag === 'cap-widget',
-				},
-			},
+		resolve: {
+			// BlueMap and skinview3d must share one Three.js runtime. Loading
+			// two copies makes WebGL state and shader chunks diverge at runtime.
+			dedupe: ['three'],
+		},
+		optimizeDeps: {
+			include: [
+				'@microsoft/clarity',
+				'chart.js',
+				'dayjs',
+				'dayjs/plugin/utc',
+				'gsap',
+				'gsap/Observer',
+				'gsap/ScrollTrigger',
+				'hammerjs',
+				'lunar-typescript',
+				'skinview-utils',
+				'skinview3d',
+				'three',
+				'three/src/math/MathUtils',
+				'three/examples/jsm/lines/LineMaterial',
+				'three/examples/jsm/lines/Line2',
+				'three/examples/jsm/lines/LineSegmentsGeometry',
+				'three/examples/jsm/lines/LineGeometry',
+				'vue-chartjs',
+				'vue-picture-cropper',
+				'vuedraggable',
+			],
 		},
 	},
 	app: {
@@ -355,7 +377,7 @@ export default defineNuxtConfig({
 				{
 					name: 'description',
 					content:
-						'氢气工艺 HydCraft 是一个以城市建设和铁路建设为核心的 Minecraft 服务器，一个可以修楼、铺轨、造城、养老的地方，至于为什么一个 MC 服务器用氢气命名？我也不知道。',
+						'氢气工艺 HydCraft 是一个围绕城市建设、铁路交通与机械动力持续发展的 Minecraft 社区。',
 				},
 			],
 			titleTemplate: '%s',
@@ -377,12 +399,11 @@ export default defineNuxtConfig({
 				return
 			}
 
-			config.optimizeDeps = {
-				...config.optimizeDeps,
-				include: include.filter(
-					(entry) => !INVALID_MDC_OPTIMIZE_DEPS.has(entry),
-				),
-			}
+			include.splice(
+				0,
+				include.length,
+				...include.filter((entry) => !INVALID_MDC_OPTIMIZE_DEPS.has(entry)),
+			)
 		},
 	},
 })

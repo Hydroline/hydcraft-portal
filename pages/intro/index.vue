@@ -1,5 +1,11 @@
 <template>
 	<div class="flex flex-col gap-16">
+		<UAlert
+			color="warning"
+			icon="i-lucide-info"
+			:title="t('content.intro.outdatedNotice.title')"
+			:description="t('content.intro.outdatedNotice.description')"
+		/>
 		<IntroHeroBanner />
 		<IntroRequirementsCard />
 		<IntroMarquee
@@ -23,7 +29,7 @@
 					{{ t('content.intro.participation.title') }}
 				</h2>
 			</div>
-			<IntroParticipationMap />
+			<IntroParticipationMap :assets-base-url="introMapAssetsBaseUrl" />
 		</section>
 		<section class="flex flex-col gap-6">
 			<div class="flex justify-center">
@@ -57,6 +63,7 @@
 <script setup lang="ts">
 import type { NormalizedContentImageItem } from '~/components/content/utils/content-image'
 import { getSiteMediaUrl } from '~/utils/assets/site-media-url'
+import type { ServerOverviewResponse } from '~/utils/server/overview'
 
 definePageMeta({
 	headerVariant: 'solid',
@@ -88,6 +95,23 @@ const unfinishedImagePaths = [
 ]
 
 const { t } = useI18n()
+
+const { data: serverOverview } = await useFetch<ServerOverviewResponse>(
+	'/api/public/server/overview',
+)
+
+const introMapAssetsBaseUrl = computed(() => {
+	const overview = serverOverview.value
+	if (!overview?.defaultServerId) {
+		return null
+	}
+
+	return (
+		overview.servers.find(
+			(server) => server.serverId === overview.defaultServerId,
+		)?.blueMapConfig?.defaultAssetsBaseUrl ?? null
+	)
+})
 
 const serverShowcaseImagePaths = [
 	"minecraft-gallery/season_7/bei'an_screenshots_2.webp",

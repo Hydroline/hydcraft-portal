@@ -1,5 +1,6 @@
 import { computed } from 'vue'
 import { hasHeroVideoBackground } from '~/utils/layout/hero-video'
+import { resolveHeaderVariant } from '~/utils/layout/page-presentation'
 
 type ThemeMode = 'light' | 'dark' | 'system'
 
@@ -10,6 +11,7 @@ interface HeaderAppearanceState {
 	headerScrimClass: ComputedRef<string>
 	headerActionButtonClass: ComputedRef<string>
 	headerLoginButtonClass: ComputedRef<string>
+	headerMenuActionClass: ComputedRef<string>
 	headerUserMenuButtonClass: ComputedRef<string>
 	headerUserMenuChevronClass: ComputedRef<string>
 	activeNavItemClass: ComputedRef<string>
@@ -29,8 +31,9 @@ export const useHeaderAppearance = (): HeaderAppearanceState => {
 	const route = useRoute()
 	const colorMode = useNuxtApp().$colorMode
 
-	const usesHeroVideoHeaderChrome = computed(() =>
-		hasHeroVideoBackground(route),
+	const usesHeroVideoHeaderChrome = computed(
+		() =>
+			resolveHeaderVariant(route) === 'hero' || hasHeroVideoBackground(route),
 	)
 
 	const selectedThemeMode = computed<ThemeMode>(() => {
@@ -69,6 +72,12 @@ export const useHeaderAppearance = (): HeaderAppearanceState => {
 			: 'text-slate-700! hover:text-slate-950! dark:text-slate-100! dark:hover:text-white!',
 	)
 
+	const headerMenuActionClass = computed(() =>
+		usesHeroVideoHeaderChrome.value
+			? 'text-white! hover:text-white!'
+			: 'text-slate-800! hover:text-slate-800! dark:text-slate-100! dark:hover:text-slate-100!',
+	)
+
 	const headerUserMenuButtonClass = computed(() =>
 		usesHeroVideoHeaderChrome.value
 			? 'text-white hover:text-white'
@@ -100,6 +109,7 @@ export const useHeaderAppearance = (): HeaderAppearanceState => {
 		headerScrimClass,
 		headerActionButtonClass,
 		headerLoginButtonClass,
+		headerMenuActionClass,
 		headerUserMenuButtonClass,
 		headerUserMenuChevronClass,
 		activeNavItemClass,

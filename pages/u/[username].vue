@@ -17,7 +17,7 @@
 		/>
 
 		<div v-else class="grid gap-12">
-			<ProfilePublicHero :profile="profile" />
+			<ProfileHero mode="public" :profile="profile" />
 
 			<div class="flex flex-col-reverse gap-10 lg:grid lg:gap-6 lg:grid-cols-4">
 				<div class="flex flex-col gap-8 lg:gap-10 lg:col-span-3">
@@ -239,33 +239,26 @@
 								</p>
 							</div>
 							<div class="grid gap-3">
-								<div class="flex items-center justify-between gap-3 text-sm">
-									<span class="text-slate-500 dark:text-slate-400">
-										{{ t('minecraftAccounts.summary.deaths') }}
-									</span>
-									<span class="text-slate-950 dark:text-white">
-										{{ minecraftArchiveSummary.totalDeaths }}
-									</span>
-								</div>
-								<div class="flex items-center justify-between gap-3 text-sm">
-									<span class="text-slate-500 dark:text-slate-400">
-										{{ t('minecraftAccounts.summary.leaveCount') }}
-									</span>
-									<span class="text-slate-950 dark:text-white">
-										{{ minecraftArchiveSummary.totalLeaveCount }}
-									</span>
-								</div>
-								<div class="flex items-center justify-between gap-3 text-sm">
-									<span class="text-slate-500 dark:text-slate-400">
-										{{ t('minecraftAccounts.summary.distance') }}
-									</span>
-									<span class="text-slate-950 dark:text-white">
-										{{ minecraftArchiveDistanceLabel }}
-									</span>
-								</div>
+								<ProfileInfoRow
+									:label="t('minecraftAccounts.summary.deaths')"
+									:value="String(minecraftArchiveSummary.totalDeaths)"
+								/>
+								<ProfileInfoRow
+									:label="t('minecraftAccounts.summary.leaveCount')"
+									:value="String(minecraftArchiveSummary.totalLeaveCount)"
+								/>
+								<ProfileInfoRow
+									:label="t('minecraftAccounts.summary.distance')"
+									:value="minecraftArchiveDistanceLabel"
+								/>
 							</div>
 						</div>
 					</section>
+
+					<ProfileBuilderRankCard
+						v-if="profile.builderRank"
+						:builder-rank="profile.builderRank"
+					/>
 
 					<section :class="sideCardClass">
 						<h3 :class="sideTitleClass">
@@ -411,6 +404,15 @@ interface PublicProfile {
 		textEnUs: string | null
 		textJaJp: string | null
 	}
+	builderRank?: {
+		rank: 'CHIEF' | 'SENIOR' | 'PRACTICING' | 'APPRENTICE'
+		comments: {
+			zhCn: string | null
+			zhTw: string | null
+			enUs: string | null
+			jaJp: string | null
+		}
+	} | null
 	bio?: string | null
 	schoolOrCompany?: string | null
 	occupationOrMajor?: string | null

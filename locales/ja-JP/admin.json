@@ -59,7 +59,7 @@
 					"description": "有効 {enabled} / 設定済み {configured}"
 				},
 				"portalBridge": {
-					"label": "PortalBridge",
+					"label": "Portal Bridge",
 					"description": "有効 {enabled} / 設定済み {configured}"
 				}
 			},
@@ -312,7 +312,7 @@
 			},
 			"sections": {
 				"onlinePlayers": "オンライン人数",
-				"portalBridge": "PortalBridge",
+				"portalBridge": "Portal Bridge",
 				"archiveStatus": "アーカイブ状態",
 				"serverInfo": "サーバー情報",
 				"dataSources": "データソース",
@@ -472,25 +472,15 @@
 				"group": "権限グループ"
 			},
 			"fields": {
-				"id": "レコード ID",
 				"player": "プレイヤー",
-				"normalizedUsername": "正規化ユーザー名",
-				"uuidSource": "UUID ソース",
 				"firstSeenAt": "初回参加",
 				"lastSeenAt": "最終確認",
-				"evidenceCount": "証拠数",
-				"conflictState": "競合状態",
-				"authMeId": "AuthMe ID",
-				"authMeUsername": "AuthMe ユーザー名",
-				"authMeRealname": "AuthMe 表示名",
-				"authMeEmail": "AuthMe メール",
 				"authMeRegisteredAt": "AuthMe 登録日時",
 				"authMeLastLoginAt": "AuthMe 最終ログイン",
 				"authMeRegisterIp": "AuthMe 登録 IP",
 				"authMeLastIp": "AuthMe 最終 IP",
 				"authMeHasTotp": "AuthMe TOTP",
 				"authMeSyncedAt": "AuthMe 同期日時",
-				"luckPermsUsername": "LuckPerms ユーザー名",
 				"luckPermsPrimaryGroup": "LuckPerms プライマリグループ",
 				"luckPermsSyncedAt": "LuckPerms 同期日時",
 				"portalAccountId": "Hydroline ID アカウント ID",
@@ -640,7 +630,8 @@
 			},
 			"actions": {
 				"assign": "割り当て",
-				"unassign": "割り当て解除"
+				"unassign": "割り当て解除",
+				"create": "履歴プレイヤーを追加"
 			},
 			"empty": {
 				"unassigned": "未割り当て"
@@ -650,11 +641,23 @@
 				"description": "紐付ける Hydroline ユーザー名を入力してください。",
 				"username": "Hydroline ユーザー名"
 			},
+			"createModal": {
+				"title": "履歴プレイヤーを追加",
+				"description": "Minecraft ID を入力すると、オフライン UUID ルールで履歴アーカイブを作成し、一致するサーバーデータを自動で集計します。",
+				"usernamePlaceholder": "Minecraft ID を入力",
+				"waiting": "Minecraft ID を入力すると自動計算されます",
+				"calculating": "計算中…",
+				"invalidUsername": "英字、数字、アンダースコアを 3～16 文字で入力してください。",
+				"confirm": "履歴アーカイブを作成"
+			},
 			"notifications": {
 				"assigned": "履歴アーカイブを割り当てました",
 				"assignFailed": "履歴アーカイブの割り当てに失敗しました",
 				"unassigned": "履歴アーカイブの割り当てを解除しました",
-				"unassignFailed": "履歴アーカイブの割り当て解除に失敗しました"
+				"unassignFailed": "履歴アーカイブの割り当て解除に失敗しました",
+				"created": "履歴アーカイブを作成しました：{uuid}",
+				"existing": "履歴アーカイブは既に存在します：{uuid}",
+				"createFailed": "履歴アーカイブの作成に失敗しました"
 			}
 		},
 		"users": {
@@ -672,7 +675,8 @@
 				"preferences": "設定",
 				"social": "ソーシャルリンク",
 				"privacy": "公開情報",
-				"achievements": "実績と認証"
+				"achievements": "実績と認証",
+				"builderRank": "建築ランク"
 			},
 			"fields": {
 				"user": "ユーザー",
@@ -948,11 +952,11 @@
 			"sections": {
 				"basic": "サーバー基本情報",
 				"basicDescription": "サーバーの識別情報、表示名、接続方式を設定します。",
-				"mapConfig": "マップ設定",
-				"mapConfigDescription": "このサーバーで地図を有効にするか、タイルが利用可能かを設定します。",
+				"blueMapConfig": "BlueMap 設定",
+				"blueMapConfigDescription": "このサーバーの BlueMap アセットルートを設定します。",
 				"periods": "ライフサイクル期間",
 				"periodsDescription": "このサーバーの稼働、保管、イベント期間を手動で管理します。",
-				"portalBridge": "PortalBridge",
+				"portalBridge": "Portal Bridge",
 				"portalBridgeDescription": "このサーバーの Bridge 接続情報と同期入口を設定します。",
 				"authMe": "AuthMe MySQL",
 				"luckPerms": "LuckPerms MySQL",
@@ -976,17 +980,9 @@
 				"description": "説明",
 				"enabled": "このサーバーを有効化",
 				"enabledDescription": "無効化すると、このサーバーは有効なインスタンスとして公開されません。",
-				"mapEnabled": "地図を有効化",
-				"mapEnabledDescription": "有効にすると、このサーバーで地図機能と既定視点を利用できます。",
-				"hasTiles": "地図 Tiles を有効化",
-				"hasTilesDescription": "有効にすると、フロントエンドがタイル URL から地図レイヤーを読み込みます。",
-				"tileBaseUrl": "Tiles Base URL",
-				"worldName": "ワールド名",
-				"mapName": "マップ名",
-				"tileExtension": "タイル拡張子",
-				"defaultZoom": "既定ズーム",
-				"defaultCenterX": "既定中心 X",
-				"defaultCenterZ": "既定中心 Z",
+				"assetsBaseUrl": "BlueMap Assets Base URL",
+				"blueMapDimensions": "ワールドディメンション",
+				"blueMapDimensionId": "ワールドディメンション",
 				"periodKind": "期間種別",
 				"periodSortOrder": "期間並び順",
 				"startedAt": "開始日時",
@@ -1005,6 +1001,8 @@
 				"keepSecret": "空欄なら変更しません"
 			},
 			"actions": {
+				"addBlueMapDimension": "ディメンションを追加",
+				"removeBlueMapDimension": "ディメンションを削除",
 				"addPeriod": "期間を追加",
 				"cancel": "キャンセル",
 				"save": "設定を保存",
@@ -1022,6 +1020,7 @@
 					"test": "テストサーバー"
 				},
 				"serverStatus": {
+					"online": "オンライン",
 					"planned": "計画中",
 					"live": "稼働中",
 					"frozen": "凍結",
@@ -1101,6 +1100,31 @@
 				"createBadge": "Badge 作成",
 				"editBadge": "Badge 編集",
 				"assignBadges": "Badge 付与"
+			}
+		},
+		"builderRanks": {
+			"title": "建築ランク",
+			"filters": { "search": "ユーザー名、メール、Hydroline ID を検索" },
+			"fields": {
+				"user": "ユーザー",
+				"rank": "ランク",
+				"comment": "現在の言語の説明",
+				"comments": "カスタム説明"
+			},
+			"ranks": {
+				"NONE": "ランクなし",
+				"CHIEF": "チーフアーキテクト",
+				"SENIOR": "シニアアーキテクト",
+				"PRACTICING": "プラクティシングアーキテクト",
+				"APPRENTICE": "アプレンティスアーキテクト"
+			},
+			"actions": { "assign": "一括付与", "edit": "ランクを編集" },
+			"modal": { "edit": "建築ランクを編集" },
+			"notifications": {
+				"assigned": "建築ランクを更新しました",
+				"assignFailed": "建築ランクの一括更新に失敗しました",
+				"saved": "建築ランクを保存しました",
+				"saveFailed": "建築ランクの保存に失敗しました"
 			}
 		},
 		"oauthClients": {
