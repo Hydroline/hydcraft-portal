@@ -4,6 +4,7 @@
 			"UNEXPECTED_ERROR": "Something went wrong. Please try again later.",
 			"INTERNAL_SERVER_ERROR": "The server cannot process the request right now. Please try again later.",
 			"NOT_FOUND": "The requested resource was not found.",
+			"INVALID_RECOMMENDED_USERS_REQUEST": "The recommended users request is invalid. Refresh the page and try again.",
 			"FORBIDDEN": "You do not have permission to perform this action.",
 			"TOO_MANY_REQUESTS": "Too many attempts. Please try again later.",
 			"AUTHENTICATION_REQUIRED": "Please sign in to continue.",

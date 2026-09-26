@@ -122,9 +122,9 @@
 				</div>
 				<HomeScrollHint
 					:phase="scrollHintPhase"
+					:suppressed="sceneSwitching"
 					:active="
 						storyState.navigationStatus === 'idle' &&
-						!sceneSwitching &&
 						!overviewDetailPersonId &&
 						!heroDescriptionExpanded
 					"

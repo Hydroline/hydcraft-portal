@@ -138,14 +138,35 @@ const { t } = useI18n()
 const toast = useToast()
 const refreshedUsers = ref<ServerOverviewRecommendedUser[] | null>(null)
 const refreshingUsers = ref(false)
+const seenUsernames = new Set<string>()
+
+function recordSeenUsers(users: ServerOverviewRecommendedUser[]) {
+	for (const user of users) seenUsernames.add(user.username)
+	while (seenUsernames.size > 2000) {
+		const oldestUsername = seenUsernames.values().next().value
+		if (oldestUsername) seenUsernames.delete(oldestUsername)
+	}
+}
 
 async function refreshUsers() {
 	if (refreshingUsers.value) return
+	const currentUsers =
+		refreshedUsers.value ?? overview.value?.recommendedUsers ?? []
+	recordSeenUsers(currentUsers)
 	refreshingUsers.value = true
 	try {
-		refreshedUsers.value = await $fetch<ServerOverviewRecommendedUser[]>(
+		const nextUsers = await $fetch<ServerOverviewRecommendedUser[]>(
 			'/api/public/server/recommended-users',
+			{
+				method: 'POST',
+				body: {
+					currentUsernames: currentUsers.map((user) => user.username),
+					seenUsernames: [...seenUsernames],
+				},
+			},
 		)
+		refreshedUsers.value = nextUsers
+		recordSeenUsers(nextUsers)
 	} catch {
 		toast.add({
 			title: t('content.serverOverview.cards.users.refreshFailed'),

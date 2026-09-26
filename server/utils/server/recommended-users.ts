@@ -18,9 +18,14 @@ const shuffle = <T>(items: T[]): T[] => {
 const pickRandomItems = <T>(items: T[], limit: number): T[] =>
 	shuffle(items).slice(0, limit)
 
-export const listRecommendedUsers = async (): Promise<
-	ServerOverviewRecommendedUser[]
-> => {
+export interface RecommendedUserSelection {
+	currentUsernames?: string[]
+	seenUsernames?: string[]
+}
+
+export const listRecommendedUsers = async (
+	selection: RecommendedUserSelection = {},
+): Promise<ServerOverviewRecommendedUser[]> => {
 	const users = await prisma.user.findMany({
 		select: {
 			username: true,
@@ -37,16 +42,34 @@ export const listRecommendedUsers = async (): Promise<
 		},
 	})
 
-	return pickRandomItems(
-		users
-			.filter((user) => isPublicProfileCandidate(user.privacy))
-			.map((user) => ({
-				username: user.username,
-				displayName: user.displayName,
-				avatarUrl: user.avatarUrl,
-				coverUrl: user.coverUrl,
-				bio: user.bio,
-			})),
-		10,
+	const candidates = users
+		.filter((user) => isPublicProfileCandidate(user.privacy))
+		.map((user) => ({
+			username: user.username,
+			displayName: user.displayName,
+			avatarUrl: user.avatarUrl,
+			coverUrl: user.coverUrl,
+			bio: user.bio,
+		}))
+
+	if (!selection.currentUsernames?.length)
+		return pickRandomItems(candidates, 10)
+
+	const current = new Set(selection.currentUsernames)
+	const seen = new Set(selection.seenUsernames)
+	const unseen = candidates.filter(
+		(user) => !current.has(user.username) && !seen.has(user.username),
 	)
+	const previouslySeen = candidates.filter(
+		(user) => !current.has(user.username) && seen.has(user.username),
+	)
+	const currentCandidates = candidates.filter((user) =>
+		current.has(user.username),
+	)
+
+	return [
+		...shuffle(unseen),
+		...shuffle(previouslySeen),
+		...shuffle(currentCandidates),
+	].slice(0, 10)
 }

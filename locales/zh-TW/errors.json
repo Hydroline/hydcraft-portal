@@ -4,6 +4,7 @@
 			"UNEXPECTED_ERROR": "操作失敗，請稍後再試。",
 			"INTERNAL_SERVER_ERROR": "伺服器暫時無法處理請求，請稍後再試。",
 			"NOT_FOUND": "請求的內容不存在。",
+			"INVALID_RECOMMENDED_USERS_REQUEST": "推薦用戶請求無效，請重新整理頁面後再試。",
 			"FORBIDDEN": "你沒有權限執行此操作。",
 			"TOO_MANY_REQUESTS": "操作過於頻繁，請稍後再試。",
 			"AUTHENTICATION_REQUIRED": "請先登入後再繼續。",

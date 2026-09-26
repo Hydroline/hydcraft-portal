@@ -4,6 +4,7 @@
 			"UNEXPECTED_ERROR": "操作に失敗しました。しばらくしてからもう一度お試しください。",
 			"INTERNAL_SERVER_ERROR": "サーバーが現在リクエストを処理できません。しばらくしてからもう一度お試しください。",
 			"NOT_FOUND": "リクエストされた内容が見つかりません。",
+			"INVALID_RECOMMENDED_USERS_REQUEST": "おすすめユーザーのリクエストが無効です。ページを再読み込みしてからお試しください。",
 			"FORBIDDEN": "この操作を行う権限がありません。",
 			"TOO_MANY_REQUESTS": "操作が多すぎます。しばらくしてからもう一度お試しください。",
 			"AUTHENTICATION_REQUIRED": "続行するにはログインしてください。",

@@ -8,7 +8,7 @@
 				leave-to-class="opacity-0"
 			>
 				<div
-					v-if="visible && phase"
+					v-if="visible && phase && !suppressed"
 					:key="phase"
 					class="absolute bottom-[max(2rem,env(safe-area-inset-bottom))] flex h-6 items-center gap-2.5 text-base font-medium tracking-wide text-white/90 [text-shadow:0_2px_12px_rgba(2,6,23,0.8)] lg:bottom-[max(3rem,env(safe-area-inset-bottom))]"
 					:class="{
@@ -39,6 +39,7 @@
 const props = defineProps<{
 	phase: 'hero' | 'players' | 'community' | null
 	active: boolean
+	suppressed: boolean
 }>()
 
 const visible = ref(false)
@@ -56,7 +57,7 @@ onMounted(() => {
 			revealTimer = setTimeout(() => {
 				visible.value = true
 				revealTimer = null
-			}, 3000)
+			}, 1500)
 		},
 		{ immediate: true },
 	)
