@@ -120,6 +120,15 @@
 						:screenshots="outroScreenshots"
 					/>
 				</div>
+				<HomeScrollHint
+					:phase="scrollHintPhase"
+					:active="
+						storyState.navigationStatus === 'idle' &&
+						!sceneSwitching &&
+						!overviewDetailPersonId &&
+						!heroDescriptionExpanded
+					"
+				/>
 			</section>
 		</div>
 	</div>
@@ -190,6 +199,7 @@ const OUTRO_COMMUNITY_HANDOFF_PROGRESS = 0.18
 const {
 	scrollStoryRef,
 	storyLayout,
+	storyState,
 	storyTouchInputControlled,
 	sceneStoryHeightStyle,
 	heroActive,
@@ -211,6 +221,14 @@ const communityVisible = computed(
 		overviewPhase.value === 'community' &&
 		outroProgress.value <= OUTRO_COMMUNITY_HANDOFF_PROGRESS,
 )
+const scrollHintPhase = computed(() => {
+	if (outroProgress.value > OUTRO_COMMUNITY_HANDOFF_PROGRESS) return null
+	if (communityVisible.value) return 'community'
+	if (heroActive.value) return 'hero'
+	if (overviewPhase.value === 'scene' || overviewPhase.value === 'players')
+		return 'players'
+	return null
+})
 const { scenePlayerPositions, overviewMemberPositions } =
 	useHomePlayerLocations(scene)
 const overviewMemberOrder = useState<string[]>(

@@ -1,6 +1,7 @@
 {
 	"home": {
 		"immersive": {
+			"scrollToContinue": "下にスクロールして続ける",
 			"mapUnavailable": "マップは一時的に利用できません",
 			"serverUnavailable": "デフォルトサーバー",
 			"sceneSwitcher": {

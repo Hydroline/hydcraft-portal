@@ -1,3 +1,4 @@
+import { listRecommendedUsers } from '../../../utils/server/recommended-users'
 import { prisma } from '../../../utils/db/prisma'
 import { listAdminMinecraftAccountOverviewCandidates } from '../../../utils/admin/players'
 import {
@@ -14,14 +15,12 @@ import { readLuckPermsSnapshotBundle } from '../../../utils/luckperms/snapshot'
 import {
 	DEFAULT_SERVER_OVERVIEW_PLAYER_ACCENT,
 	type ServerOverviewRecommendedPlayer,
-	type ServerOverviewRecommendedUser,
 	type ServerOverviewResponse,
 } from '../../../../utils/server/overview'
 import {
 	countPublicHistoricalOverviewPlayers,
 	countPublicOverviewPlayers,
 	countPublicOverviewUsers,
-	isPublicProfileCandidate,
 	listPublicOverviewServers,
 	resolvePublicOverviewDefaultServerId,
 } from '../../../utils/server/public-overview'
@@ -39,42 +38,6 @@ const shuffle = <T>(items: T[]): T[] => {
 	}
 
 	return shuffled
-}
-
-const pickRandomItems = <T>(items: T[], limit: number): T[] =>
-	shuffle(items).slice(0, limit)
-
-const listRecommendedUsers = async (): Promise<
-	ServerOverviewRecommendedUser[]
-> => {
-	const users = await prisma.user.findMany({
-		select: {
-			username: true,
-			displayName: true,
-			avatarUrl: true,
-			coverUrl: true,
-			bio: true,
-			privacy: {
-				select: {
-					publicProfile: true,
-					searchableInUserDirectory: true,
-				},
-			},
-		},
-	})
-
-	return pickRandomItems(
-		users
-			.filter((user) => isPublicProfileCandidate(user.privacy))
-			.map((user) => ({
-				username: user.username,
-				displayName: user.displayName,
-				avatarUrl: user.avatarUrl,
-				coverUrl: user.coverUrl,
-				bio: user.bio,
-			})),
-		10,
-	)
 }
 
 const buildRecommendedPlayerItem = async (

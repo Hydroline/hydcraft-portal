@@ -1,6 +1,7 @@
 {
 	"home": {
 		"immersive": {
+			"scrollToContinue": "Scroll to continue",
 			"mapUnavailable": "The map is temporarily unavailable",
 			"serverUnavailable": "Default server",
 			"sceneSwitcher": {

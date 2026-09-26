@@ -94,8 +94,10 @@
 			<ServerOverviewSeasonEightCard />
 			<ServerOverviewSponsorCard :summary="sponsorSummary" />
 			<ServerOverviewUsersSection
-				:users="overview.recommendedUsers"
+				:users="refreshedUsers ?? overview.recommendedUsers"
+				:refreshing="refreshingUsers"
 				:total-count="overview.totalUsers"
+				@refresh="refreshUsers"
 			/>
 			<ServerOverviewPlayersSection
 				:players="overview.recommendedPlayers"
@@ -124,6 +126,7 @@ import { useExplicitRouteTitle } from '~/utils/layout/route-display'
 import type { AfdianSponsorStatsResponse } from '~/utils/server/afdian'
 import type {
 	ServerOverviewLiveResponse,
+	ServerOverviewRecommendedUser,
 	ServerOverviewResponse,
 } from '~/utils/server/overview'
 
@@ -132,6 +135,27 @@ definePageMeta({
 })
 
 const { t } = useI18n()
+const toast = useToast()
+const refreshedUsers = ref<ServerOverviewRecommendedUser[] | null>(null)
+const refreshingUsers = ref(false)
+
+async function refreshUsers() {
+	if (refreshingUsers.value) return
+	refreshingUsers.value = true
+	try {
+		refreshedUsers.value = await $fetch<ServerOverviewRecommendedUser[]>(
+			'/api/public/server/recommended-users',
+		)
+	} catch {
+		toast.add({
+			title: t('content.serverOverview.cards.users.refreshFailed'),
+			color: 'error',
+		})
+	} finally {
+		refreshingUsers.value = false
+	}
+}
+
 const pageTitle = computed(() => t('routes.server'))
 useExplicitRouteTitle(pageTitle)
 

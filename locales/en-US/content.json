@@ -63,7 +63,9 @@
 				},
 				"users": {
 					"title": "User",
-					"action": "View User Directory"
+					"action": "View User Directory",
+					"refresh": "Shuffle users",
+					"refreshFailed": "Unable to refresh users. Please try again later."
 				},
 				"players": {
 					"title": "Players",

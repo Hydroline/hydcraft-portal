@@ -63,7 +63,9 @@
 				},
 				"users": {
 					"title": "用户",
-					"action": "查看用户目录"
+					"action": "查看用户目录",
+					"refresh": "换一批",
+					"refreshFailed": "刷新用户失败，请稍后重试。"
 				},
 				"players": {
 					"title": "玩家",

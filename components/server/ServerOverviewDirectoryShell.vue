@@ -16,15 +16,18 @@
 				<slot name="titleSuffix" />
 			</div>
 
-			<UButton
-				v-if="actionLabel && to"
-				color="neutral"
-				variant="link"
-				icon="i-lucide-arrow-right"
-				:to="to"
-			>
-				{{ actionLabel }}
-			</UButton>
+			<div class="flex flex-wrap items-center justify-end gap-x-3 gap-y-1">
+				<slot name="actions" />
+				<UButton
+					v-if="actionLabel && to"
+					color="neutral"
+					variant="link"
+					icon="i-lucide-arrow-right"
+					:to="to"
+				>
+					{{ actionLabel }}
+				</UButton>
+			</div>
 		</div>
 
 		<slot />

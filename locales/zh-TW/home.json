@@ -1,6 +1,7 @@
 {
 	"home": {
 		"immersive": {
+			"scrollToContinue": "下滑以繼續",
 			"mapUnavailable": "地圖暫時無法使用",
 			"serverUnavailable": "預設伺服器",
 			"sceneSwitcher": {
