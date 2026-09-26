@@ -319,8 +319,7 @@
 				},
 				"councilOfElders": {
 					"title": "元老院",
-					"subtitle": "古参が集まる場所",
-					"count": "40+"
+					"subtitle": "古参が集まる場所"
 				},
 				"chiefArchitect": {
 					"title": "チーフアーキテクト",

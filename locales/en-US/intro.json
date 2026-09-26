@@ -319,8 +319,7 @@
 				},
 				"councilOfElders": {
 					"title": "Council of Elders",
-					"subtitle": "Where the old hands gather",
-					"count": "40+"
+					"subtitle": "Where the old hands gather"
 				},
 				"chiefArchitect": {
 					"title": "Chief Architects",

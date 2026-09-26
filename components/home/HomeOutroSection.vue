@@ -49,19 +49,22 @@
 						<span
 							class="rounded-md border border-white/18 bg-slate-950/72 px-2.5 py-1"
 						>
-							NeoForge
+							{{ t('home.immersive.outro.modLoader') }}
 						</span>
 						<span
 							class="rounded-md border border-white/18 bg-slate-950/72 px-2.5 py-1"
 						>
-							内存 ≥ 16 GB
+							{{ t('home.immersive.outro.clientMemory') }}
 						</span>
 						<span
 							class="rounded-md border border-white/18 bg-slate-950/72 px-2.5 py-1"
 						>
-							八周目
+							{{ t('home.immersive.outro.season') }}
 						</span>
 					</div>
+					<p class="mt-2 text-sm leading-6 text-white/85">
+						{{ t('home.immersive.outro.clientMemoryNote') }}
+					</p>
 					<p
 						class="mt-5 max-w-xl text-base leading-7 text-white [text-shadow:0_2px_12px_rgba(2,6,23,0.9)] sm:text-lg"
 					>

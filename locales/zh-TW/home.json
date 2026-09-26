@@ -1,6 +1,7 @@
 {
 	"home": {
 		"immersive": {
+			"scrollToContinue": "下滑以繼續",
 			"mapUnavailable": "地圖暫時無法使用",
 			"serverUnavailable": "預設伺服器",
 			"sceneSwitcher": {
@@ -28,6 +29,10 @@
 				"collapse": "收起"
 			},
 			"outro": {
+				"modLoader": "NeoForge",
+				"clientMemory": "建議玩家電腦記憶體 ≥ 16 GB",
+				"clientMemoryNote": "建議玩家電腦配備至少 16 GB 記憶體，以便啟動模組客戶端。",
+				"season": "八週目",
 				"description": "蓋樓、鋪軌、造城、養老。至於為什麼一個 MC 伺服器叫氫氣？我也不知道。",
 				"copyQq": "加入 QQ 群",
 				"screenshotAlt": "HydCraft 八週目截圖 {index}"

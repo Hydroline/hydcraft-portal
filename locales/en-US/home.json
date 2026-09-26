@@ -1,6 +1,7 @@
 {
 	"home": {
 		"immersive": {
+			"scrollToContinue": "Scroll to continue",
 			"mapUnavailable": "The map is temporarily unavailable",
 			"serverUnavailable": "Default server",
 			"sceneSwitcher": {
@@ -28,6 +29,10 @@
 				"collapse": "Collapse"
 			},
 			"outro": {
+				"modLoader": "NeoForge",
+				"clientMemory": "Player PC: 16 GB+ RAM recommended",
+				"clientMemoryNote": "We recommend at least 16 GB of RAM on your computer to launch the modded client.",
+				"season": "Season 8",
 				"description": "Build buildings, lay tracks, shape cities, and settle in. Why is a Minecraft server called HydCraft? I have no idea either.",
 				"copyQq": "Join the QQ Group",
 				"screenshotAlt": "HydCraft Season 8 screenshot {index}"

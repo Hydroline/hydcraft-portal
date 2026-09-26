@@ -151,7 +151,7 @@
 							</div>
 						</div>
 						<UBadge color="neutral" variant="soft" size="sm">
-							{{ t('content.intro.staff.councilOfElders.count') }}
+							{{ introCouncilOfEldersMemberDefinitions.length }}
 						</UBadge>
 					</div>
 					<div

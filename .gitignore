@@ -12,6 +12,9 @@ tmp
 node_modules
 generated
 
+# PNPM dev/build outputs
+.pnpm-store
+
 # Logs
 logs
 *.log

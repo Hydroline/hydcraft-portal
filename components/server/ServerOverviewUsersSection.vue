@@ -5,6 +5,15 @@
 		:to="localePath('/server/users')"
 		:count="totalCount ?? users.length"
 	>
+		<template #actions>
+			<ServerOverviewRefreshButton
+				:label="t('content.serverOverview.cards.users.refresh')"
+				:refreshing="refreshing"
+				:disabled="refreshDisabled"
+				@refresh="emit('refresh')"
+			/>
+		</template>
+
 		<div v-if="users.length" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
 			<ServerOverviewUserCard
 				v-for="user in users"
@@ -28,9 +37,12 @@ import type { ServerOverviewRecommendedUser } from '~/utils/server/overview'
 interface Props {
 	users: ServerOverviewRecommendedUser[]
 	totalCount?: number
+	refreshing?: boolean
+	refreshDisabled?: boolean
 }
 
 defineProps<Props>()
+const emit = defineEmits<{ refresh: [] }>()
 
 const { t } = useI18n()
 const localePath = useLocalePath()
