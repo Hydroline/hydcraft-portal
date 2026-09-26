@@ -70,6 +70,8 @@
 				"players": {
 					"title": "玩家",
 					"action": "查看玩家目錄",
+					"refresh": "換一批",
+					"refreshFailed": "重新整理玩家失敗，請稍後再試。",
 					"fields": {
 						"playTime": "遊玩時間",
 						"lastLogin": "最近登入時間"

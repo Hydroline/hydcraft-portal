@@ -11,7 +11,7 @@
 				variant="link"
 				icon="i-lucide-refresh-cw"
 				:loading="refreshing"
-				:disabled="refreshing"
+				:disabled="refreshDisabled"
 				@click="emit('refresh')"
 			>
 				{{ t('content.serverOverview.cards.users.refresh') }}
@@ -42,6 +42,7 @@ interface Props {
 	users: ServerOverviewRecommendedUser[]
 	totalCount?: number
 	refreshing?: boolean
+	refreshDisabled?: boolean
 }
 
 defineProps<Props>()

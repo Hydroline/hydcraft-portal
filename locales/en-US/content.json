@@ -70,6 +70,8 @@
 				"players": {
 					"title": "Players",
 					"action": "View Player Directory",
+					"refresh": "Shuffle players",
+					"refreshFailed": "Unable to refresh players. Please try again later.",
 					"fields": {
 						"playTime": "Play Time",
 						"lastLogin": "Last Login"

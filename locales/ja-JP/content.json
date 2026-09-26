@@ -70,6 +70,8 @@
 				"players": {
 					"title": "プレイヤー",
 					"action": "プレイヤー一覧を見る",
+					"refresh": "別のプレイヤーを表示",
+					"refreshFailed": "プレイヤーの更新に失敗しました。しばらくしてから再試行してください。",
 					"fields": {
 						"playTime": "プレイ時間",
 						"lastLogin": "最終ログイン"

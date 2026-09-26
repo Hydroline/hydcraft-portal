@@ -57,7 +57,7 @@ onMounted(() => {
 			revealTimer = setTimeout(() => {
 				visible.value = true
 				revealTimer = null
-			}, 1500)
+			}, 500)
 		},
 		{ immediate: true },
 	)

@@ -70,6 +70,8 @@
 				"players": {
 					"title": "玩家",
 					"action": "查看玩家目录",
+					"refresh": "换一批",
+					"refreshFailed": "刷新玩家失败，请稍后重试。",
 					"fields": {
 						"playTime": "游戏时间",
 						"lastLogin": "最近登录时间"

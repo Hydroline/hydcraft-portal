@@ -96,13 +96,17 @@
 			<ServerOverviewUsersSection
 				:users="refreshedUsers ?? overview.recommendedUsers"
 				:refreshing="refreshingUsers"
+				:refresh-disabled="refreshDisabled"
 				:total-count="overview.totalUsers"
 				@refresh="refreshUsers"
 			/>
 			<ServerOverviewPlayersSection
-				:players="overview.recommendedPlayers"
+				:players="refreshedPlayers ?? overview.recommendedPlayers"
+				:refreshing="refreshingPlayers"
+				:refresh-disabled="refreshDisabled"
 				:total-count="overview.totalPlayers"
 				:historical-count="overview.historicalPlayersCount"
+				@refresh="refreshPlayers"
 			/>
 			<ServerOverviewMunicipalitySection />
 			<ServerOverviewRailwayDataSection />
@@ -126,6 +130,7 @@ import { useExplicitRouteTitle } from '~/utils/layout/route-display'
 import type { AfdianSponsorStatsResponse } from '~/utils/server/afdian'
 import type {
 	ServerOverviewLiveResponse,
+	ServerOverviewRecommendedPlayer,
 	ServerOverviewRecommendedUser,
 	ServerOverviewResponse,
 } from '~/utils/server/overview'
@@ -137,22 +142,59 @@ definePageMeta({
 const { t } = useI18n()
 const toast = useToast()
 const refreshedUsers = ref<ServerOverviewRecommendedUser[] | null>(null)
+const refreshedPlayers = ref<ServerOverviewRecommendedPlayer[] | null>(null)
 const refreshingUsers = ref(false)
+const refreshingPlayers = ref(false)
+const refreshCooldownActive = ref(false)
+const refreshDisabled = computed(
+	() =>
+		refreshCooldownActive.value ||
+		refreshingUsers.value ||
+		refreshingPlayers.value,
+)
 const seenUsernames = new Set<string>()
+const seenPlayerKeys = new Set<string>()
+let refreshCooldownTimer: ReturnType<typeof setTimeout> | null = null
 
-function recordSeenUsers(users: ServerOverviewRecommendedUser[]) {
-	for (const user of users) seenUsernames.add(user.username)
-	while (seenUsernames.size > 2000) {
-		const oldestUsername = seenUsernames.values().next().value
-		if (oldestUsername) seenUsernames.delete(oldestUsername)
+function recordSeenKeys<T>(
+	items: T[],
+	keyOf: (item: T) => string,
+	seen: Set<string>,
+) {
+	for (const item of items) seen.add(keyOf(item))
+	while (seen.size > 500) {
+		const oldestKey = seen.values().next().value
+		if (oldestKey) seen.delete(oldestKey)
 	}
 }
 
+function startRefreshCooldown(): boolean {
+	if (refreshDisabled.value) return false
+	refreshCooldownActive.value = true
+	refreshCooldownTimer = setTimeout(() => {
+		refreshCooldownActive.value = false
+		refreshCooldownTimer = null
+	}, 1500)
+	return true
+}
+
+function refreshErrorMessage(error: unknown, fallbackKey: string): string {
+	const statusCode =
+		error && typeof error === 'object' && 'statusCode' in error
+			? error.statusCode
+			: null
+	return t(
+		statusCode === 429
+			? 'errors.codes.RECOMMENDATION_RATE_LIMITED'
+			: fallbackKey,
+	)
+}
+
 async function refreshUsers() {
-	if (refreshingUsers.value) return
+	if (!startRefreshCooldown()) return
 	const currentUsers =
 		refreshedUsers.value ?? overview.value?.recommendedUsers ?? []
-	recordSeenUsers(currentUsers)
+	recordSeenKeys(currentUsers, (user) => user.username, seenUsernames)
 	refreshingUsers.value = true
 	try {
 		const nextUsers = await $fetch<ServerOverviewRecommendedUser[]>(
@@ -160,20 +202,65 @@ async function refreshUsers() {
 			{
 				method: 'POST',
 				body: {
-					currentUsernames: currentUsers.map((user) => user.username),
-					seenUsernames: [...seenUsernames],
+					currentKeys: currentUsers.map((user) => user.username),
+					seenKeys: [...seenUsernames],
 				},
 			},
 		)
 		refreshedUsers.value = nextUsers
-		recordSeenUsers(nextUsers)
-	} catch {
+		recordSeenKeys(nextUsers, (user) => user.username, seenUsernames)
+	} catch (error) {
 		toast.add({
-			title: t('content.serverOverview.cards.users.refreshFailed'),
+			title: refreshErrorMessage(
+				error,
+				'content.serverOverview.cards.users.refreshFailed',
+			),
 			color: 'error',
 		})
 	} finally {
 		refreshingUsers.value = false
+	}
+}
+
+async function refreshPlayers() {
+	if (!startRefreshCooldown()) return
+	const currentPlayers =
+		refreshedPlayers.value ?? overview.value?.recommendedPlayers ?? []
+	recordSeenKeys(
+		currentPlayers,
+		(player) => player.normalizedUsername,
+		seenPlayerKeys,
+	)
+	refreshingPlayers.value = true
+	try {
+		const nextPlayers = await $fetch<ServerOverviewRecommendedPlayer[]>(
+			'/api/public/server/recommended-players',
+			{
+				method: 'POST',
+				body: {
+					currentKeys: currentPlayers.map(
+						(player) => player.normalizedUsername,
+					),
+					seenKeys: [...seenPlayerKeys],
+				},
+			},
+		)
+		refreshedPlayers.value = nextPlayers
+		recordSeenKeys(
+			nextPlayers,
+			(player) => player.normalizedUsername,
+			seenPlayerKeys,
+		)
+	} catch (error) {
+		toast.add({
+			title: refreshErrorMessage(
+				error,
+				'content.serverOverview.cards.players.refreshFailed',
+			),
+			color: 'error',
+		})
+	} finally {
+		refreshingPlayers.value = false
 	}
 }
 
@@ -269,6 +356,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+	if (refreshCooldownTimer) clearTimeout(refreshCooldownTimer)
 	if (refreshTimer) {
 		clearInterval(refreshTimer)
 		refreshTimer = null
