@@ -29,6 +29,10 @@
 				"collapse": "收起"
 			},
 			"outro": {
+				"modLoader": "NeoForge",
+				"clientMemory": "玩家电脑内存建议 ≥ 16 GB",
+				"clientMemoryNote": "建议玩家电脑配备至少 16 GB 内存，以便启动模组客户端。",
+				"season": "八周目",
 				"description": "修楼、铺轨、造城、养老。至于为什么一个 MC 服务器叫氢气？我也不知道。",
 				"copyQq": "加入 QQ 群",
 				"screenshotAlt": "HydCraft 八周目截图 {index}"

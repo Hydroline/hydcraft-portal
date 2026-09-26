@@ -16,7 +16,9 @@
 				<slot name="titleSuffix" />
 			</div>
 
-			<div class="flex flex-wrap items-center justify-end gap-x-3 gap-y-1">
+			<div
+				class="flex flex-wrap items-center justify-end gap-x-3 gap-y-0 sm:gap-y-1"
+			>
 				<slot name="actions" />
 				<UButton
 					v-if="actionLabel && to"
