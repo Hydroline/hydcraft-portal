@@ -31,16 +31,12 @@
 			</UBadge>
 		</template>
 		<template #actions>
-			<UButton
-				color="neutral"
-				variant="link"
-				icon="i-lucide-refresh-cw"
-				:loading="refreshing"
+			<ServerOverviewRefreshButton
+				:label="t('content.serverOverview.cards.players.refresh')"
+				:refreshing="refreshing"
 				:disabled="refreshDisabled"
-				@click="emit('refresh')"
-			>
-				{{ t('content.serverOverview.cards.players.refresh') }}
-			</UButton>
+				@refresh="emit('refresh')"
+			/>
 		</template>
 
 		<div v-if="players.length" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">

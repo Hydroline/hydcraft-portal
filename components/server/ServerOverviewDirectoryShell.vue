@@ -1,8 +1,8 @@
 <template>
 	<section class="flex flex-col gap-2">
-		<div class="flex items-center justify-between gap-3">
-			<div class="mx-1 flex items-center gap-2">
-				<h2 class="text-2xl text-slate-950 dark:text-white">
+		<div class="flex flex-wrap items-center justify-between gap-3">
+			<div class="mx-1 flex flex-wrap items-center gap-2">
+				<h2 class="whitespace-nowrap text-2xl text-slate-950 dark:text-white">
 					{{ title }}
 				</h2>
 				<UBadge
