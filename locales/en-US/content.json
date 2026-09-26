@@ -63,11 +63,15 @@
 				},
 				"users": {
 					"title": "User",
-					"action": "View User Directory"
+					"action": "View User Directory",
+					"refresh": "Shuffle users",
+					"refreshFailed": "Unable to refresh users. Please try again later."
 				},
 				"players": {
 					"title": "Players",
 					"action": "View Player Directory",
+					"refresh": "Shuffle players",
+					"refreshFailed": "Unable to refresh players. Please try again later.",
 					"fields": {
 						"playTime": "Play Time",
 						"lastLogin": "Last Login"

@@ -60,6 +60,7 @@ export interface ServerOverviewRecommendedUser {
 }
 
 export interface ServerOverviewRecommendedPlayer {
+	normalizedUsername: string
 	mcid: string
 	username: string
 	skinBodyUrl: string

@@ -30,6 +30,14 @@
 				}}
 			</UBadge>
 		</template>
+		<template #actions>
+			<ServerOverviewRefreshButton
+				:label="t('content.serverOverview.cards.players.refresh')"
+				:refreshing="refreshing"
+				:disabled="refreshDisabled"
+				@refresh="emit('refresh')"
+			/>
+		</template>
 
 		<div v-if="players.length" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
 			<ServerOverviewPlayerCard
@@ -55,9 +63,12 @@ interface Props {
 	players: ServerOverviewRecommendedPlayer[]
 	totalCount?: number
 	historicalCount?: number
+	refreshing?: boolean
+	refreshDisabled?: boolean
 }
 
 defineProps<Props>()
+const emit = defineEmits<{ refresh: [] }>()
 
 const { t } = useI18n()
 const localePath = useLocalePath()
