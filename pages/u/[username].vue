@@ -752,6 +752,7 @@ const aboutItems = computed<ProfileInfoItem[]>(() => {
 		items.push({
 			label: t('profile.public.social.publicEmail'),
 			value: social.publicEmail,
+			href: `mailto:${social.publicEmail}`,
 		})
 	}
 
