@@ -1,5 +1,14 @@
 <template>
 	<div class="site-shell pb-16">
+		<ProfileBirthdayCelebration
+			:visit-key="username"
+			:enabled="
+				!pending &&
+				!error &&
+				profile?.username.toLowerCase() === username.toLowerCase() &&
+				birthdaySummary?.daysUntilNextBirthday === 0
+			"
+		/>
 		<div v-if="pending" class="grid gap-5">
 			<USkeleton class="h-80 rounded-lg" />
 			<div class="grid gap-4 lg:grid-cols-3">
@@ -550,7 +559,10 @@ const genderSymbol = computed(() =>
 	resolveGenderSymbol(profile.value?.gender ?? null),
 )
 const birthdaySummary = computed(() =>
-	resolveBirthdaySummary(profile.value?.birthday ?? null),
+	resolveBirthdaySummary(
+		profile.value?.birthday ?? null,
+		profile.value?.timezone ?? null,
+	),
 )
 const birthdayAgeText = computed(() => {
 	const summary = birthdaySummary.value

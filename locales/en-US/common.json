@@ -36,7 +36,8 @@
 		"meConnections": "Connections",
 		"adminAchievements": "Achievements",
 		"adminBuilderRanks": "Builder Ranks",
-		"adminOAuthClients": "OAuth Clients"
+		"adminOAuthClients": "OAuth Clients",
+		"adminSite": "Site"
 	},
 	"main": {
 		"contentFooter": {

@@ -1164,6 +1164,31 @@
 			"raw": "Raw",
 			"empty": "No content",
 			"showAll": "Show all"
+		},
+		"site": {
+			"title": "Site",
+			"description": "Manage site-wide features and appearance settings.",
+			"saved": "Site settings saved",
+			"loadFailed": "Unable to load site settings. Please try again.",
+			"retry": "Retry",
+			"saveHelp": "Save to apply all changes. Open pages sync within one minute.",
+			"mourning": {
+				"title": "Mourning mode",
+				"description": "Apply grayscale across the site, including admin pages, when enabled manually or on a matching annual date. Turning off the manual switch does not override an automatic date.",
+				"manual": "Enable mourning mode manually",
+				"grayscale": "Grayscale (%)",
+				"grayscaleHelp": "0% preserves colors; 100% is fully grayscale.",
+				"automatic": "Enable automatic mourning dates",
+				"dates": "Annual mourning dates",
+				"calendarHelp": "Dates repeat yearly in Shanghai time (UTC+8), sorted from January to December. February 29 matches only in leap years. Up to 100 entries.",
+				"name": "Observance name",
+				"month": "Month",
+				"day": "Day",
+				"add": "Add to list",
+				"empty": "No mourning dates added yet.",
+				"date": "{month}/{day}",
+				"remove": "Delete {name}"
+			}
 		}
 	}
 }

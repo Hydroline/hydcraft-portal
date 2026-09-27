@@ -1,6 +1,11 @@
 type EventHandler<TPayload> = (payload: TPayload) => Promise<void> | void
 
 interface EventMap {
+	'site.settings.updated': {
+		key: string
+		actorUserId: string
+		updatedAt: Date
+	}
 	'oauth.client.created': {
 		clientId: string
 		createdAt: Date

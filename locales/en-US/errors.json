@@ -177,7 +177,8 @@
 			"OAUTH_GRANT_ID_REQUIRED": "The OIDC grant ID is missing.",
 			"OAUTH_GRANT_NOT_FOUND": "The OIDC grant was not found.",
 			"HYDROLINE_ID_CREATE_FAILED": "Failed to create a Hydroline ID.",
-			"HYDROLINE_ID_GENERATION_FAILED": "Failed to generate a Hydroline ID."
+			"HYDROLINE_ID_GENERATION_FAILED": "Failed to generate a Hydroline ID.",
+			"SITE_MOURNING_SETTINGS_INVALID": "Enter a valid name (1–100 characters), grayscale (an integer from 0 to 100), and month/day. At most 100 dates are allowed."
 		},
 		"INVALID_PARTNER_REORDER": "The partner reorder input is invalid.",
 		"INVALID_FRIEND_LINK_REORDER": "The friend link reorder input is invalid."
