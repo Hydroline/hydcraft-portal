@@ -685,22 +685,14 @@ const handleSceneGalleryLightboxOpenChange = (open: boolean): void => {
 	}
 }
 
-@media (min-width: 1024px) and (max-height: 850px) {
-	.home-hero-display-prefix {
-		font-size: clamp(1.25rem, 4dvh, 2.25rem);
-		line-height: 1.08;
-	}
-
+@media (min-width: 1024px) and (max-height: 1100px) {
 	.home-hero-display-name {
-		font-size: clamp(3.75rem, 15dvh, 8rem);
+		font-size: clamp(3.9rem, 15.5dvh, 8.5rem);
 		line-height: 0.98;
 	}
+}
 
-	.home-hero-copy-title {
-		font-size: clamp(1rem, 3.2dvh, 1.5rem);
-		line-height: 1.15;
-	}
-
+@media (min-width: 1024px) and (max-height: 850px) {
 	.home-hero-copy-description {
 		margin-top: 0.25rem;
 		font-size: clamp(0.75rem, 2.4dvh, 1rem);
