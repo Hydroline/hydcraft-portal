@@ -176,6 +176,7 @@ interface HomeOverviewMarkerPerson extends HomeOverviewPerson {
 definePageMeta({
 	headerVariant: 'hero',
 	pageContainerVariant: 'immersive',
+	pageBackground: 'map',
 	pageTransition: {
 		name: 'immersive-page',
 		mode: 'out-in',

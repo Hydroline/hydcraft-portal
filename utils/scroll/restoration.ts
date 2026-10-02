@@ -12,12 +12,14 @@ interface AbsoluteScrollRestore {
 	key: string
 	type: 'absolute'
 	top: number
+	behavior?: ScrollBehavior
 }
 
 interface ProgressScrollRestore {
 	key: string
 	type: 'progress'
 	progress: number
+	behavior?: ScrollBehavior
 }
 
 type PendingScrollRestore = AbsoluteScrollRestore | ProgressScrollRestore
@@ -198,7 +200,7 @@ const applyPendingRestore = (): boolean => {
 	}
 
 	const position = resolvePendingRestorePosition(pendingRestore)
-	window.scrollTo(position)
+	window.scrollTo({ ...position, behavior: pendingRestore.behavior })
 
 	return true
 }
@@ -297,6 +299,7 @@ const schedulePendingRestoreFallback = (): void => {
 export const queueAbsoluteScrollRestore = (
 	fullPath: string | undefined,
 	top: number,
+	behavior?: ScrollBehavior,
 ): void => {
 	if (!import.meta.client) {
 		return
@@ -308,6 +311,7 @@ export const queueAbsoluteScrollRestore = (
 		key: getScrollRouteKey(fullPath),
 		type: 'absolute',
 		top,
+		behavior,
 	}
 	pendingRestoreExpiresAt = Date.now() + FALLBACK_RESTORE_TIMEOUT_MS
 	startUserScrollIntentListeners()
@@ -317,6 +321,7 @@ export const queueAbsoluteScrollRestore = (
 export const queueProgressScrollRestore = (
 	fullPath: string | undefined,
 	progress: number,
+	behavior?: ScrollBehavior,
 ): void => {
 	if (!import.meta.client) {
 		return
@@ -328,6 +333,7 @@ export const queueProgressScrollRestore = (
 		key: getScrollRouteKey(fullPath),
 		type: 'progress',
 		progress,
+		behavior,
 	}
 	pendingRestoreExpiresAt = Date.now() + FALLBACK_RESTORE_TIMEOUT_MS
 	startUserScrollIntentListeners()
