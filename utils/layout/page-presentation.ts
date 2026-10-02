@@ -7,6 +7,19 @@ export type PageContainerVariant =
 	| 'minecraftAccounts'
 
 export type HeaderVariant = 'hero' | 'minecraftAccounts' | 'solid'
+export type PageBackground = 'none' | 'map'
+
+declare module '#app' {
+	interface PageMeta {
+		pageBackground?: PageBackground
+	}
+}
+
+declare module 'vue-router' {
+	interface RouteMeta {
+		pageBackground?: PageBackground
+	}
+}
 
 const readQueryValue = (value: unknown): string | null => {
 	if (typeof value === 'string') {
@@ -21,10 +34,23 @@ const readQueryValue = (value: unknown): string | null => {
 }
 
 export const isMinecraftAccountsImmersiveView = (
-	route: RouteLocationNormalizedLoaded,
+	route: Pick<RouteLocationNormalizedLoaded, 'meta' | 'query'>,
 ): boolean =>
 	route.meta.pageContainerVariant === 'minecraftAccounts' &&
 	readQueryValue(route.query.view) !== 'list'
+
+export const resolvePageBackground = (
+	route: Pick<RouteLocationNormalizedLoaded, 'meta' | 'query'>,
+): PageBackground => {
+	if (
+		route.meta.pageContainerVariant === 'minecraftAccounts' &&
+		!isMinecraftAccountsImmersiveView(route)
+	) {
+		return 'none'
+	}
+
+	return route.meta.pageBackground ?? 'none'
+}
 
 export const resolvePageContainerVariant = (
 	route: RouteLocationNormalizedLoaded,

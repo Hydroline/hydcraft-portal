@@ -235,6 +235,7 @@ import {
 definePageMeta({
 	headerVariant: 'minecraftAccounts',
 	pageContainerVariant: 'minecraftAccounts',
+	pageBackground: 'map',
 	middleware: 'portal-auth',
 	pageTransition: {
 		name: 'immersive-page',

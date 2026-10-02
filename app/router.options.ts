@@ -1,4 +1,5 @@
 import type { RouterConfig } from '@nuxt/schema'
+import { resolvePageBackground } from '../utils/layout/page-presentation'
 import {
 	clearPendingScrollRestore,
 	getScrollRouteKey,
@@ -52,32 +53,49 @@ const waitForHashScrollPosition = async (hash: string) => {
 }
 
 export default <RouterConfig>{
-	scrollBehavior(to, from, savedPosition) {
-		const leavingImmersivePage =
-			import.meta.client &&
+	async scrollBehavior(to, from, savedPosition) {
+		const hasMapBackground =
+			resolvePageBackground(from) === 'map' ||
+			resolvePageBackground(to) === 'map'
+		const isChangingPage =
 			normalizeScrollPath(from.fullPath) !== normalizeScrollPath(to.fullPath) &&
-			(isHomeScrollPath(from.fullPath) ||
-				/^\/players\/[^/]+$/.test(normalizeScrollPath(from.fullPath)))
-		const afterPageLeave = <T>(position: T): T | Promise<T> =>
-			leavingImmersivePage ? waitForPageLeave().then(() => position) : position
+			!(
+				from.meta.pageContainerVariant === 'minecraftAccounts' &&
+				to.meta.pageContainerVariant === 'minecraftAccounts'
+			)
+		const waitForMapLeave =
+			import.meta.client &&
+			from.matched.length > 0 &&
+			isChangingPage &&
+			hasMapBackground &&
+			to.meta.pageTransition !== false
+		const behavior = hasMapBackground ? ('instant' as const) : undefined
+
+		if (import.meta.client) {
+			saveScrollSnapshot(from.fullPath)
+		}
+		if (waitForMapLeave) {
+			clearPendingScrollRestore()
+			const router = useRouter()
+			await waitForPageLeave()
+			if (router.currentRoute.value.fullPath !== to.fullPath) {
+				return false
+			}
+		}
 
 		if (savedPosition) {
 			clearPendingScrollRestore()
-			return afterPageLeave(savedPosition)
+			return { ...savedPosition, behavior }
 		}
 
 		if (to.hash) {
 			clearPendingScrollRestore()
-			return leavingImmersivePage
-				? waitForPageLeave().then(() => waitForHashScrollPosition(to.hash))
-				: waitForHashScrollPosition(to.hash)
+			return waitForHashScrollPosition(to.hash)
 		}
 
 		if (!import.meta.client) {
 			return { left: 0, top: 0 }
 		}
-
-		saveScrollSnapshot(from.fullPath)
 
 		const fromNormalizedPath = normalizeScrollPath(from.fullPath)
 		const toNormalizedPath = normalizeScrollPath(to.fullPath)
@@ -89,30 +107,24 @@ export default <RouterConfig>{
 			const fromSnapshot = getScrollSnapshot(from.fullPath)
 
 			if (fromSnapshot) {
-				queueProgressScrollRestore(to.fullPath, fromSnapshot.progress)
-				return afterPageLeave({ left: 0, top: fromSnapshot.top })
+				queueProgressScrollRestore(to.fullPath, fromSnapshot.progress, behavior)
+				return { left: 0, top: fromSnapshot.top, behavior }
 			}
 		}
 
 		if (isHomeScrollPath(to.fullPath)) {
 			clearPendingScrollRestore()
-			return afterPageLeave({ left: 0, top: 0 })
+			return { left: 0, top: 0, behavior }
 		}
 
 		const savedSnapshot = getScrollSnapshot(to.fullPath)
 
 		if (savedSnapshot) {
-			if (leavingImmersivePage) {
-				return waitForPageLeave().then(() => {
-					queueAbsoluteScrollRestore(to.fullPath, savedSnapshot.top)
-					return false
-				})
-			}
-			queueAbsoluteScrollRestore(to.fullPath, savedSnapshot.top)
+			queueAbsoluteScrollRestore(to.fullPath, savedSnapshot.top, behavior)
 			return false
 		}
 
 		clearPendingScrollRestore()
-		return afterPageLeave({ left: 0, top: 0 })
+		return { left: 0, top: 0, behavior }
 	},
 }

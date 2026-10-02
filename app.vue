@@ -14,7 +14,10 @@ import {
 	profileLanguageToLocaleCode,
 	type ProfileLanguage,
 } from '~/utils/profile/edit'
-import { resolvePageContainerVariant } from '~/utils/layout/page-presentation'
+import {
+	resolvePageBackground,
+	resolvePageContainerVariant,
+} from '~/utils/layout/page-presentation'
 import { normalizeScrollPath, notifyPageLeave } from '~/utils/scroll'
 
 type LocaleCode = 'zh-CN' | 'zh-TW' | 'ja-JP' | 'en-US'
@@ -28,11 +31,15 @@ interface NuxtI18nApi {
 const toast = useToast()
 const nuxtApp = useNuxtApp()
 const route = useRoute()
+const router = useRouter()
 const displayedPresentationVariant = ref(resolvePageContainerVariant(route))
 const displayedIsHomePage = ref(normalizeHeaderMenuPath(route.path) === '/')
+const displayedBackground = ref(resolvePageBackground(route))
 const syncDisplayedPresentation = () => {
-	displayedPresentationVariant.value = resolvePageContainerVariant(route)
-	displayedIsHomePage.value = normalizeHeaderMenuPath(route.path) === '/'
+	const currentRoute = router.currentRoute.value
+	displayedPresentationVariant.value = resolvePageContainerVariant(currentRoute)
+	displayedIsHomePage.value = normalizeHeaderMenuPath(currentRoute.path) === '/'
+	displayedBackground.value = resolvePageBackground(currentRoute)
 }
 
 if (import.meta.client) {
@@ -42,11 +49,18 @@ if (import.meta.client) {
 	})
 	onBeforeUnmount(unhookPageLeave)
 	watch(
-		() => route.fullPath,
+		() => router.currentRoute.value,
 		(next, previous) => {
+			const hasMapBackground =
+				displayedBackground.value === 'map' ||
+				resolvePageBackground(next) === 'map'
 			if (
-				normalizeScrollPath(next) === normalizeScrollPath(previous) ||
-				route.meta.pageContainerVariant === 'minecraftAccounts'
+				!hasMapBackground ||
+				next.meta.pageTransition === false ||
+				normalizeScrollPath(next.fullPath) ===
+					normalizeScrollPath(previous.fullPath) ||
+				(next.meta.pageContainerVariant === 'minecraftAccounts' &&
+					previous.meta.pageContainerVariant === 'minecraftAccounts')
 			) {
 				syncDisplayedPresentation()
 			}
@@ -385,7 +399,10 @@ useHead(() => ({
 			"
 		>
 			<PageHeader :presentation-variant="displayedPresentationVariant" />
-			<PageContainer :presentation-variant="displayedPresentationVariant" />
+			<PageContainer
+				:presentation-variant="displayedPresentationVariant"
+				:background="displayedBackground"
+			/>
 			<PageFooter v-if="!isViewportLockedImmersivePage" />
 			<PageStatusBar />
 		</div>

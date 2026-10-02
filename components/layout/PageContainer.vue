@@ -9,6 +9,7 @@
 				'page-container-shell',
 				{
 					'page-container-shell--ready': pageContainerReady,
+					'page-container-shell--map': props.background === 'map',
 				},
 			]"
 		>
@@ -21,10 +22,14 @@
 import { onMounted, ref } from 'vue'
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import { normalizeScrollPath } from '~/utils/scroll'
+import type { PageBackground } from '~/utils/layout/page-presentation'
 
-const props = defineProps<{
+interface PageContainerProps {
 	presentationVariant?: 'auth' | 'fullBleed' | 'immersive'
-}>()
+	background?: PageBackground
+}
+
+const props = defineProps<PageContainerProps>()
 
 const pageContainerReady = ref(false)
 
@@ -87,6 +92,12 @@ onMounted(() => {
 .page-container-shell--ready {
 	opacity: 1;
 	transform: none;
+}
+
+.page-container-shell--map {
+	transition:
+		opacity 560ms cubic-bezier(0.22, 1, 0.36, 1),
+		transform 560ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -20,6 +20,7 @@ import { useExplicitRouteTitle } from '~/utils/layout/route-display'
 definePageMeta({
 	headerVariant: 'hero',
 	pageContainerVariant: 'immersive',
+	pageBackground: 'map',
 	pageTransition: {
 		name: 'immersive-page',
 		mode: 'out-in',
