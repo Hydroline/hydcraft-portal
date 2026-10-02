@@ -8,6 +8,8 @@ const statusbarRef = ref<HTMLElement | null>(null)
 
 const BOTTOM_HIDE_DELAY = 180
 const BOTTOM_SHOW_DELAY = 120
+const BOTTOM_ENTER_THRESHOLD = 32
+const BOTTOM_EXIT_THRESHOLD = 64
 
 let bottomHideTimer: ReturnType<typeof setTimeout> | null = null
 let bottomShowTimer: ReturnType<typeof setTimeout> | null = null
@@ -26,8 +28,11 @@ const updateBottomState = (): void => {
 		doc.scrollHeight,
 		document.body?.scrollHeight ?? 0,
 	)
-	const threshold = 32
-	const nextAtBottom = scrollTop + viewportHeight >= scrollHeight - threshold
+	const distanceFromBottom = scrollHeight - (scrollTop + viewportHeight)
+	const threshold = rawAtBottom.value
+		? BOTTOM_EXIT_THRESHOLD
+		: BOTTOM_ENTER_THRESHOLD
+	const nextAtBottom = distanceFromBottom <= threshold
 
 	if (nextAtBottom === rawAtBottom.value) {
 		return

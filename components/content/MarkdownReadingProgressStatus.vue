@@ -9,7 +9,6 @@ interface MarkdownReadingProgressDoc {
 interface ReadingProgressTarget {
 	article: HTMLElement
 	stats: HTMLElement | null
-	footer: HTMLElement | null
 	header: HTMLElement | null
 }
 
@@ -18,13 +17,11 @@ const props = withDefaults(
 		doc: MarkdownReadingProgressDoc
 		targetSelector?: string
 		statsSelector?: string
-		footerSelector?: string
 		headerSelector?: string
 	}>(),
 	{
 		targetSelector: '[data-markdown-page]',
 		statsSelector: '[data-reading-stats]',
-		footerSelector: 'footer',
 		headerSelector: 'header',
 	},
 )
@@ -133,10 +130,14 @@ const resolveTarget = (): ReadingProgressTarget | null => {
 	return {
 		article,
 		stats: document.querySelector<HTMLElement>(props.statsSelector),
-		footer: document.querySelector<HTMLElement>(props.footerSelector),
 		header: document.querySelector<HTMLElement>(props.headerSelector),
 	}
 }
+
+const HEADER_ENTER_GAP = 8
+const HEADER_EXIT_GAP = 24
+const ARTICLE_ENTER_GAP = 8
+const ARTICLE_EXIT_GAP = 24
 
 const calculateProgress = (): void => {
 	const currentTarget = target.value
@@ -145,7 +146,7 @@ const calculateProgress = (): void => {
 		return
 	}
 
-	const { article, stats, footer, header } = currentTarget
+	const { article, stats, header } = currentTarget
 	const articleTop = article.getBoundingClientRect().top + window.scrollY
 	const articleBottom = articleTop + article.offsetHeight
 	const end = articleBottom - window.innerHeight
@@ -154,14 +155,18 @@ const calculateProgress = (): void => {
 	const statsRect = stats?.getBoundingClientRect()
 	const articleRect = article.getBoundingClientRect()
 	const headerBottom = header?.getBoundingClientRect().bottom ?? 0
+	const headerThreshold = visible.value
+		? headerBottom + HEADER_EXIT_GAP
+		: headerBottom - HEADER_ENTER_GAP
 	const hasReachedHeader = statsRect
-		? statsRect.top <= headerBottom
-		: articleRect.top <= headerBottom
-	const footerTop =
-		footer?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY
+		? statsRect.top <= headerThreshold
+		: articleRect.top <= headerThreshold
+	const hasPassedArticleStart = visible.value
+		? scrollY > articleTop + ARTICLE_EXIT_GAP
+		: scrollY > articleTop + ARTICLE_ENTER_GAP
 	const hasEnoughContent = article.offsetHeight > viewportHeight + 96
 	const shouldShow =
-		hasEnoughContent && hasReachedHeader && footerTop > viewportHeight - 32
+		hasEnoughContent && hasReachedHeader && hasPassedArticleStart
 
 	if (end <= articleTop) {
 		progress.value = 100
@@ -206,9 +211,6 @@ const bindTarget = (): void => {
 	if (target.value) {
 		resizeObserver = new ResizeObserver(scheduleCalculate)
 		resizeObserver.observe(target.value.article)
-		if (target.value.footer) {
-			resizeObserver.observe(target.value.footer)
-		}
 	}
 
 	scheduleCalculate()
@@ -230,12 +232,7 @@ const syncProgressTextWidth = async (): Promise<void> => {
 }
 
 watch(
-	() => [
-		props.targetSelector,
-		props.statsSelector,
-		props.footerSelector,
-		props.headerSelector,
-	],
+	() => [props.targetSelector, props.statsSelector, props.headerSelector],
 	() => {
 		bindTarget()
 	},
