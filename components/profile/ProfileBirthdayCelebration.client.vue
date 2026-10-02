@@ -39,10 +39,11 @@ function stop() {
 
 function schedule(delay = 300) {
 	if (!props.enabled) return
-	if (motion?.matches || (props.mode !== 'card' && consumed)) {
+	if (motion?.matches) {
 		emit('settled')
 		return
 	}
+	if (props.mode !== 'card' && consumed) return
 	if (document.hidden || !visible) return
 	clearTimeout(timer)
 	timer = setTimeout(() => {
@@ -52,6 +53,8 @@ function schedule(delay = 300) {
 }
 
 function resume() {
+	// An interrupted fullscreen celebration must finish before revealing its cue.
+	if (active.value && props.mode !== 'card') consumed = false
 	stop()
 	schedule()
 }

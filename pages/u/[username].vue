@@ -202,23 +202,32 @@
 					>
 						<div v-if="birthdaySummary || genderSymbol" class="grid gap-1">
 							<div class="flex flex-wrap items-baseline gap-1">
-								<UTooltip
-									v-if="showBirthdayIndicator"
-									:text="t('profile.public.birthday.today')"
-								>
-									<span
-										tabindex="0"
-										:aria-label="t('profile.public.birthday.today')"
-										class="inline-flex self-center text-primary"
-									>
-										<UIcon name="i-lucide-cake" class="size-5" />
-									</span>
-								</UTooltip>
 								<span
 									v-if="birthdayAgeText"
-									:class="{ 'font-semibold': showBirthdayIndicator }"
-									class="text-2xl text-slate-950 dark:text-white"
+									class="inline-flex items-center text-2xl text-slate-950 dark:text-white"
 								>
+									<Transition
+										name="birthday-reveal"
+										@after-enter="birthdayDetailsAnimated = true"
+									>
+										<span
+											v-if="showBirthdayIndicator"
+											class="mr-1.5 inline-flex w-4 shrink-0 overflow-hidden align-middle"
+										>
+											<UTooltip :text="t('profile.public.birthday.today')">
+												<span
+													tabindex="0"
+													:aria-label="t('profile.public.birthday.today')"
+													class="birthday-icon inline-flex text-rose-500 dark:text-rose-300"
+												>
+													<ProfileBirthdayCake
+														:animated="birthdayDetailsAnimated"
+														class="size-4 shrink-0"
+													/>
+												</span>
+											</UTooltip>
+										</span>
+									</Transition>
 									{{ birthdayAgeText }}
 								</span>
 								<span
@@ -229,10 +238,31 @@
 								</span>
 							</div>
 							<p
-								v-if="birthdaySecondaryText"
+								v-if="birthdayDateText"
 								class="text-xs text-slate-500 dark:text-slate-400"
 							>
-								{{ birthdaySecondaryText }}
+								<i18n-t
+									v-if="locale === 'en-US'"
+									keypath="profile.public.birthday.bornOn"
+									tag="span"
+									scope="global"
+								>
+									<template #date
+										><ProfileBirthdayDate
+											:text="birthdayDateText"
+											:animated="
+												birthdayDetailsAnimated && showBirthdayIndicator
+											"
+									/></template>
+								</i18n-t>
+								<template v-else>
+									<ProfileBirthdayDate
+										:text="birthdayDateText"
+										:animated="birthdayDetailsAnimated && showBirthdayIndicator"
+									/><span v-if="birthdayLunarText">
+										/ {{ birthdayLunarText }}</span
+									>
+								</template>
 							</p>
 						</div>
 						<p
@@ -579,11 +609,15 @@ const birthdaySummary = computed(() =>
 	),
 )
 const birthdayCelebrationSettled = ref(false)
+const birthdayDetailsAnimated = ref(false)
 const showBirthdayIndicator = computed(
 	() =>
 		birthdaySummary.value?.daysUntilNextBirthday === 0 &&
 		birthdayCelebrationSettled.value,
 )
+watch(showBirthdayIndicator, (visible) => {
+	if (!visible) birthdayDetailsAnimated.value = false
+})
 watch(username, () => {
 	birthdayCelebrationSettled.value = false
 })
@@ -636,32 +670,20 @@ const birthdayMetaText = computed(() => {
 	return parts.join(' ')
 })
 
-const birthdaySecondaryText = computed(() => {
-	const summary = birthdaySummary.value
-
-	if (!summary || !profile.value?.birthday) {
-		return ''
-	}
-
-	if (locale.value === 'en-US') {
-		return t('profile.public.birthday.bornOn', {
-			date: formatBirthdayDateParts(profile.value.birthday),
-		})
-	}
-
-	const lunarText = summary.lunar
+const birthdayDateText = computed(() =>
+	birthdaySummary.value && profile.value?.birthday
+		? formatBirthdayDateParts(profile.value.birthday)
+		: '',
+)
+const birthdayLunarText = computed(() => {
+	const lunar = birthdaySummary.value?.lunar
+	return lunar
 		? t('profile.edit.birthday.lunar', {
-				leap: summary.lunar.isLeapMonth
-					? t('profile.edit.birthday.lunarLeap')
-					: '',
-				month: summary.lunar.month,
-				day: summary.lunar.day,
+				leap: lunar.isLeapMonth ? t('profile.edit.birthday.lunarLeap') : '',
+				month: lunar.month,
+				day: lunar.day,
 			})
 		: ''
-
-	return [formatBirthdayDateParts(profile.value.birthday), lunarText]
-		.filter(Boolean)
-		.join(' / ')
 })
 
 const displayCountryOrRegion = computed(() => {
@@ -1117,3 +1139,41 @@ async function handleSocialAction(action: SocialAction): Promise<void> {
 
 useExplicitRouteTitle(pageTitle)
 </script>
+
+<style scoped>
+.birthday-reveal-enter-active,
+.birthday-reveal-leave-active {
+	transition:
+		width 480ms cubic-bezier(0.22, 1, 0.36, 1),
+		margin-right 480ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.birthday-reveal-enter-active .birthday-icon,
+.birthday-reveal-leave-active .birthday-icon {
+	transform-origin: center;
+	transition:
+		transform 480ms cubic-bezier(0.22, 1, 0.36, 1),
+		opacity 320ms ease;
+}
+
+.birthday-reveal-enter-from,
+.birthday-reveal-leave-to {
+	width: 0;
+	margin-right: 0;
+}
+
+.birthday-reveal-enter-from .birthday-icon,
+.birthday-reveal-leave-to .birthday-icon {
+	transform: scale(0.25);
+	opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.birthday-reveal-enter-active,
+	.birthday-reveal-leave-active,
+	.birthday-reveal-enter-active .birthday-icon,
+	.birthday-reveal-leave-active .birthday-icon {
+		transition: none;
+	}
+}
+</style>
