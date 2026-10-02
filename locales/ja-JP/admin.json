@@ -928,6 +928,7 @@
 				"ownerId": "所有者 ID",
 				"contentType": "Content Type",
 				"sizeBytes": "サイズ",
+				"createdBy": "アップロードしたユーザー",
 				"createdById": "作成者 ID",
 				"objectKey": "Object Key",
 				"createdAt": "作成日時"

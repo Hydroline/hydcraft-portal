@@ -928,6 +928,7 @@
 				"ownerId": "歸屬 ID",
 				"contentType": "Content Type",
 				"sizeBytes": "大小",
+				"createdBy": "上傳使用者",
 				"createdById": "建立者 ID",
 				"objectKey": "Object Key",
 				"createdAt": "建立時間"

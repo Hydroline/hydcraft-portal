@@ -21,6 +21,7 @@ const props = withDefaults(
 	}>(),
 	{ mode: 'fullscreen' },
 )
+const emit = defineEmits<{ settled: [] }>()
 const canvas = ref<HTMLCanvasElement | null>(null)
 const active = ref(false)
 let consumed = false
@@ -37,8 +38,12 @@ function stop() {
 }
 
 function schedule(delay = 300) {
-	if (!props.enabled || motion?.matches || document.hidden || !visible) return
-	if (props.mode !== 'card' && consumed) return
+	if (!props.enabled) return
+	if (motion?.matches || (props.mode !== 'card' && consumed)) {
+		emit('settled')
+		return
+	}
+	if (document.hidden || !visible) return
 	clearTimeout(timer)
 	timer = setTimeout(() => {
 		consumed = true
@@ -54,13 +59,17 @@ function resume() {
 function play() {
 	const element = canvas.value
 	const context = element?.getContext('2d')
-	if (!element || !context || motion?.matches) return
+	if (!element || !context || motion?.matches) {
+		emit('settled')
+		return
+	}
 	active.value = true
 	const card = props.mode === 'card'
 	const width = card ? element.clientWidth : window.innerWidth
 	const height = card ? element.clientHeight : window.innerHeight
 	if (!width || !height) {
 		stop()
+		emit('settled')
 		return
 	}
 	const ratio = Math.min(window.devicePixelRatio || 1, 2)
@@ -79,6 +88,7 @@ function play() {
 		.filter(Boolean)
 	if (!colors.length) {
 		stop()
+		emit('settled')
 		return
 	}
 	const count = card ? 32 : width < 640 ? 80 : 150
@@ -108,6 +118,7 @@ function play() {
 		const elapsed = now - start
 		if (elapsed >= 4200) {
 			stop()
+			emit('settled')
 			if (card) schedule(5000)
 			return
 		}

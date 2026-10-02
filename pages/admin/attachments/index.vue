@@ -102,6 +102,32 @@
 						{{ row.original.ownerType }} / {{ row.original.ownerId || '-' }}
 					</div>
 				</template>
+				<template #createdBy-cell="{ row }">
+					<NuxtLink
+						v-if="row.original.createdBy"
+						:to="localePath(`/admin/users/${row.original.createdBy.id}`)"
+						class="flex items-center gap-2 text-primary hover:underline"
+					>
+						<UAvatar
+							:src="row.original.createdBy.avatarUrl || undefined"
+							:alt="
+								row.original.createdBy.displayName ||
+								row.original.createdBy.username
+							"
+							size="xs"
+						/>
+						<span class="grid gap-0.5">
+							<span>{{
+								row.original.createdBy.displayName ||
+								row.original.createdBy.username
+							}}</span>
+							<span class="text-xs text-slate-500"
+								>@{{ row.original.createdBy.username }}</span
+							>
+						</span>
+					</NuxtLink>
+					<span v-else class="text-xs text-slate-500">-</span>
+				</template>
 				<template #createdAt-cell="{ row }">
 					{{ formatDate(row.original.createdAt) }}
 				</template>
@@ -232,10 +258,24 @@
 						<div
 							class="grid gap-1 rounded-lg border border-slate-200 p-3 dark:border-slate-800 [&>span]:text-xs [&>span]:text-slate-500 [&>strong]:text-sm [&>strong]:text-slate-950 dark:[&>span]:text-slate-400 dark:[&>strong]:text-white"
 						>
-							<span>{{ t('admin.attachments.fields.createdById') }}</span>
-							<strong class="break-all text-xs">{{
+							<span>{{ t('admin.attachments.fields.createdBy') }}</span>
+							<NuxtLink
+								v-if="selectedAttachment.createdBy"
+								:to="
+									localePath(`/admin/users/${selectedAttachment.createdBy.id}`)
+								"
+								class="text-sm text-primary hover:underline"
+							>
+								{{
+									selectedAttachment.createdBy.displayName ||
+									selectedAttachment.createdBy.username
+								}}
+								· @{{ selectedAttachment.createdBy.username }}
+							</NuxtLink>
+							<strong v-else>-</strong>
+							<span class="break-all">{{
 								selectedAttachment.createdById || '-'
-							}}</strong>
+							}}</span>
 						</div>
 						<div
 							class="grid gap-1 rounded-lg border border-slate-200 p-3 dark:border-slate-800 [&>span]:text-xs [&>span]:text-slate-500 [&>strong]:text-sm [&>strong]:text-slate-950 dark:[&>span]:text-slate-400 dark:[&>strong]:text-white"
@@ -369,6 +409,13 @@ interface AdminAttachmentVariant {
 	createdAt: string
 }
 
+interface AdminAttachmentUser {
+	id: string
+	username: string
+	displayName: string | null
+	avatarUrl: string | null
+}
+
 interface AdminAttachment {
 	id: string
 	app: string
@@ -381,6 +428,7 @@ interface AdminAttachment {
 	contentType: string | null
 	sizeBytes: number | null
 	createdById: string | null
+	createdBy: AdminAttachmentUser | null
 	objectKey: string | null
 	createdAt: string
 	updatedAt: string
@@ -397,6 +445,7 @@ interface AdminAttachmentsResponse {
 
 const { notifyError, notifySuccess } = useAdminToast()
 const { locale } = useI18n()
+const localePath = useLocalePath()
 const ALL_FILTER_VALUE = '__all__'
 const page = ref(1)
 const pageSize = ref(20)
@@ -443,6 +492,7 @@ const columns = [
 	{ accessorKey: 'purpose', header: t('admin.attachments.fields.purpose') },
 	{ accessorKey: 'status', header: t('admin.attachments.fields.status') },
 	{ accessorKey: 'owner', header: t('admin.attachments.fields.owner') },
+	{ accessorKey: 'createdBy', header: t('admin.attachments.fields.createdBy') },
 	{ accessorKey: 'createdAt', header: t('admin.attachments.fields.createdAt') },
 	{ id: 'actions', header: '' },
 ]
