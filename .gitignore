@@ -47,6 +47,3 @@ logs
 .continue
 .gemini
 .aider*
-prisma/schema/migrations/20260926134838/migration.sql
-.gitignore
-prisma/schema/migrations/20260927000100_site_settings/migration.sql
