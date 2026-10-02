@@ -349,6 +349,7 @@ useHead(() => ({
 			},
 		}"
 	>
+		<SiteAppearance />
 		<div
 			id="app"
 			class="relative flex flex-col"

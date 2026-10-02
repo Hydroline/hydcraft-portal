@@ -251,6 +251,8 @@
 			"savedDescription": "Header 使用者資訊已同步更新。",
 			"saveFailed": "儲存資料失敗",
 			"saveFailedDescription": "請檢查登入狀態與輸入內容。",
+			"copyEmail": "複製電子郵件地址",
+			"copyFailed": "複製失敗，請重試",
 			"copied": "已複製",
 			"noChanges": "沒有需要儲存的變更",
 			"imageSaveFailed": "資料圖片儲存失敗",

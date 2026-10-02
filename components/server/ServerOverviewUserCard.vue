@@ -3,6 +3,11 @@
 		<article
 			class="relative h-full overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950"
 		>
+			<ProfileBirthdayCelebration
+				mode="card"
+				:visit-key="user.username"
+				:enabled="user.isBirthdayToday === true"
+			/>
 			<div class="absolute inset-0 select-none">
 				<SkeletonImage
 					:src="coverSrc"

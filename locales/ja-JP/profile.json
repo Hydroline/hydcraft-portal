@@ -251,6 +251,8 @@
 			"savedDescription": "Header のユーザー情報を更新しました。",
 			"saveFailed": "プロフィールの保存に失敗しました",
 			"saveFailedDescription": "ログイン状態と入力内容を確認してください。",
+			"copyEmail": "メールアドレスをコピー",
+			"copyFailed": "コピーに失敗しました。もう一度お試しください。",
 			"copied": "コピーしました",
 			"noChanges": "保存する変更はありません",
 			"imageSaveFailed": "プロフィール画像の保存に失敗しました",

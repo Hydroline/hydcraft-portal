@@ -98,7 +98,10 @@ const COUNTRY_OR_REGION_TO_TIMEZONE: Record<string, string> = {
  * 退路 Asia/Shanghai。时区本身低敏感，恒定下发（与 /u 页原本就恒定显示
  * 一个默认时区行一致），仅是把假默认换成真实值，故不挂隐私开关。
  */
-const resolveDisplayTimezone = (user: ProfileUser): string | null => {
+export const resolveDisplayTimezone = (user: {
+	countryOrRegion: string | null
+	preferences: { timezoneMode: string; timezone: string | null } | null
+}): string | null => {
 	const preferences = user.preferences
 
 	if (preferences?.timezoneMode === 'MANUAL') {

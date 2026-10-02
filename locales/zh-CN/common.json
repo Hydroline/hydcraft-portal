@@ -36,7 +36,8 @@
 		"meConnections": "连接与授权",
 		"adminAchievements": "成就",
 		"adminBuilderRanks": "建筑职阶",
-		"adminOAuthClients": "OAuth 客户端"
+		"adminOAuthClients": "OAuth 客户端",
+		"adminSite": "站点"
 	},
 	"main": {
 		"contentFooter": {

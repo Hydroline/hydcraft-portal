@@ -177,7 +177,8 @@
 			"OAUTH_GRANT_ID_REQUIRED": "缺少 OIDC 授權 ID。",
 			"OAUTH_GRANT_NOT_FOUND": "OIDC 授權不存在。",
 			"HYDROLINE_ID_CREATE_FAILED": "Hydroline ID 建立失敗。",
-			"HYDROLINE_ID_GENERATION_FAILED": "Hydroline ID 產生失敗。"
+			"HYDROLINE_ID_GENERATION_FAILED": "Hydroline ID 產生失敗。",
+			"SITE_MOURNING_SETTINGS_INVALID": "請填寫有效名稱（1–100 字）、灰階（0–100 的整數）及月日，最多新增 100 筆日期。"
 		},
 		"INVALID_PARTNER_REORDER": "排序資料無效。",
 		"INVALID_FRIEND_LINK_REORDER": "友情連結排序資料無效。"

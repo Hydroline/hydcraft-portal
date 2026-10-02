@@ -1,0 +1,7 @@
+// Each site module owns and validates its own settings document.
+model SiteSetting {
+  key       String   @id
+  value     Json
+  updatedBy String?
+  updatedAt DateTime @updatedAt
+}

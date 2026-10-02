@@ -52,6 +52,7 @@ export interface ServerOverviewServerItem {
 }
 
 export interface ServerOverviewRecommendedUser {
+	isBirthdayToday?: boolean
 	username: string
 	displayName: string | null
 	avatarUrl: string | null
