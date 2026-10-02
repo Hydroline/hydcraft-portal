@@ -37,6 +37,25 @@ const SCROLL_INTENT_KEYS = new Set([
 	'PageDown',
 	'PageUp',
 ])
+const PAGE_LEAVE_FALLBACK_MS = 2500
+const pageLeaveWaiters = new Set<() => void>()
+
+export const waitForPageLeave = (): Promise<void> =>
+	new Promise((resolve) => {
+		const settle = () => {
+			window.clearTimeout(timeout)
+			pageLeaveWaiters.delete(settle)
+			resolve()
+		}
+		const timeout = window.setTimeout(settle, PAGE_LEAVE_FALLBACK_MS)
+		pageLeaveWaiters.add(settle)
+	})
+
+export const notifyPageLeave = (): void => {
+	for (const settle of pageLeaveWaiters) {
+		settle()
+	}
+}
 
 const scrollSnapshots = new Map<string, ScrollSnapshot>()
 

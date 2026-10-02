@@ -168,11 +168,6 @@
 							data-home-detail-scroll
 							:lang="props.locale"
 							class="home-hero-copy-description home-hero-copy-description--expanded whitespace-pre-line break-words hyphens-auto [text-wrap:pretty] text-sm leading-6 text-white/72 sm:text-lg sm:leading-normal"
-							:class="
-								props.locale.startsWith('en')
-									? 'text-justify [text-align-last:left]'
-									: ''
-							"
 							@pointerdown.stop
 							@touchstart.stop
 							@touchmove.stop
@@ -197,11 +192,6 @@
 						ref="descriptionCollapsedRef"
 						:lang="props.locale"
 						class="home-hero-copy-description home-hero-copy-description--collapsed whitespace-pre-line break-words hyphens-auto [text-wrap:pretty] text-sm leading-6 text-white/72 sm:text-lg sm:leading-normal"
-						:class="
-							props.locale.startsWith('en')
-								? 'text-justify [text-align-last:left]'
-								: ''
-						"
 						@pointerdown.stop
 						@touchstart.stop
 						@touchmove.stop
@@ -226,11 +216,6 @@
 						aria-hidden="true"
 						:lang="props.locale"
 						class="home-hero-copy-description home-hero-description-measure whitespace-pre-line break-words hyphens-auto [text-wrap:pretty] text-sm leading-6 text-white/72 sm:text-lg sm:leading-normal"
-						:class="
-							props.locale.startsWith('en')
-								? 'text-justify [text-align-last:left]'
-								: ''
-						"
 					>
 						{{ scenePresentation.description }}
 					</p>
@@ -693,6 +678,10 @@ const handleSceneGalleryLightboxOpenChange = (open: boolean): void => {
 }
 
 @media (min-width: 1024px) and (max-height: 850px) {
+	:lang(en).home-hero-description-shell {
+		max-width: 32rem;
+	}
+
 	.home-hero-copy-description {
 		margin-top: 0.25rem;
 		font-size: clamp(0.75rem, 2.4dvh, 1rem);

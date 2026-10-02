@@ -8,6 +8,7 @@ import {
 	queueAbsoluteScrollRestore,
 	queueProgressScrollRestore,
 	saveScrollSnapshot,
+	waitForPageLeave,
 } from '../utils/scroll'
 
 const HASH_SCROLL_RETRY_INTERVAL_MS = 50
@@ -52,14 +53,24 @@ const waitForHashScrollPosition = async (hash: string) => {
 
 export default <RouterConfig>{
 	scrollBehavior(to, from, savedPosition) {
+		const leavingImmersivePage =
+			import.meta.client &&
+			normalizeScrollPath(from.fullPath) !== normalizeScrollPath(to.fullPath) &&
+			(isHomeScrollPath(from.fullPath) ||
+				/^\/players\/[^/]+$/.test(normalizeScrollPath(from.fullPath)))
+		const afterPageLeave = <T>(position: T): T | Promise<T> =>
+			leavingImmersivePage ? waitForPageLeave().then(() => position) : position
+
 		if (savedPosition) {
 			clearPendingScrollRestore()
-			return savedPosition
+			return afterPageLeave(savedPosition)
 		}
 
 		if (to.hash) {
 			clearPendingScrollRestore()
-			return waitForHashScrollPosition(to.hash)
+			return leavingImmersivePage
+				? waitForPageLeave().then(() => waitForHashScrollPosition(to.hash))
+				: waitForHashScrollPosition(to.hash)
 		}
 
 		if (!import.meta.client) {
@@ -79,23 +90,29 @@ export default <RouterConfig>{
 
 			if (fromSnapshot) {
 				queueProgressScrollRestore(to.fullPath, fromSnapshot.progress)
-				return { left: 0, top: fromSnapshot.top }
+				return afterPageLeave({ left: 0, top: fromSnapshot.top })
 			}
 		}
 
 		if (isHomeScrollPath(to.fullPath)) {
 			clearPendingScrollRestore()
-			return { left: 0, top: 0 }
+			return afterPageLeave({ left: 0, top: 0 })
 		}
 
 		const savedSnapshot = getScrollSnapshot(to.fullPath)
 
 		if (savedSnapshot) {
+			if (leavingImmersivePage) {
+				return waitForPageLeave().then(() => {
+					queueAbsoluteScrollRestore(to.fullPath, savedSnapshot.top)
+					return false
+				})
+			}
 			queueAbsoluteScrollRestore(to.fullPath, savedSnapshot.top)
 			return false
 		}
 
 		clearPendingScrollRestore()
-		return { left: 0, top: 0 }
+		return afterPageLeave({ left: 0, top: 0 })
 	},
 }

@@ -15,6 +15,7 @@ import {
 	type ProfileLanguage,
 } from '~/utils/profile/edit'
 import { resolvePageContainerVariant } from '~/utils/layout/page-presentation'
+import { normalizeScrollPath, notifyPageLeave } from '~/utils/scroll'
 
 type LocaleCode = 'zh-CN' | 'zh-TW' | 'ja-JP' | 'en-US'
 type LocaleNameKey = 'zhCN' | 'zhTW' | 'jaJP' | 'enUS'
@@ -27,8 +28,33 @@ interface NuxtI18nApi {
 const toast = useToast()
 const nuxtApp = useNuxtApp()
 const route = useRoute()
+const displayedPresentationVariant = ref(resolvePageContainerVariant(route))
+const displayedIsHomePage = ref(normalizeHeaderMenuPath(route.path) === '/')
+const syncDisplayedPresentation = () => {
+	displayedPresentationVariant.value = resolvePageContainerVariant(route)
+	displayedIsHomePage.value = normalizeHeaderMenuPath(route.path) === '/'
+}
+
+if (import.meta.client) {
+	const unhookPageLeave = nuxtApp.hook('page:transition:finish', () => {
+		syncDisplayedPresentation()
+		notifyPageLeave()
+	})
+	onBeforeUnmount(unhookPageLeave)
+	watch(
+		() => route.fullPath,
+		(next, previous) => {
+			if (
+				normalizeScrollPath(next) === normalizeScrollPath(previous) ||
+				route.meta.pageContainerVariant === 'minecraftAccounts'
+			) {
+				syncDisplayedPresentation()
+			}
+		},
+	)
+}
 const isImmersivePage = computed(
-	() => resolvePageContainerVariant(route) === 'immersive',
+	() => displayedPresentationVariant.value === 'immersive',
 )
 const switchLocalePath = useSwitchLocalePath()
 const locale = (nuxtApp.$i18n as { locale: Ref<LocaleCode> }).locale
@@ -37,9 +63,8 @@ const { user, resolved } = usePortalAuth()
 const explicitRouteTitle = useExplicitRouteTitleState()
 const resolvedRouteTitleDefinition = useResolvedRouteTitleDefinition()
 const normalizedRoutePath = computed(() => normalizeHeaderMenuPath(route.path))
-const isHomePage = computed(() => normalizedRoutePath.value === '/')
 const isViewportLockedImmersivePage = computed(
-	() => isImmersivePage.value && !isHomePage.value,
+	() => isImmersivePage.value && !displayedIsHomePage.value,
 )
 const MANUAL_LOCALE_SWITCH_STORAGE_KEY = 'hydcraft:manual-locale-switch-at'
 const MANUAL_LOCALE_SWITCH_GRACE_MS = 1500
@@ -359,8 +384,8 @@ useHead(() => ({
 					: 'min-h-[105vh]'
 			"
 		>
-			<PageHeader />
-			<PageContainer />
+			<PageHeader :presentation-variant="displayedPresentationVariant" />
+			<PageContainer :presentation-variant="displayedPresentationVariant" />
 			<PageFooter v-if="!isViewportLockedImmersivePage" />
 			<PageStatusBar />
 		</div>

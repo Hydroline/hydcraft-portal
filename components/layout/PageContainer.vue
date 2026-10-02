@@ -21,9 +21,11 @@
 import { onMounted, ref } from 'vue'
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import { normalizeScrollPath } from '~/utils/scroll'
-import { resolvePageContainerVariant } from '~/utils/layout/page-presentation'
 
-const route = useRoute()
+const props = defineProps<{
+	presentationVariant?: 'auth' | 'fullBleed' | 'immersive'
+}>()
+
 const pageContainerReady = ref(false)
 
 const resolvePageKey = (route: RouteLocationNormalizedLoaded): string => {
@@ -35,7 +37,7 @@ const resolvePageKey = (route: RouteLocationNormalizedLoaded): string => {
 }
 
 const mainClass = computed(() => {
-	const pageContainerVariant = resolvePageContainerVariant(route)
+	const pageContainerVariant = props.presentationVariant
 
 	if (pageContainerVariant === 'immersive') {
 		return 'max-w-full p-0'
