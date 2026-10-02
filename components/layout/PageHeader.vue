@@ -16,6 +16,12 @@ interface ThemeModeItem {
 	icon: string
 }
 
+interface PageHeaderProps {
+	presentationVariant?: 'auth' | 'fullBleed' | 'immersive'
+}
+
+const props = defineProps<PageHeaderProps>()
+
 type LocaleCode = 'zh-CN' | 'zh-TW' | 'ja-JP' | 'en-US'
 type ThemeMode = 'light' | 'dark' | 'system'
 
@@ -86,13 +92,13 @@ const isHeaderMenuHidden = computed(() => {
 	)
 })
 const isImmersivePage = computed(
-	() => resolvePageContainerVariant(route) === 'immersive',
+	() => props.presentationVariant === 'immersive',
 )
 const usesOverlayHeader = computed(() => isImmersivePage.value)
 const usesWideHeaderShell = computed(
 	() =>
-		resolvePageContainerVariant(route) === 'immersive' ||
-		resolvePageContainerVariant(route) === 'fullBleed',
+		props.presentationVariant === 'immersive' ||
+		props.presentationVariant === 'fullBleed',
 )
 const userAvatarLabel = computed(() =>
 	(user.value?.displayName ?? user.value?.handle ?? '')
@@ -104,6 +110,11 @@ const displayedUserAvatarUrl = computed(() => {
 
 	return avatarUrl && avatarUrl !== failedUserAvatarUrl.value ? avatarUrl : null
 })
+const publicProfilePath = computed(() =>
+	user.value?.username
+		? localePath(`/u/${encodeURIComponent(user.value.username)}`)
+		: null,
+)
 const routeMiddleware = computed(() => route.meta.middleware)
 const shouldRedirectAfterLogout = computed(() => {
 	const middleware = routeMiddleware.value
@@ -401,11 +412,20 @@ onMounted(() => {
 							<template #content>
 								<div class="flex min-w-40 flex-col gap-1 p-2">
 									<div class="px-3 py-2">
-										<div
+										<NuxtLink
+											v-if="publicProfilePath"
+											:to="publicProfilePath"
+											class="line-clamp-2 wrap-break-word rounded-sm text-[17px] leading-snug font-semibold text-slate-600 transition-opacity duration-150 ease-out hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500 dark:text-slate-300 dark:focus-visible:outline-slate-400 motion-reduce:transition-none"
+											@click="userMenuOpen = false"
+										>
+											{{ user.displayName ?? user.handle }}
+										</NuxtLink>
+										<span
+											v-else
 											class="line-clamp-2 wrap-break-word text-[17px] leading-snug font-semibold text-slate-600 dark:text-slate-300"
 										>
 											{{ user.displayName ?? user.handle }}
-										</div>
+										</span>
 										<div
 											class="text-[13px] leading-[normal] text-slate-500/80 dark:text-slate-400/80"
 										>
