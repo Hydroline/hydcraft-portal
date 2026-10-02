@@ -2,6 +2,7 @@
 	<div class="site-shell pb-16">
 		<ProfileBirthdayCelebration
 			:visit-key="username"
+			@settled="birthdayCelebrationSettled = true"
 			:enabled="
 				!pending &&
 				!error &&
@@ -201,8 +202,21 @@
 					>
 						<div v-if="birthdaySummary || genderSymbol" class="grid gap-1">
 							<div class="flex flex-wrap items-baseline gap-1">
+								<UTooltip
+									v-if="showBirthdayIndicator"
+									:text="t('profile.public.birthday.today')"
+								>
+									<span
+										tabindex="0"
+										:aria-label="t('profile.public.birthday.today')"
+										class="inline-flex self-center text-primary"
+									>
+										<UIcon name="i-lucide-cake" class="size-5" />
+									</span>
+								</UTooltip>
 								<span
 									v-if="birthdayAgeText"
+									:class="{ 'font-semibold': showBirthdayIndicator }"
 									class="text-2xl text-slate-950 dark:text-white"
 								>
 									{{ birthdayAgeText }}
@@ -564,6 +578,16 @@ const birthdaySummary = computed(() =>
 		profile.value?.timezone ?? null,
 	),
 )
+const birthdayCelebrationSettled = ref(false)
+const showBirthdayIndicator = computed(
+	() =>
+		birthdaySummary.value?.daysUntilNextBirthday === 0 &&
+		birthdayCelebrationSettled.value,
+)
+watch(username, () => {
+	birthdayCelebrationSettled.value = false
+})
+
 const birthdayAgeText = computed(() => {
 	const summary = birthdaySummary.value
 

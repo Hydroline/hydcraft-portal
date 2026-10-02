@@ -928,6 +928,7 @@
 				"ownerId": "Owner ID",
 				"contentType": "Content Type",
 				"sizeBytes": "Size",
+				"createdBy": "Uploaded by",
 				"createdById": "Created by ID",
 				"objectKey": "Object Key",
 				"createdAt": "Created at"

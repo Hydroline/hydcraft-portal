@@ -171,6 +171,7 @@
 				}
 			},
 			"birthday": {
+				"today": "今天是用户的生日",
 				"ageShort": "{count}岁",
 				"bornOn": "出生于 {date}",
 				"zodiacLabel": "生肖{zodiac}",

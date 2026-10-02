@@ -171,6 +171,7 @@
 				}
 			},
 			"birthday": {
+				"today": "今日はこのユーザーの誕生日です",
 				"ageShort": "{count}歳",
 				"bornOn": "{date} 生まれ",
 				"zodiacLabel": "干支{zodiac}",

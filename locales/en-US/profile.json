@@ -172,6 +172,7 @@
 				}
 			},
 			"birthday": {
+				"today": "Today is this user's birthday",
 				"ageShort": "{count} y.o.",
 				"bornOn": "Born on {date}",
 				"zodiacLabel": "Year of the {zodiac}",

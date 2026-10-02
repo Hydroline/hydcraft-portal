@@ -7,6 +7,7 @@
 				mode="card"
 				:visit-key="user.username"
 				:enabled="user.isBirthdayToday === true"
+				@settled="birthdayCelebrationSettled = true"
 			/>
 			<div class="absolute inset-0 select-none">
 				<SkeletonImage
@@ -25,7 +26,7 @@
 			</div>
 
 			<div class="relative z-10 flex min-h-90 flex-col justify-end p-4">
-				<div class="mb-1">
+				<div class="relative mb-1 w-fit">
 					<UAvatar
 						:src="user.avatarUrl || undefined"
 						:alt="user.displayName || user.username"
@@ -33,6 +34,18 @@
 						size="xl"
 						class="border border-white/30 shadow-lg"
 					/>
+					<UTooltip
+						v-if="user.isBirthdayToday && birthdayCelebrationSettled"
+						:text="t('profile.public.birthday.today')"
+					>
+						<span
+							tabindex="0"
+							:aria-label="t('profile.public.birthday.today')"
+							class="absolute -right-1 -bottom-1 inline-flex size-6 items-center justify-center rounded-full bg-white text-primary shadow-sm dark:bg-slate-950"
+						>
+							<UIcon name="i-lucide-cake" class="size-4" />
+						</span>
+					</UTooltip>
 				</div>
 
 				<div class="min-w-0">
@@ -64,6 +77,11 @@ interface Props {
 
 const props = defineProps<Props>()
 const localePath = useLocalePath()
+const { t } = useI18n()
+const birthdayCelebrationSettled = ref(false)
+watch([() => props.user.username, () => props.user.isBirthdayToday], () => {
+	birthdayCelebrationSettled.value = false
+})
 
 const coverSrc = computed(() => props.user.coverUrl || defaultCover)
 const avatarText = computed(() =>
