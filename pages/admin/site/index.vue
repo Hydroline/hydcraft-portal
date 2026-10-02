@@ -3,6 +3,7 @@ import {
 	createDefaultMourningSettings,
 	isValidAnnualDate,
 	sortMourningDates,
+	type MourningDate,
 	type MourningSettings,
 } from '~/utils/site/mourning'
 
@@ -12,62 +13,121 @@ const { notifySuccess, notifyError } = useAdminToast()
 const { data, error, pending, refresh } = await useFetch<MourningSettings>(
 	'/api/admin/site/mourning',
 )
-const form = ref(createDefaultMourningSettings())
-const saving = ref(false)
+const defaults = createDefaultMourningSettings()
+const modeForm = reactive({
+	manualEnabled: defaults.manualEnabled,
+	automaticEnabled: defaults.automaticEnabled,
+	grayscale: defaults.grayscale,
+})
+const dates = ref<MourningDate[]>([])
+const savingSection = ref<'mode' | 'dates' | null>(null)
+const datesModalOpen = ref(false)
 const draft = reactive({ name: '', month: 1, day: 1 })
 const draftError = ref(false)
 watch(
 	data,
 	(value) => {
-		if (value) form.value = structuredClone(toRaw(value))
+		if (!value) return
+		modeForm.manualEnabled = value.manualEnabled
+		modeForm.automaticEnabled = value.automaticEnabled
+		modeForm.grayscale = value.grayscale
+		dates.value = structuredClone(toRaw(value.dates))
 	},
 	{ immediate: true },
 )
-const dates = computed(() => sortMourningDates(form.value.dates))
+const modeValid = computed(
+	() =>
+		Number.isInteger(modeForm.grayscale) &&
+		modeForm.grayscale >= 0 &&
+		modeForm.grayscale <= 100,
+)
+const datesValid = computed(() =>
+	dates.value.every(
+		(date) =>
+			Boolean(date.name.trim()) &&
+			date.name.trim().length <= 100 &&
+			isValidAnnualDate(date.month, date.day),
+	),
+)
+const sortedDates = computed(() => sortMourningDates(dates.value))
+
+function openDatesModal() {
+	draft.name = ''
+	draft.month = 1
+	draft.day = 1
+	draftError.value = false
+	datesModalOpen.value = true
+}
 
 function addDate() {
 	draftError.value =
 		!draft.name.trim() ||
 		draft.name.trim().length > 100 ||
 		!isValidAnnualDate(draft.month, draft.day) ||
-		form.value.dates.length >= 100
+		dates.value.length >= 100
 	if (draftError.value) return
-	form.value.dates.push({
-		id: crypto.randomUUID(),
-		name: draft.name.trim(),
-		month: draft.month,
-		day: draft.day,
-	})
-	draft.name = ''
+	dates.value = sortMourningDates([
+		...dates.value,
+		{
+			id: crypto.randomUUID(),
+			name: draft.name.trim(),
+			month: draft.month,
+			day: draft.day,
+		},
+	])
+	datesModalOpen.value = false
 }
 
-async function save() {
-	saving.value = true
+function removeDate(id: string) {
+	dates.value = dates.value.filter((date) => date.id !== id)
+}
+
+async function saveSection(section: 'mode' | 'dates') {
+	if (
+		savingSection.value ||
+		(section === 'mode' && !modeValid.value) ||
+		(section === 'dates' && !datesValid.value)
+	)
+		return
+	savingSection.value = section
 	try {
+		const current = await $fetch<MourningSettings>('/api/admin/site/mourning')
 		const saved = await $fetch<MourningSettings>('/api/admin/site/mourning', {
 			method: 'PUT',
-			body: form.value,
+			body: {
+				...current,
+				...(section === 'mode'
+					? {
+							manualEnabled: modeForm.manualEnabled,
+							automaticEnabled: modeForm.automaticEnabled,
+							grayscale: modeForm.grayscale,
+						}
+					: { dates: structuredClone(toRaw(dates.value)) }),
+			},
 		})
-		form.value = saved
+		if (section === 'mode') {
+			modeForm.manualEnabled = saved.manualEnabled
+			modeForm.automaticEnabled = saved.automaticEnabled
+			modeForm.grayscale = saved.grayscale
+		} else {
+			dates.value = structuredClone(saved.dates)
+		}
 		await refreshNuxtData('site-appearance')
 		notifySuccess({ title: t('admin.site.saved') })
 	} catch (cause) {
 		notifyError(cause)
 	} finally {
-		saving.value = false
+		savingSection.value = null
 	}
 }
 </script>
 
 <template>
 	<div class="grid gap-8">
-		<header class="grid gap-2">
+		<header>
 			<h1 class="text-3xl font-semibold text-slate-950 dark:text-white">
 				{{ t('admin.site.title') }}
 			</h1>
-			<p class="text-sm text-slate-500 dark:text-slate-400">
-				{{ t('admin.site.description') }}
-			</p>
 		</header>
 		<USkeleton v-if="pending" class="h-80 rounded-xl" />
 		<div v-else-if="error" class="grid gap-3">
@@ -76,97 +136,106 @@ async function save() {
 				t('admin.site.retry')
 			}}</UButton>
 		</div>
-		<form v-else @submit.prevent="save">
-			<fieldset
-				:disabled="saving"
-				class="grid gap-6 rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-950"
-			>
-				<div class="grid gap-2">
-					<h2 class="text-xl font-semibold">
+		<div v-else class="grid gap-8 lg:grid-cols-2">
+			<section class="grid min-w-0 content-start gap-3">
+				<div class="mx-1 flex items-center justify-between gap-3">
+					<h2 class="text-2xl text-slate-950 dark:text-white">
 						{{ t('admin.site.mourning.title') }}
 					</h2>
-					<p class="text-sm text-slate-500 dark:text-slate-400">
-						{{ t('admin.site.mourning.description') }}
-					</p>
+					<UButton
+						type="button"
+						size="sm"
+						variant="link"
+						icon="i-lucide-check"
+						:loading="savingSection === 'mode'"
+						:disabled="savingSection !== null || !modeValid"
+						@click="saveSection('mode')"
+					>
+						{{ t('admin.actions.save') }}
+					</UButton>
 				</div>
-				<USwitch
-					v-model="form.manualEnabled"
-					:label="t('admin.site.mourning.manual')"
-				/>
-				<UFormField
-					:label="t('admin.site.mourning.grayscale')"
-					:help="t('admin.site.mourning.grayscaleHelp')"
+				<fieldset
+					:disabled="savingSection !== null"
+					class="grid gap-4 rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-950"
 				>
-					<UInput
-						v-model.number="form.grayscale"
-						type="number"
-						:min="0"
-						:max="100"
-						:step="1"
-						required
-					/>
-				</UFormField>
-				<USwitch
-					v-model="form.automaticEnabled"
-					:label="t('admin.site.mourning.automatic')"
-				/>
-				<div
-					class="grid gap-4 border-t border-slate-200 pt-5 dark:border-slate-800"
-				>
-					<h3 class="font-medium">{{ t('admin.site.mourning.dates') }}</h3>
-					<p class="text-sm text-slate-500 dark:text-slate-400">
-						{{ t('admin.site.mourning.calendarHelp') }}
-					</p>
-					<div class="grid items-end gap-3 sm:grid-cols-[1fr_6rem_6rem_auto]">
-						<UFormField :label="t('admin.site.mourning.name')"
-							><UInput v-model="draft.name" :maxlength="100" class="w-full"
-						/></UFormField>
-						<UFormField :label="t('admin.site.mourning.month')"
-							><UInput
-								v-model.number="draft.month"
+					<AdminSiteSwitchField :label="t('admin.site.mourning.manual')">
+						<USwitch v-model="modeForm.manualEnabled" />
+					</AdminSiteSwitchField>
+					<AdminSiteSwitchField :label="t('admin.site.mourning.automatic')">
+						<USwitch v-model="modeForm.automaticEnabled" />
+					</AdminSiteSwitchField>
+					<AdminSiteField :label="t('admin.site.mourning.grayscale')">
+						<div class="grid gap-1.5">
+							<UInput
+								v-model.number="modeForm.grayscale"
 								type="number"
-								:min="1"
-								:max="12"
-						/></UFormField>
-						<UFormField :label="t('admin.site.mourning.day')"
-							><UInput
-								v-model.number="draft.day"
-								type="number"
-								:min="1"
-								:max="31"
-						/></UFormField>
+								:min="0"
+								:max="100"
+								:step="1"
+								class="w-full text-sm"
+							/>
+							<div class="text-xs text-slate-500 dark:text-slate-400">
+								{{ t('admin.site.mourning.grayscaleHelp') }}
+							</div>
+						</div>
+					</AdminSiteField>
+				</fieldset>
+			</section>
+			<section class="grid min-w-0 content-start gap-3">
+				<div class="mx-1 flex items-center justify-between gap-3">
+					<h2 class="text-2xl text-slate-950 dark:text-white">
+						{{ t('admin.site.mourning.dates') }}
+					</h2>
+					<div class="flex items-center gap-1">
 						<UButton
 							type="button"
+							size="sm"
+							variant="link"
 							icon="i-lucide-plus"
-							:disabled="form.dates.length >= 100"
-							@click="addDate"
-							>{{ t('admin.site.mourning.add') }}</UButton
+							:disabled="savingSection !== null || dates.length >= 100"
+							@click="openDatesModal"
 						>
+							{{ t('admin.site.mourning.manageDates') }}
+						</UButton>
+						<UButton
+							type="button"
+							size="sm"
+							variant="link"
+							icon="i-lucide-check"
+							:loading="savingSection === 'dates'"
+							:disabled="savingSection !== null || !datesValid"
+							@click="saveSection('dates')"
+						>
+							{{ t('admin.actions.save') }}
+						</UButton>
 					</div>
-					<p v-if="draftError" role="alert" class="text-sm text-error">
-						{{ t('errors.codes.SITE_MOURNING_SETTINGS_INVALID') }}
-					</p>
-					<p v-if="!dates.length" class="text-sm text-slate-500">
+				</div>
+				<div
+					class="grid gap-4 rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-950"
+				>
+					<p v-if="!sortedDates.length" class="text-sm text-slate-500">
 						{{ t('admin.site.mourning.empty') }}
 					</p>
-					<ul v-else class="grid gap-3">
+					<ul v-else class="grid max-h-80 gap-2 overflow-y-auto">
 						<li
-							v-for="date in dates"
+							v-for="date in sortedDates"
 							:key="date.id"
-							class="flex flex-wrap items-center gap-3 rounded-lg bg-slate-50 p-3 dark:bg-slate-900"
+							class="grid grid-cols-[5rem_minmax(0,1fr)_2.5rem] items-center gap-2 text-sm"
 						>
-							<span class="w-24 shrink-0 text-sm tabular-nums">{{
-								t('admin.site.mourning.date', {
-									month: date.month,
-									day: date.day,
-								})
-							}}</span>
+							<span class="tabular-nums text-slate-500 dark:text-slate-400">
+								{{
+									t('admin.site.mourning.date', {
+										month: date.month,
+										day: date.day,
+									})
+								}}
+							</span>
 							<UInput
 								v-model="date.name"
 								:aria-label="t('admin.site.mourning.name')"
 								:maxlength="100"
-								required
-								class="min-w-40 flex-1"
+								:disabled="savingSection !== null"
+								class="w-full text-sm"
 							/>
 							<UButton
 								type="button"
@@ -176,22 +245,92 @@ async function save() {
 								:aria-label="
 									t('admin.site.mourning.remove', { name: date.name })
 								"
-								@click="
-									form.dates = form.dates.filter((item) => item.id !== date.id)
-								"
+								:disabled="savingSection !== null"
+								@click="removeDate(date.id)"
 							/>
 						</li>
 					</ul>
-				</div>
-				<div class="flex flex-wrap items-center gap-3">
-					<UButton type="submit" :loading="saving">{{
-						t('admin.actions.save')
-					}}</UButton>
-					<p class="text-sm text-slate-500 dark:text-slate-400">
-						{{ t('admin.site.saveHelp') }}
+					<p v-if="!datesValid" role="alert" class="text-sm text-error">
+						{{ t('errors.codes.SITE_MOURNING_SETTINGS_INVALID') }}
 					</p>
 				</div>
-			</fieldset>
-		</form>
+			</section>
+		</div>
+		<UModal
+			v-model:open="datesModalOpen"
+			:title="t('admin.site.mourning.dates')"
+			:ui="{ content: 'max-w-2xl' }"
+		>
+			<template #body>
+				<div class="grid gap-4">
+					<form class="grid gap-4" @submit.prevent="addDate">
+						<AdminSiteField :label="t('admin.site.mourning.name')">
+							<UInput
+								v-model="draft.name"
+								:maxlength="100"
+								class="w-full text-sm"
+							/>
+						</AdminSiteField>
+						<AdminSiteField
+							as="div"
+							:label="t('admin.site.mourning.dateLabel')"
+						>
+							<div class="grid grid-cols-2 gap-3">
+								<label class="grid gap-1.5">
+									<span class="text-xs text-slate-500 dark:text-slate-400">
+										{{ t('admin.site.mourning.month') }}
+									</span>
+									<UInput
+										v-model.number="draft.month"
+										type="number"
+										:min="1"
+										:max="12"
+										class="w-full text-sm"
+									/>
+								</label>
+								<label class="grid gap-1.5">
+									<span class="text-xs text-slate-500 dark:text-slate-400">
+										{{ t('admin.site.mourning.day') }}
+									</span>
+									<UInput
+										v-model.number="draft.day"
+										type="number"
+										:min="1"
+										:max="31"
+										class="w-full text-sm"
+									/>
+								</label>
+							</div>
+						</AdminSiteField>
+						<p v-if="draftError" role="alert" class="text-sm text-error">
+							{{ t('errors.codes.SITE_MOURNING_SETTINGS_INVALID') }}
+						</p>
+					</form>
+					<p class="text-xs leading-5 text-slate-500 dark:text-slate-400">
+						{{ t('admin.site.mourning.calendarHelp') }}
+					</p>
+				</div>
+			</template>
+			<template #footer>
+				<div class="flex w-full justify-end gap-2">
+					<UButton
+						type="button"
+						color="neutral"
+						variant="ghost"
+						@click="datesModalOpen = false"
+					>
+						{{ t('admin.actions.cancel') }}
+					</UButton>
+					<UButton
+						type="button"
+						icon="i-lucide-plus"
+						:disabled="dates.length >= 100"
+						@click="addDate"
+					>
+						{{ t('admin.site.mourning.add') }}
+					</UButton>
+				</div>
+			</template>
+		</UModal>
 	</div>
 </template>

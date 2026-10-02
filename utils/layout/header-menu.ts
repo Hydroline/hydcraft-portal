@@ -115,6 +115,7 @@ export const headerMenuGroups: HeaderMenuGroup[] = [
 				labelKey: 'routes.adminOverview',
 				to: '/admin/overview',
 			},
+			{ key: 'site', labelKey: 'routes.adminSite', to: '/admin/site' },
 			{
 				key: 'servers',
 				labelKey: 'routes.adminServers',
@@ -161,7 +162,6 @@ export const headerMenuGroups: HeaderMenuGroup[] = [
 				labelKey: 'routes.adminAttachments',
 				to: '/admin/attachments',
 			},
-			{ key: 'site', labelKey: 'routes.adminSite', to: '/admin/site' },
 		],
 	},
 ]
