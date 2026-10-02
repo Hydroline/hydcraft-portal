@@ -1164,6 +1164,30 @@
 			"raw": "原始值",
 			"empty": "暂无内容",
 			"showAll": "显示全部"
+		},
+		"site": {
+			"title": "站点",
+			"saved": "站点设置已保存",
+			"loadFailed": "无法加载站点设置，请重试。",
+			"retry": "重试",
+			"mourning": {
+				"title": "默哀模式",
+				"manual": "手动开启默哀模式",
+				"grayscale": "灰度（%）",
+				"grayscaleHelp": "0% 保留原色，100% 完全灰白。",
+				"automatic": "启用自动默哀日期",
+				"dates": "每年默哀日期",
+				"dateLabel": "日期",
+				"manageDates": "管理日期",
+				"calendarHelp": "按上海时区（UTC+8）每年匹配月日，自动按 1 月至 12 月排序。2 月 29 日仅在闰年匹配，最多 100 条。",
+				"name": "默哀节日名称",
+				"month": "月",
+				"day": "日",
+				"add": "添加到列表",
+				"empty": "尚未添加默哀日期。",
+				"date": "{month} 月 {day} 日",
+				"remove": "删除 {name}"
+			}
 		}
 	}
 }

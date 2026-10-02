@@ -1,5 +1,14 @@
 <template>
 	<div class="site-shell pb-16">
+		<ProfileBirthdayCelebration
+			:visit-key="username"
+			:enabled="
+				!pending &&
+				!error &&
+				profile?.username.toLowerCase() === username.toLowerCase() &&
+				birthdaySummary?.daysUntilNextBirthday === 0
+			"
+		/>
 		<div v-if="pending" class="grid gap-5">
 			<USkeleton class="h-80 rounded-lg" />
 			<div class="grid gap-4 lg:grid-cols-3">
@@ -215,7 +224,7 @@
 						<p
 							v-if="profile.bio"
 							:class="[
-								'text-sm leading-7 text-slate-600 dark:text-slate-300',
+								'whitespace-pre-line text-sm leading-7 text-slate-600 dark:text-slate-300',
 								birthdaySummary || genderSymbol ? 'mt-2' : '',
 							]"
 						>
@@ -550,7 +559,10 @@ const genderSymbol = computed(() =>
 	resolveGenderSymbol(profile.value?.gender ?? null),
 )
 const birthdaySummary = computed(() =>
-	resolveBirthdaySummary(profile.value?.birthday ?? null),
+	resolveBirthdaySummary(
+		profile.value?.birthday ?? null,
+		profile.value?.timezone ?? null,
+	),
 )
 const birthdayAgeText = computed(() => {
 	const summary = birthdaySummary.value
@@ -740,6 +752,7 @@ const aboutItems = computed<ProfileInfoItem[]>(() => {
 		items.push({
 			label: t('profile.public.social.publicEmail'),
 			value: social.publicEmail,
+			href: `mailto:${social.publicEmail}`,
 		})
 	}
 

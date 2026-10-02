@@ -7,8 +7,27 @@
 		>
 			{{ label }}
 		</span>
+		<div
+			v-if="href?.startsWith('mailto:')"
+			class="flex min-w-0 items-start gap-2 md:justify-end"
+		>
+			<a
+				:href="href"
+				class="min-w-0 break-all text-slate-800 dark:text-slate-100 md:text-right"
+				>{{ value }}</a
+			>
+			<UButton
+				icon="i-lucide-copy"
+				color="neutral"
+				variant="link"
+				class="mt-0.5 shrink-0 p-0 text-slate-400"
+				:ui="{ leadingIcon: 'size-3.5' }"
+				:aria-label="$t('profile.notifications.copyEmail')"
+				@click="copyEmail"
+			/>
+		</div>
 		<a
-			v-if="href"
+			v-else-if="href"
 			:href="href"
 			target="_blank"
 			rel="noopener noreferrer"
@@ -40,5 +59,24 @@ interface ProfileInfoRowProps {
 	href?: string
 }
 
-defineProps<ProfileInfoRowProps>()
+const props = defineProps<ProfileInfoRowProps>()
+const { t } = useI18n()
+const toast = useToast()
+
+async function copyEmail() {
+	try {
+		await navigator.clipboard.writeText(props.value)
+		toast.add({
+			title: t('profile.notifications.copied'),
+			color: 'success',
+			icon: 'i-lucide-check',
+		})
+	} catch {
+		toast.add({
+			title: t('profile.notifications.copyFailed'),
+			color: 'error',
+			icon: 'i-lucide-circle-alert',
+		})
+	}
+}
 </script>

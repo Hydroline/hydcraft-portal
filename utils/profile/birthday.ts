@@ -79,15 +79,47 @@ export const resolveZodiacKey = (value: string): string | null =>
  */
 export const resolveBirthdaySummary = (
 	value: string | Date | null | undefined,
+	timezone?: string | null,
+	now = new Date(),
 ): BirthdaySummary | null => {
-	if (!value) {
+	if (!value || (value instanceof Date && Number.isNaN(value.getTime()))) {
 		return null
 	}
 
-	const birthday = dayjs(value)
-	const today = dayjs().startOf('day')
+	// Birthdays are calendar dates, not instants to shift into the visitor's zone.
+	const dateValue = value instanceof Date ? value.toISOString() : value
+	const birthday = dayjs(dateValue.slice(0, 10)).startOf('day')
+	let today = dayjs(now).startOf('day')
+	if (timezone !== undefined) {
+		let formatter: Intl.DateTimeFormat
+		try {
+			formatter = new Intl.DateTimeFormat('en-US', {
+				timeZone: timezone || 'Asia/Shanghai',
+				year: 'numeric',
+				month: '2-digit',
+				day: '2-digit',
+			})
+		} catch {
+			formatter = new Intl.DateTimeFormat('en-US', {
+				timeZone: 'Asia/Shanghai',
+				year: 'numeric',
+				month: '2-digit',
+				day: '2-digit',
+			})
+		}
+		const parts = formatter.formatToParts(now)
+		const part = (type: string) =>
+			parts.find((item) => item.type === type)?.value
+		today = dayjs(`${part('year')}-${part('month')}-${part('day')}`).startOf(
+			'day',
+		)
+	}
 
-	if (!birthday.isValid() || birthday.isAfter(today)) {
+	if (
+		!birthday.isValid() ||
+		birthday.format('YYYY-MM-DD') !== dateValue.slice(0, 10) ||
+		birthday.isAfter(today)
+	) {
 		return null
 	}
 
@@ -143,7 +175,8 @@ export const computeDaysUntilNextBirthday = (
 	birthday: Dayjs,
 	today: Dayjs,
 ): number => {
-	const thisYearBirthday = dayjs()
+	const thisYearBirthday = today
+		.date(1)
 		.year(today.year())
 		.month(birthday.month())
 		.date(birthday.date())
@@ -151,7 +184,11 @@ export const computeDaysUntilNextBirthday = (
 	const diff = thisYearBirthday.startOf('day').diff(today, 'day')
 
 	if (diff < 0) {
-		candidate = thisYearBirthday.add(1, 'year')
+		candidate = today
+			.date(1)
+			.year(today.year() + 1)
+			.month(birthday.month())
+			.date(birthday.date())
 	}
 
 	return candidate.startOf('day').diff(today, 'day')
@@ -164,14 +201,19 @@ export const computeDaysSinceLastBirthday = (
 	birthday: Dayjs,
 	today: Dayjs,
 ): number => {
-	const thisYearBirthday = dayjs()
+	const thisYearBirthday = today
+		.date(1)
 		.year(today.year())
 		.month(birthday.month())
 		.date(birthday.date())
 	let candidate = thisYearBirthday
 
 	if (thisYearBirthday.startOf('day').isAfter(today)) {
-		candidate = thisYearBirthday.subtract(1, 'year')
+		candidate = today
+			.date(1)
+			.year(today.year() - 1)
+			.month(birthday.month())
+			.date(birthday.date())
 	}
 
 	return today.diff(candidate.startOf('day'), 'day')
