@@ -57,7 +57,7 @@
 						<p
 							v-for="column in desktopVerticalNameColumns"
 							:key="column"
-							class="home-hero-display-name text-[clamp(4.5rem,11vw,11rem)] leading-[1.05] tracking-[0.08em] [writing-mode:vertical-lr] [text-orientation:upright]"
+							class="home-hero-display-name text-[clamp(4.5rem,11vw,11rem)] leading-[1.2] tracking-[0.08em] [writing-mode:vertical-lr] [text-orientation:upright]"
 						>
 							{{ column }}
 						</p>
@@ -70,14 +70,14 @@
 						{{ desktopDisplayName.prefix }}
 					</div>
 					<div
-						class="home-hero-display-name text-[clamp(4.5rem,11vw,11rem)] leading-[1.05] tracking-[0.08em] whitespace-pre-line"
+						class="home-hero-display-name text-[clamp(4.5rem,11vw,11rem)] leading-[1.2] tracking-[0.08em] whitespace-pre-line"
 					>
 						{{ desktopDisplayName.name }}
 					</div>
 				</template>
 				<p
 					v-else
-					class="home-hero-display-name inline-block max-w-full text-[clamp(4.5rem,11vw,11rem)] tracking-[-0.04em] whitespace-pre-line uppercase leading-[1.05] drop-shadow-[0_2px_16px_rgba(2,6,23,0.8)] select-none break-words hyphens-auto"
+					class="home-hero-display-name inline-block max-w-full text-[clamp(4.5rem,11vw,11rem)] tracking-[-0.04em] whitespace-pre-line uppercase leading-[1.2] drop-shadow-[0_2px_16px_rgba(2,6,23,0.8)] select-none break-words hyphens-auto"
 					:class="
 						props.locale.startsWith('en') ? 'font-semibold' : 'font-extrabold'
 					"
@@ -673,7 +673,6 @@ const handleSceneGalleryLightboxOpenChange = (open: boolean): void => {
 @media (min-width: 1024px) and (max-height: 1100px) {
 	.home-hero-display-name {
 		font-size: clamp(3.9rem, 15.5dvh, 8.5rem);
-		line-height: 0.98;
 	}
 }
 
