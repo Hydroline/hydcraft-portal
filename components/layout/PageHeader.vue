@@ -37,6 +37,7 @@ const {
 	headerLoginButtonClass,
 	headerMenuActionClass,
 	headerScrimClass,
+	headerBlurClass,
 	headerUserMenuButtonClass,
 	headerUserMenuChevronClass,
 	inactiveNavItemClass,
@@ -194,7 +195,11 @@ onMounted(() => {
 		]"
 	>
 		<div
-			class="pointer-events-none absolute top-0 right-0 -bottom-4/5 left-0 z-10 backdrop-blur-[48px] mask-[linear-gradient(to_bottom,black_0%,rgba(0,0,0,0.98)_30%,rgba(0,0,0,0.92)_45%,rgba(0,0,0,0.8)_55%,rgba(0,0,0,0.58)_65%,rgba(0,0,0,0.35)_75%,rgba(0,0,0,0.15)_85%,transparent_100%)] lg:-bottom-3/5"
+			class="pointer-events-none absolute top-0 right-0 -bottom-4/5 left-0 z-10 mask-[linear-gradient(to_bottom,black_0%,rgba(0,0,0,0.95)_18%,rgba(0,0,0,0.82)_32%,rgba(0,0,0,0.6)_46%,rgba(0,0,0,0.35)_60%,rgba(0,0,0,0.14)_72%,rgba(0,0,0,0.03)_84%,transparent_92%)] lg:-bottom-3/5"
+			:class="headerBlurClass"
+		/>
+		<div
+			class="pointer-events-none absolute top-0 right-0 -bottom-4/5 left-0 z-10 lg:-bottom-3/5"
 			:class="headerScrimClass"
 		/>
 

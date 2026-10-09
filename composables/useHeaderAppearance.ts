@@ -1,6 +1,9 @@
 import { computed } from 'vue'
 import { hasHeroVideoBackground } from '~/utils/layout/hero-video'
-import { resolveHeaderVariant } from '~/utils/layout/page-presentation'
+import {
+	resolveHeaderVariant,
+	resolvePageBackground,
+} from '~/utils/layout/page-presentation'
 
 type ThemeMode = 'light' | 'dark' | 'system'
 
@@ -9,6 +12,7 @@ interface HeaderAppearanceState {
 	selectedThemeMode: ComputedRef<ThemeMode>
 	themeButtonIcon: ComputedRef<string>
 	headerScrimClass: ComputedRef<string>
+	headerBlurClass: ComputedRef<string>
 	headerActionButtonClass: ComputedRef<string>
 	headerLoginButtonClass: ComputedRef<string>
 	headerMenuActionClass: ComputedRef<string>
@@ -33,7 +37,9 @@ export const useHeaderAppearance = (): HeaderAppearanceState => {
 
 	const usesHeroVideoHeaderChrome = computed(
 		() =>
-			resolveHeaderVariant(route) === 'hero' || hasHeroVideoBackground(route),
+			resolvePageBackground(route) === 'map' ||
+			resolveHeaderVariant(route) === 'hero' ||
+			hasHeroVideoBackground(route),
 	)
 
 	const selectedThemeMode = computed<ThemeMode>(() => {
@@ -56,8 +62,14 @@ export const useHeaderAppearance = (): HeaderAppearanceState => {
 
 	const headerScrimClass = computed(() =>
 		usesHeroVideoHeaderChrome.value
-			? 'bg-[#192024]/25'
-			: 'bg-[#FAFAFA]/90 dark:bg-[#192024]/90',
+			? 'bg-[linear-gradient(to_bottom,rgba(25,32,36,0.3)_0%,rgba(25,32,36,0.28)_18%,rgba(25,32,36,0.24)_32%,rgba(25,32,36,0.18)_46%,rgba(25,32,36,0.1)_60%,rgba(25,32,36,0.04)_72%,rgba(25,32,36,0.01)_84%,transparent_92%)]'
+			: 'bg-[linear-gradient(to_bottom,rgba(250,250,250,0.94)_0%,rgba(250,250,250,0.88)_18%,rgba(250,250,250,0.72)_32%,rgba(250,250,250,0.5)_46%,rgba(250,250,250,0.27)_60%,rgba(250,250,250,0.1)_72%,rgba(250,250,250,0.02)_84%,transparent_92%)] dark:bg-[linear-gradient(to_bottom,rgba(25,32,36,0.88)_0%,rgba(25,32,36,0.8)_18%,rgba(25,32,36,0.65)_32%,rgba(25,32,36,0.45)_46%,rgba(25,32,36,0.25)_60%,rgba(25,32,36,0.1)_72%,rgba(25,32,36,0.02)_84%,transparent_92%)]',
+	)
+
+	const headerBlurClass = computed(() =>
+		usesHeroVideoHeaderChrome.value
+			? 'backdrop-blur-[12px]'
+			: 'backdrop-blur-[8px] dark:backdrop-blur-[12px]',
 	)
 
 	const headerActionButtonClass = computed(() =>
@@ -107,6 +119,7 @@ export const useHeaderAppearance = (): HeaderAppearanceState => {
 		selectedThemeMode,
 		themeButtonIcon,
 		headerScrimClass,
+		headerBlurClass,
 		headerActionButtonClass,
 		headerLoginButtonClass,
 		headerMenuActionClass,
