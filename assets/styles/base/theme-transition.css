@@ -1,0 +1,139 @@
+/* Fade the page snapshot while header controls and teleported menus update directly. */
+html[data-theme-transition='snapshot']::view-transition {
+	pointer-events: none;
+}
+
+html[data-theme-transition='snapshot']::view-transition-old(root) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+
+html[data-theme-transition='snapshot']::view-transition-new(root) {
+	animation: theme-color-fade 240ms ease-in-out both;
+	mix-blend-mode: normal;
+}
+
+html[data-theme-transition='snapshot']::view-transition-group(header-user-menu),
+html[data-theme-transition='snapshot']::view-transition-group(
+		header-route-menu
+	),
+html[data-theme-transition='snapshot']::view-transition-group(header-controls),
+html[data-theme-transition='snapshot']::view-transition-group(
+		header-theme-menu
+	),
+html[data-theme-transition='snapshot']::view-transition-group(
+		header-language-menu
+	),
+html[data-theme-transition='snapshot']::view-transition-new(header-user-menu),
+html[data-theme-transition='snapshot']::view-transition-new(header-route-menu),
+html[data-theme-transition='snapshot']::view-transition-new(header-controls),
+html[data-theme-transition='snapshot']::view-transition-new(header-theme-menu),
+html[data-theme-transition='snapshot']::view-transition-new(
+		header-language-menu
+	) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+
+html[data-theme-transition='snapshot']::view-transition-old(header-user-menu),
+html[data-theme-transition='snapshot']::view-transition-old(header-route-menu),
+html[data-theme-transition='snapshot']::view-transition-old(header-controls),
+html[data-theme-transition='snapshot']::view-transition-old(header-theme-menu),
+html[data-theme-transition='snapshot']::view-transition-old(
+		header-language-menu
+	) {
+	display: none;
+}
+
+@keyframes theme-color-fade {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+/* Color interpolation fallback for unsupported browsers and system changes. */
+html[data-theme-transition='colors'],
+html[data-theme-transition='colors']
+	:not(
+		:where(
+			[data-theme-controls],
+			[data-theme-controls] *,
+			.theme-controls-popover,
+			.theme-controls-popover *
+		)
+	),
+html[data-theme-transition='colors']
+	:not(
+		:where(
+			[data-theme-controls],
+			[data-theme-controls] *,
+			.theme-controls-popover,
+			.theme-controls-popover *
+		)
+	)::before,
+html[data-theme-transition='colors']
+	:not(
+		:where(
+			[data-theme-controls],
+			[data-theme-controls] *,
+			.theme-controls-popover,
+			.theme-controls-popover *
+		)
+	)::after {
+	transition:
+		color 240ms ease-in-out,
+		background-color 240ms ease-in-out,
+		border-color 240ms ease-in-out,
+		outline-color 240ms ease-in-out,
+		text-decoration-color 240ms ease-in-out,
+		box-shadow 240ms ease-in-out,
+		fill 240ms ease-in-out,
+		stroke 240ms ease-in-out !important;
+}
+
+html[data-theme-transition] [data-theme-controls],
+html[data-theme-transition] [data-theme-controls] *,
+html[data-theme-transition] .theme-controls-popover,
+html[data-theme-transition] .theme-controls-popover * {
+	transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html[data-theme-transition='snapshot']::view-transition-new(root) {
+		animation: none;
+	}
+
+	html[data-theme-transition='colors'],
+	html[data-theme-transition='colors']
+		:not(
+			:where(
+				[data-theme-controls],
+				[data-theme-controls] *,
+				.theme-controls-popover,
+				.theme-controls-popover *
+			)
+		),
+	html[data-theme-transition='colors']
+		:not(
+			:where(
+				[data-theme-controls],
+				[data-theme-controls] *,
+				.theme-controls-popover,
+				.theme-controls-popover *
+			)
+		)::before,
+	html[data-theme-transition='colors']
+		:not(
+			:where(
+				[data-theme-controls],
+				[data-theme-controls] *,
+				.theme-controls-popover,
+				.theme-controls-popover *
+			)
+		)::after {
+		transition: none !important;
+	}
+}

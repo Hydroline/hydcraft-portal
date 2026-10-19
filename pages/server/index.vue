@@ -55,40 +55,8 @@
 					@select-server="selectedServerId = $event"
 				/>
 
-				<ClientOnly>
-					<ServerOverviewSatelliteMapCard
-						class="h-full"
-						:assets-base-url="selectedServerAssetsBaseUrl"
-					/>
-
-					<template #fallback>
-						<ServerOverviewMapShell
-							class="h-full"
-							:title="t('content.serverOverview.cards.satellite.title')"
-							:open-label="t('content.serverOverview.actions.openMap')"
-							open-to="https://map.oxygen.hydcraft.cn"
-							body-class="h-42"
-						>
-							<USkeleton class="h-full w-full rounded-none" />
-						</ServerOverviewMapShell>
-					</template>
-				</ClientOnly>
-
-				<ClientOnly>
-					<ServerOverviewMtrMapCard class="h-full" />
-
-					<template #fallback>
-						<ServerOverviewMapShell
-							class="h-full"
-							:title="t('content.serverOverview.cards.mtr.title')"
-							:open-label="t('content.serverOverview.actions.openMap')"
-							open-to="https://rail.oxygen.hydcraft.cn"
-							body-class="h-42"
-						>
-							<USkeleton class="h-full w-full rounded-none" />
-						</ServerOverviewMapShell>
-					</template>
-				</ClientOnly>
+				<ServerOverviewSatelliteMapCard class="h-full" />
+				<ServerOverviewMtrMapCard class="h-full" />
 			</section>
 
 			<ServerOverviewSeasonEightCard />
@@ -307,12 +275,6 @@ const overview = computed<ServerOverviewResponse | null>(() => {
 const sponsorStats = computed(() => sponsorData.value ?? null)
 const showInitialSkeleton = computed(() => pending.value && !overview.value)
 const showInitialError = computed(() => Boolean(error.value) && !overview.value)
-const selectedServerAssetsBaseUrl = computed(
-	() =>
-		overview.value?.servers.find(
-			(server) => server.serverId === selectedServerId.value,
-		)?.blueMapConfig?.defaultAssetsBaseUrl ?? null,
-)
 const sponsorSummary = computed<ServerOverviewSponsorCardSummary>(() => {
 	if (sponsorStats.value) {
 		return {

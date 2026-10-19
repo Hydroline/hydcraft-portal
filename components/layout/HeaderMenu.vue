@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useHeaderMenuState } from '~/composables/useHeaderMenuState'
 import HeaderMenuRouteBadge from '~/components/layout/HeaderMenuRouteBadge.vue'
+import HeaderMenuSurface from '~/components/layout/HeaderMenuSurface.vue'
 
 const props = defineProps<{
 	activeNavItemClass: string
@@ -34,7 +35,6 @@ const {
 	openMobileMenu,
 	resolveDesktopNavItemClass,
 	resolveHighlightClass,
-	resolveNavItemClass,
 	resolveTo,
 	routeGroupKey,
 	selectDesktopOverflowItem,
@@ -228,13 +228,18 @@ onBeforeUnmount(() => {
 				leave-from-class="translate-y-0 opacity-100"
 				leave-to-class="translate-y-2 opacity-0"
 			>
-				<div
+				<HeaderMenuSurface
 					:key="groupTransitionKey"
 					class="inline-flex w-max flex-none flex-nowrap items-center justify-center gap-2"
 				>
 					<NuxtLink
 						v-for="item in desktopVisibleNavItems"
 						:key="item.key"
+						data-header-menu-link
+						:data-header-menu-compact="Boolean(item.badgeType)"
+						:data-header-menu-selected="
+							resolveHighlightClass(item) === 'opacity-100'
+						"
 						:to="resolveTo(item)"
 						class="group relative z-0 rounded-full p-2 text-[16px] leading-none whitespace-nowrap transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
 						:class="resolveDesktopNavItemClass(item)"
@@ -242,11 +247,6 @@ onBeforeUnmount(() => {
 							item.isFallback || isPathActive(item) ? 'page' : undefined
 						"
 					>
-						<span
-							class="pointer-events-none absolute top-[calc(50%+0.24em)] left-1/2 -z-10 h-[0.95em] w-[96%] origin-center -translate-x-1/2 -translate-y-1/2 scale-y-[1] rounded-md bg-[rgba(125,211,252,0.16)] opacity-0 shadow-[0_0_10px_rgba(125,211,252,0.12)] transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-100"
-							:class="resolveHighlightClass(item)"
-							aria-hidden="true"
-						/>
 						<span
 							v-if="item.isFallback"
 							class="inline-flex items-center gap-1.5 font-semibold"
@@ -279,7 +279,8 @@ onBeforeUnmount(() => {
 							placeholder: 'flex w-full items-center justify-center',
 							trailing: 'hidden',
 							trailingIcon: 'hidden',
-							content: 'min-w-36',
+							content:
+								'min-w-36 theme-controls-popover [view-transition-name:header-route-menu]',
 							viewport: 'min-w-36',
 							item: 'whitespace-nowrap',
 							itemLabel: 'whitespace-nowrap',
@@ -293,7 +294,7 @@ onBeforeUnmount(() => {
 							/>
 						</template>
 					</USelect>
-				</div>
+				</HeaderMenuSurface>
 			</Transition>
 		</div>
 	</nav>
@@ -308,14 +309,19 @@ onBeforeUnmount(() => {
 			type="button"
 			color="neutral"
 			variant="ghost"
-			class="group relative z-0 rounded-full p-2 text-[16px] leading-none whitespace-nowrap transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] active:bg-slate-500/10 dark:active:bg-white/10"
+			class="group relative z-0 rounded-full p-2 text-[16px] leading-none whitespace-nowrap transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-transparent active:bg-transparent dark:hover:bg-transparent dark:active:bg-transparent"
 			:class="mobileCurrentNavItemClass"
 			:aria-label="activeDisplayNavItem.label"
 			aria-current="page"
 			@click="openMobileMenu"
 		>
 			<span
-				class="pointer-events-none absolute top-[calc(50%+0.24em)] left-1/2 -z-10 h-[0.95em] w-[96%] origin-center -translate-x-1/2 -translate-y-1/2 scale-y-[1] rounded-md bg-[rgba(125,211,252,0.16)] opacity-100 shadow-[0_0_10px_rgba(125,211,252,0.12)] transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+				class="header-menu-current-marker pointer-events-none absolute inset-x-px -z-10 rounded-xl bg-sky-300/28 transition-colors duration-180 dark:bg-sky-300/16"
+				:class="
+					activeDisplayNavItem.badgeType
+						? 'top-1/2 h-6 -translate-y-1/2'
+						: 'inset-y-1'
+				"
 				aria-hidden="true"
 			/>
 			<Transition name="header-current-page-label" mode="out-in">
@@ -365,13 +371,18 @@ onBeforeUnmount(() => {
 							type="button"
 							color="neutral"
 							variant="ghost"
-							class="group relative z-0 rounded-full p-2 text-[16px] leading-none whitespace-nowrap transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] active:bg-slate-500/10 dark:active:bg-white/10"
+							class="group relative z-0 rounded-full p-2 text-[16px] leading-none whitespace-nowrap transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-transparent active:bg-transparent dark:hover:bg-transparent dark:active:bg-transparent"
 							:class="mobileCurrentNavItemClass"
 							aria-current="page"
 							@click="closeMobileMenu"
 						>
 							<span
-								class="pointer-events-none absolute top-[calc(50%+0.24em)] left-1/2 -z-10 h-[0.95em] w-[96%] origin-center -translate-x-1/2 -translate-y-1/2 scale-y-[1] rounded-md bg-[rgba(125,211,252,0.16)] opacity-100 shadow-[0_0_10px_rgba(125,211,252,0.12)]"
+								class="header-menu-current-marker pointer-events-none absolute inset-x-px -z-10 rounded-xl bg-sky-300/28 transition-colors duration-180 dark:bg-sky-300/16"
+								:class="
+									activeDisplayNavItem.badgeType
+										? 'top-1/2 h-6 -translate-y-1/2'
+										: 'inset-y-1'
+								"
 								aria-hidden="true"
 							/>
 							<Transition name="header-current-page-label" mode="out-in">
@@ -419,38 +430,36 @@ onBeforeUnmount(() => {
 								<div
 									:key="groupTransitionKey"
 									ref="mobileRouteListInner"
-									class="flex min-w-0 max-w-full flex-wrap items-center gap-2"
+									class="min-w-0 max-w-full"
 								>
-									<UButton
-										v-for="item in selectableMobileGroupNavItems"
-										:key="item.key"
-										type="button"
-										color="neutral"
-										variant="ghost"
-										class="group relative z-0 rounded-full p-2 text-[16px] leading-none whitespace-nowrap text-white opacity-100 transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-white active:bg-slate-500/10 dark:text-slate-50 dark:hover:text-slate-900 dark:active:bg-white/10"
-										@click="selectMobileNavItem(item)"
+									<HeaderMenuSurface
+										class="flex min-w-0 max-w-full flex-wrap items-center gap-2"
 									>
-										<span
-											class="pointer-events-none absolute top-[calc(50%+0.24em)] left-1/2 -z-10 h-[0.95em] w-[96%] origin-center -translate-x-1/2 -translate-y-1/2 scale-y-[1] rounded-md bg-[rgba(125,211,252,0.16)] opacity-0 shadow-[0_0_10px_rgba(125,211,252,0.12)] transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-100"
-											aria-hidden="true"
-										/>
-										{{ item.label }}
-									</UButton>
+										<UButton
+											v-for="item in selectableMobileGroupNavItems"
+											:key="item.key"
+											data-header-menu-link
+											type="button"
+											color="neutral"
+											variant="ghost"
+											class="group relative z-0 rounded-full p-2 text-[16px] leading-none whitespace-nowrap text-white opacity-100 transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-transparent hover:text-white active:bg-transparent dark:text-slate-50 dark:hover:bg-transparent dark:hover:text-slate-50 dark:active:bg-transparent"
+											@click="selectMobileNavItem(item)"
+										>
+											{{ item.label }}
+										</UButton>
 
-									<UButton
-										v-if="selectableMobileFallback"
-										type="button"
-										color="neutral"
-										variant="ghost"
-										class="group relative z-0 rounded-full p-2 text-[16px] leading-none whitespace-nowrap text-white opacity-100 transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-white active:bg-slate-500/10 dark:text-slate-50 dark:hover:text-slate-900 dark:active:bg-white/10"
-										@click="selectMobileFallback"
-									>
-										<span
-											class="pointer-events-none absolute top-[calc(50%+0.24em)] left-1/2 -z-10 h-[0.95em] w-[96%] origin-center -translate-x-1/2 -translate-y-1/2 scale-y-[1] rounded-md bg-[rgba(125,211,252,0.16)] opacity-0 shadow-[0_0_10px_rgba(125,211,252,0.12)] transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-100"
-											aria-hidden="true"
-										/>
-										{{ selectableMobileFallback.label }}
-									</UButton>
+										<UButton
+											v-if="selectableMobileFallback"
+											data-header-menu-link
+											type="button"
+											color="neutral"
+											variant="ghost"
+											class="group relative z-0 rounded-full p-2 text-[16px] leading-none whitespace-nowrap text-white opacity-100 transition-all duration-[420ms] ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-transparent hover:text-white active:bg-transparent dark:text-slate-50 dark:hover:bg-transparent dark:hover:text-slate-50 dark:active:bg-transparent"
+											@click="selectMobileFallback"
+										>
+											{{ selectableMobileFallback.label }}
+										</UButton>
+									</HeaderMenuSurface>
 								</div>
 							</Transition>
 						</div>
@@ -497,6 +506,16 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+/* Match the full marker on the collapsed mobile control and its modal copy. */
+@media (hover: hover) {
+	.group:hover > .header-menu-current-marker {
+		background: color-mix(in srgb, var(--color-sky-300) 40%, transparent);
+	}
+}
+.group:active > .header-menu-current-marker {
+	background: color-mix(in srgb, var(--color-sky-300) 40%, transparent);
+}
+
 .mobile-menu-pop {
 	animation: mobile-menu-pop-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }

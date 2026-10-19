@@ -1,36 +1,40 @@
 <template>
-	<div
-		class="relative overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950"
+	<component
+		:is="openTo ? 'a' : 'div'"
+		:href="openTo || undefined"
+		:target="openTo ? '_blank' : undefined"
+		:rel="openTo ? 'noopener noreferrer' : undefined"
+		class="group block overflow-hidden rounded-xl border border-slate-200 bg-white text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-500 dark:border-slate-800 dark:bg-slate-950 dark:focus-visible:outline-slate-400"
 	>
-		<div
-			class="pointer-events-none absolute inset-x-0 top-0 z-[1000] flex items-start justify-between gap-3 p-4"
-		>
-			<h3
-				class="font-arkpixel text-lg leading-none tracking-wide"
-				:class="resolvedTitleClass"
+		<div class="relative isolate overflow-hidden" :class="bodyClass">
+			<div
+				class="pointer-events-none absolute inset-0 -z-10"
+				aria-hidden="true"
 			>
-				{{ title }}
-			</h3>
-
-			<UButton
-				v-if="openTo"
-				class="pointer-events-auto"
-				:class="resolvedOpenLabelClass"
-				color="neutral"
-				variant="link"
-				icon="i-lucide-arrow-up-right"
-				:to="openTo"
-				target="_blank"
-				rel="noreferrer"
+				<slot />
+			</div>
+			<div
+				class="pointer-events-none absolute inset-0 bg-slate-950/4 opacity-0 transition-opacity duration-200 group-hover:opacity-100 motion-reduce:transition-none dark:bg-black/15"
+				aria-hidden="true"
+			/>
+			<div
+				class="pointer-events-none relative z-10 flex h-full max-w-[58%] flex-col justify-between gap-4 p-5 sm:p-6"
 			>
-				{{ openLabel }}
-			</UButton>
+				<h3
+					class="font-arkpixel text-lg leading-6 text-slate-900 dark:text-slate-50"
+				>
+					{{ title }}
+				</h3>
+				<span
+					v-if="openTo"
+					class="inline-flex items-center gap-1.5 text-sm text-slate-600 transition-colors duration-200 group-hover:text-slate-900 motion-reduce:transition-none dark:text-slate-400 dark:group-hover:text-slate-100"
+				>
+					{{ openLabel }}
+					<UIcon name="i-lucide-arrow-up-right" class="size-3.5" />
+				</span>
+			</div>
 		</div>
-
-		<div class="relative overflow-hidden bg-slate-900" :class="bodyClass">
-			<slot />
-		</div>
-	</div>
+	</component>
 </template>
 
 <script setup lang="ts">
@@ -39,25 +43,10 @@ interface Props {
 	openLabel: string
 	openTo?: string | null
 	bodyClass?: string
-	titleClass?: string
-	openLabelClass?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
 	openTo: null,
-	bodyClass: 'h-54',
-	titleClass: '',
-	openLabelClass: '',
+	bodyClass: 'h-42',
 })
-
-const defaultOverlayTextClass =
-	'text-slate-900 dark:text-white [text-shadow:0_1px_2px_rgba(255,255,255,0.32)] dark:[text-shadow:0_1px_2px_rgba(15,23,42,0.72)]'
-
-const resolvedTitleClass = computed(
-	() => props.titleClass.trim() || defaultOverlayTextClass,
-)
-
-const resolvedOpenLabelClass = computed(
-	() => props.openLabelClass.trim() || defaultOverlayTextClass,
-)
 </script>

@@ -317,6 +317,7 @@ export default defineNuxtConfig({
 		'vue-picture-cropper/style.css',
 		'~/assets/styles/fonts/index.css',
 		'~/assets/styles/base/main.css',
+		'~/assets/styles/base/theme-transition.css',
 		'~/assets/styles/base/tailwind.css',
 	],
 	vite: {
