@@ -59,6 +59,7 @@ export const useHeaderMenuState = (options: HeaderMenuStateOptions) => {
 	const DESKTOP_OVERFLOW_TRIGGER_WIDTH = 36
 	const DESKTOP_SIBLING_GAP = 16
 	let resizeObserver: ResizeObserver | null = null
+	let metricsFrame = 0
 
 	const resolveTo = (item: MenuItem | HeaderMenuItem): string =>
 		localePath(item.to)
@@ -593,7 +594,15 @@ export const useHeaderMenuState = (options: HeaderMenuStateOptions) => {
 			]),
 		)
 
-		measuredItemWidths.value = nextWidths
+		const previousWidths = measuredItemWidths.value
+		if (
+			Object.keys(previousWidths).length !== Object.keys(nextWidths).length ||
+			Object.entries(nextWidths).some(
+				([key, width]) => previousWidths[key] !== width,
+			)
+		) {
+			measuredItemWidths.value = nextWidths
+		}
 	}
 	const syncViewportWidth = (): void => {
 		if (!import.meta.client) {
@@ -673,10 +682,17 @@ export const useHeaderMenuState = (options: HeaderMenuStateOptions) => {
 			}
 		}
 	}
+	const scheduleMenuMetrics = (): void => {
+		if (!import.meta.client || metricsFrame) return
+		metricsFrame = requestAnimationFrame(() => {
+			metricsFrame = 0
+			void syncMeasuredMenuMetrics()
+			void syncDesktopAvailableWidth()
+		})
+	}
 	const onResize = (): void => {
 		syncViewportWidth()
-		void syncMeasuredMenuMetrics()
-		void syncDesktopAvailableWidth()
+		scheduleMenuMetrics()
 		if (mobileMenuOpen.value) {
 			void syncMobileMenuAnchor()
 		}
@@ -689,18 +705,7 @@ export const useHeaderMenuState = (options: HeaderMenuStateOptions) => {
 		},
 		{ immediate: true },
 	)
-	watch(groupTransitionKey, () => {
-		void syncMeasuredMenuMetrics()
-		void syncDesktopAvailableWidth()
-	})
-	watch(
-		displayNavItems,
-		() => {
-			void syncMeasuredMenuMetrics()
-			void syncDesktopAvailableWidth()
-		},
-		{ deep: true, flush: 'post' },
-	)
+	watch(displayNavItems, scheduleMenuMetrics, { deep: true, flush: 'post' })
 	watch(mobileMenuOpen, (open) => {
 		if (open) {
 			void syncMobileMenuAnchor()
@@ -729,22 +734,18 @@ export const useHeaderMenuState = (options: HeaderMenuStateOptions) => {
 		void syncMeasuredMenuMetrics()
 		void syncDesktopAvailableWidth()
 
-		resizeObserver = new ResizeObserver(() => {
-			void syncMeasuredMenuMetrics()
-			void syncDesktopAvailableWidth()
-		})
+		// Observe intrinsic content and the space around the menu. The nav itself
+		// follows the animated shell, so observing it would remeasure every frame.
+		resizeObserver = new ResizeObserver(scheduleMenuMetrics)
 
 		if (menuMeasure.value) {
 			resizeObserver.observe(menuMeasure.value)
 		}
 
-		if (desktopMenuNav.value) {
-			resizeObserver.observe(desktopMenuNav.value)
-		}
-
 		window.addEventListener('resize', onResize, { passive: true })
 	})
 	onBeforeUnmount(() => {
+		if (metricsFrame) cancelAnimationFrame(metricsFrame)
 		resizeObserver?.disconnect()
 		resizeObserver = null
 		window.removeEventListener('resize', onResize)

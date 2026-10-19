@@ -211,7 +211,7 @@ onBeforeUnmount(() => {
 		</Transition>
 
 		<div
-			class="relative max-w-full overflow-hidden rounded-full px-2 transition-[width] duration-[620ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+			class="relative max-w-full overflow-hidden rounded-full px-2 transition-[width] duration-[620ms] motion-reduce:transition-none ease-[cubic-bezier(0.22,1,0.36,1)]"
 			:class="
 				isMobileMenuClamped
 					? 'overflow-x-auto overflow-y-hidden'
@@ -221,10 +221,10 @@ onBeforeUnmount(() => {
 		>
 			<Transition
 				mode="out-in"
-				enter-active-class="transition duration-[460ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+				enter-active-class="transition-[opacity,translate] motion-reduce:transition-none duration-[460ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
 				enter-from-class="-translate-y-2 opacity-0"
 				enter-to-class="translate-y-0 opacity-100"
-				leave-active-class="transition duration-[300ms] ease-in"
+				leave-active-class="transition-[opacity,translate] motion-reduce:transition-none duration-[300ms] ease-in"
 				leave-from-class="translate-y-0 opacity-100"
 				leave-to-class="translate-y-2 opacity-0"
 			>
@@ -418,10 +418,10 @@ onBeforeUnmount(() => {
 						>
 							<Transition
 								mode="out-in"
-								enter-active-class="transition duration-[420ms] ease-out"
+								enter-active-class="transition-[opacity,translate] motion-reduce:transition-none duration-[420ms] ease-out"
 								enter-from-class="-translate-y-1.5 opacity-0"
 								enter-to-class="translate-y-0 opacity-100"
-								leave-active-class="transition duration-[300ms] ease-in"
+								leave-active-class="transition-[opacity,translate] motion-reduce:transition-none duration-[300ms] ease-in"
 								leave-from-class="translate-y-0 opacity-100"
 								leave-to-class="translate-y-1.5 opacity-0"
 								@after-enter="scheduleMobileRouteListHeightSync"
