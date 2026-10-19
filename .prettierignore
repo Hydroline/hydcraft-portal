@@ -4,3 +4,4 @@ node_modules
 dist
 pnpm-lock.yaml
 utils/map/bluemap/vendor
+.cache

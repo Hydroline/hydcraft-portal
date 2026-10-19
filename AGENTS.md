@@ -3,6 +3,7 @@
 开始任务前阅读 [开发规范](docs/DEVELOPMENT.md)，再按实际改动范围阅读下列文档；跨领域任务同时阅读对应文档。当前任务的明确要求优先。
 
 - 全站页面、组件、样式与交互：[UI 规范](docs/UI_GUIDELINES.md)
+- Emoji 字体扫描、裁剪与浏览器兼容：[Emoji 字体构建](docs/EMOJI_FONTS.md)
 - Prisma schema、数据库结构与迁移：[数据库规范](docs/DATABASE.md)
 - API、Service、事件与领域 utils：[服务端与模块边界](docs/SERVER_ARCHITECTURE.md)
 - 附件、伙伴草稿和临时资源：[附件与草稿生命周期](docs/ATTACHMENTS.md)
