@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useThemeTransition } from '~/composables/useThemeTransition'
 import hydcraftLogo from '~/assets/resources/brands/logo_HydCraft.png'
 import { getPortalRedirectQuery } from '~/utils/auth/redirect'
 import { normalizeHeaderMenuPath } from '~/utils/layout/header-menu'
@@ -28,6 +29,7 @@ type ThemeMode = 'light' | 'dark' | 'system'
 const route = useRoute()
 const nuxtApp = useNuxtApp()
 const colorMode = nuxtApp.$colorMode
+const { applyThemeChange, isTransitioning } = useThemeTransition()
 const locale = (nuxtApp.$i18n as { locale: Ref<LocaleCode> }).locale
 const localePath = useLocalePath()
 const {
@@ -134,7 +136,10 @@ const shouldRedirectAfterLogout = computed(() => {
 })
 
 const selectTheme = (mode: ThemeMode): void => {
-	colorMode.preference = mode
+	if (colorMode.preference === mode && !isTransitioning.value) return
+	void applyThemeChange(() => {
+		colorMode.preference = mode
+	})
 }
 
 const selectLocale = async (value: LocaleCode): Promise<void> => {
@@ -229,10 +234,15 @@ onMounted(() => {
 				:inactive-nav-item-class="inactiveNavItemClass"
 			/>
 
-			<div class="ml-auto flex items-center gap-2">
+			<div
+				data-theme-controls
+				class="ml-auto flex items-center gap-2 [view-transition-name:header-controls]"
+			>
 				<UPopover
 					:popper="{ placement: 'bottom-end' }"
-					:ui="{ content: popoverContentClass }"
+					:ui="{
+						content: `${popoverContentClass} theme-controls-popover [view-transition-name:header-theme-menu]`,
+					}"
 				>
 					<UButton
 						color="neutral"
@@ -286,7 +296,9 @@ onMounted(() => {
 
 				<UPopover
 					:popper="{ placement: 'bottom-end' }"
-					:ui="{ content: popoverContentClass }"
+					:ui="{
+						content: `${popoverContentClass} theme-controls-popover [view-transition-name:header-language-menu]`,
+					}"
 				>
 					<UButton
 						color="neutral"
@@ -370,7 +382,9 @@ onMounted(() => {
 						<UPopover
 							v-model:open="userMenuOpen"
 							:popper="{ placement: 'bottom-end' }"
-							:ui="{ content: popoverContentClass }"
+							:ui="{
+								content: `${popoverContentClass} theme-controls-popover [view-transition-name:header-user-menu]`,
+							}"
 						>
 							<button
 								type="button"

@@ -286,9 +286,9 @@ const playerLink = (
 const mapLinkItems = computed(() => [
 	{
 		label: t('content.serverOverview.cards.bridge.links.satellite'),
-		to: localePath('/server'),
+		to: 'https://map.oxygen.hydcraft.cn',
 		icon: 'i-lucide-map',
-		external: false,
+		external: true,
 	},
 	{
 		label: t('content.serverOverview.cards.bridge.links.mtr'),
