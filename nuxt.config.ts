@@ -1,4 +1,5 @@
 import tailwindcss from '@tailwindcss/vite'
+import emojiFontOptions from './emoji.config'
 
 const INVALID_MDC_OPTIMIZE_DEPS = new Set([
 	'@nuxtjs/mdc > remark-gfm',
@@ -29,6 +30,7 @@ export default defineNuxtConfig({
 	devtools: { enabled: false },
 	plugins: [...analyticsPlugins],
 	modules: [
+		['./build/emoji-font/nuxt', emojiFontOptions],
 		'@nuxt/eslint',
 		'@nuxtjs/turnstile',
 		'nuxt-svgo',

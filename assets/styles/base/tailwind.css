@@ -31,20 +31,25 @@
 	--color-hydcraft-blue: rgb(3, 169, 244);
 
 	--font-arkpixel:
-		'Ark Pixel', 'MiSans VF', 'Misans TC VF', 'MiSans Latin VF', 'MiSans L3',
-		'MiSans Fallback', sans-serif;
+		'HydCraft Emoji', 'Ark Pixel', 'MiSans VF', 'Misans TC VF',
+		'MiSans Latin VF', 'MiSans L3', 'MiSans Fallback', 'Apple Color Emoji',
+		'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
 	--font-misans:
-		'MiSans VF', 'Misans TC VF', 'MiSans Latin VF', 'MiSans L3',
-		'MiSans Fallback', sans-serif;
+		'HydCraft Emoji', 'MiSans VF', 'Misans TC VF', 'MiSans Latin VF',
+		'MiSans L3', 'MiSans Fallback', 'Apple Color Emoji', 'Segoe UI Emoji',
+		'Noto Color Emoji', sans-serif;
 	--font-misans-latin:
-		'MiSans Latin VF', 'MiSans VF', 'Misans TC VF', 'MiSans L3',
-		'MiSans Fallback', sans-serif;
+		'HydCraft Emoji', 'MiSans Latin VF', 'MiSans VF', 'Misans TC VF',
+		'MiSans L3', 'MiSans Fallback', 'Apple Color Emoji', 'Segoe UI Emoji',
+		'Noto Color Emoji', sans-serif;
 	--font-misans-tc:
-		'Misans TC VF', 'MiSans VF', 'MiSans Latin VF', 'MiSans L3',
-		'MiSans Fallback', sans-serif;
+		'HydCraft Emoji', 'Misans TC VF', 'MiSans VF', 'MiSans Latin VF',
+		'MiSans L3', 'MiSans Fallback', 'Apple Color Emoji', 'Segoe UI Emoji',
+		'Noto Color Emoji', sans-serif;
 	--font-misans-l3:
-		'MiSans L3', 'MiSans VF', 'Misans TC VF', 'MiSans Latin VF',
-		'MiSans Fallback', sans-serif;
+		'HydCraft Emoji', 'MiSans L3', 'MiSans VF', 'Misans TC VF',
+		'MiSans Latin VF', 'MiSans Fallback', 'Apple Color Emoji', 'Segoe UI Emoji',
+		'Noto Color Emoji', sans-serif;
 
 	/* 基于 hsl(200 55% 48%) 的主色系 */
 	--color-primary-25: hsl(200 55% 98%);
