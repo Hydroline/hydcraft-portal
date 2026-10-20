@@ -10,6 +10,8 @@ export interface EmojiFontOptions {
 	include: string[]
 	exclude: string[]
 	extraEmoji: string[]
+	/** Standalone symbols rendered with the system font; keep composed glyphs. */
+	excludeCodepoints?: number[]
 	source: EmojiFontSource
 	/** HTTP(S) proxy used only for the source download. */
 	proxy?: string

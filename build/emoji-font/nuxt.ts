@@ -41,6 +41,15 @@ export default defineNuxtModule<EmojiFontOptions>({
 			server.watcher.add(rootDir)
 			const onChange = (path: string) => {
 				const file = relative(rootDir, resolve(path)).split(sep).join('/')
+				// These modules are loaded by Node, so Vite HMR cannot refresh their options.
+				if (
+					!closed &&
+					(file === 'emoji.config.ts' || file.startsWith('build/emoji-font/'))
+				) {
+					clearTimeout(timer)
+					void nuxt.callHook('restart', { hard: true })
+					return
+				}
 				if (
 					closed ||
 					!options.include.some((pattern) => matchesGlob(file, pattern)) ||

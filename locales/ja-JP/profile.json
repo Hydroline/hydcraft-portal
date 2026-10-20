@@ -252,6 +252,7 @@
 			"savedDescription": "Header のユーザー情報を更新しました。",
 			"saveFailed": "プロフィールの保存に失敗しました",
 			"saveFailedDescription": "ログイン状態と入力内容を確認してください。",
+			"copyField": "{label}をコピー",
 			"copyEmail": "メールアドレスをコピー",
 			"copyFailed": "コピーに失敗しました。もう一度お試しください。",
 			"copied": "コピーしました",

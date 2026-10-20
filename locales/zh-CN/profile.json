@@ -252,6 +252,7 @@
 			"savedDescription": "Header 用户信息已经同步更新。",
 			"saveFailed": "保存资料失败",
 			"saveFailedDescription": "请检查登录状态与输入内容。",
+			"copyField": "复制{label}",
 			"copyEmail": "复制邮箱地址",
 			"copyFailed": "复制失败，请重试",
 			"copied": "已复制",
