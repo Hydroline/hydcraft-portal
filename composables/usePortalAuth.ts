@@ -153,8 +153,7 @@ interface PortalOAuthRegistrationTicketSummary {
 }
 
 export type PortalRegistrationTicketSummary =
-	| PortalGameRegistrationTicketSummary
-	| PortalOAuthRegistrationTicketSummary
+	PortalGameRegistrationTicketSummary | PortalOAuthRegistrationTicketSummary
 
 interface PortalRegistrationTicketResponse {
 	ticket: PortalRegistrationTicketSummary

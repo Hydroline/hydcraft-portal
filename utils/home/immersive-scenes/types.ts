@@ -128,9 +128,7 @@ export interface HomeImmersiveScene extends HomeImmersiveSceneDefinition {
 }
 
 export type HomeImmersiveOverviewMemberRole =
-	| 'owner'
-	| 'committee'
-	| 'councilOfElders'
+	'owner' | 'committee' | 'councilOfElders'
 
 export interface HomeImmersiveOverviewMember {
 	id: string

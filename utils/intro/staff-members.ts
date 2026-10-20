@@ -1,10 +1,7 @@
 import { introStaffBios } from './staff-bios'
 
 export type IntroStaffBadgeKey =
-	| 'member'
-	| 'advisor'
-	| 'viceOwner'
-	| 'councilOfEldersSecretary'
+	'member' | 'advisor' | 'viceOwner' | 'councilOfEldersSecretary'
 
 export type IntroStaffLocalizedText = Readonly<
 	Record<'zh-CN' | 'zh-TW' | 'en-US' | 'ja-JP', string>

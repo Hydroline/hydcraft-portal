@@ -1,10 +1,6 @@
 export type FriendLinkCategory = 'BUSINESS' | 'PERSONAL' | 'ORGANIZATION'
 export type FriendLinkApplicationStatus =
-	| 'DRAFT'
-	| 'PENDING_REVIEW'
-	| 'APPROVED'
-	| 'REJECTED'
-	| 'EXPIRED'
+	'DRAFT' | 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED' | 'EXPIRED'
 
 export interface FriendLinkSummary {
 	id: string

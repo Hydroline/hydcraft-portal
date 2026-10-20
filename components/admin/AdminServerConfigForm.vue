@@ -360,13 +360,7 @@ interface ServerForm {
 interface AdminServerConfigFormProps {
 	server: MinecraftServerSummary | null
 	mode?:
-		| 'all'
-		| 'create'
-		| 'basic'
-		| 'map'
-		| 'periods'
-		| 'portalBridge'
-		| 'sync'
+		'all' | 'create' | 'basic' | 'map' | 'periods' | 'portalBridge' | 'sync'
 	showCancel?: boolean
 	surface?: 'card' | 'plain'
 }

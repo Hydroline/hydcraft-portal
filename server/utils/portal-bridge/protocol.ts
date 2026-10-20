@@ -1,12 +1,7 @@
 import { createHmac, randomUUID } from 'node:crypto'
 
 export type PortalBridgeEnvelopeType =
-	| 'hello'
-	| 'event'
-	| 'snapshot'
-	| 'command'
-	| 'ack'
-	| 'error'
+	'hello' | 'event' | 'snapshot' | 'command' | 'ack' | 'error'
 
 export interface PortalBridgeEndpoint {
 	serverId?: string

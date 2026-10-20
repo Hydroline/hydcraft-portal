@@ -32,8 +32,7 @@ export interface AttachmentSourceVariantPolicy {
 }
 
 export type AttachmentVariantPolicy =
-	| AttachmentResizeVariantPolicy
-	| AttachmentSourceVariantPolicy
+	AttachmentResizeVariantPolicy | AttachmentSourceVariantPolicy
 
 export interface AttachmentPolicy {
 	purpose: AttachmentPurpose

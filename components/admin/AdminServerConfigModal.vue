@@ -26,13 +26,7 @@ interface AdminServerConfigModalProps {
 	open: boolean
 	server: MinecraftServerSummary | null
 	mode?:
-		| 'all'
-		| 'create'
-		| 'basic'
-		| 'map'
-		| 'periods'
-		| 'portalBridge'
-		| 'sync'
+		'all' | 'create' | 'basic' | 'map' | 'periods' | 'portalBridge' | 'sync'
 }
 
 const props = defineProps<AdminServerConfigModalProps>()

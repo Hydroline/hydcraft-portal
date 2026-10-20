@@ -213,8 +213,7 @@ const isFreshManualLocaleSwitch = (): boolean => {
 
 const getPreferredLocale = (): LocaleCode | null => {
 	const language = user.value?.preferences?.language as
-		| ProfileLanguage
-		| undefined
+		ProfileLanguage | undefined
 
 	return language ? profileLanguageToLocaleCode[language] : null
 }

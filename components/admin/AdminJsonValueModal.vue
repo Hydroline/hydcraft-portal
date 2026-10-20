@@ -76,8 +76,7 @@
 					<pre
 						v-else
 						class="overflow-auto p-4 text-xs text-slate-900 dark:text-white"
-						>{{ rawText }}</pre
-					>
+						>{{ rawText }}</pre>
 				</div>
 			</div>
 		</template>

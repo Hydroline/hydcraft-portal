@@ -21,7 +21,7 @@ v2:
             export HYDCRAFT_DISABLE_PORTAL_BRIDGE="${HYDCRAFT_DISABLE_PORTAL_BRIDGE:-1}"
 
             corepack enable
-            corepack prepare pnpm@10.14.0 --activate
+            corepack prepare pnpm@10.34.7 --activate
             pnpm install --frozen-lockfile
             pnpm build:production-init-cli
             pnpm build
