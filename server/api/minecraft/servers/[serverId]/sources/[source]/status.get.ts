@@ -75,7 +75,7 @@ export default defineEventHandler(async (event) => {
 	}
 
 	const startedAt = Date.now()
-	let latencyMs: number | null = null
+	let latencyMs: number
 	let connectionOk = false
 	let errorMessage: string | null = null
 

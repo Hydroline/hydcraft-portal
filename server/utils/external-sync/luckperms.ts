@@ -634,12 +634,11 @@ export const syncLuckPermsSource = async (): Promise<ExternalSyncResult> => {
 	}
 
 	const pool = createMysqlPoolFromDatabaseUrl(config.databaseUrl)
-	let latencyMs: number | null = null
 
 	try {
 		const latencyStartedAt = Date.now()
 		await pool.query('SELECT 1 AS ok')
-		latencyMs = Date.now() - latencyStartedAt
+		const latencyMs = Date.now() - latencyStartedAt
 
 		const tableNames = [
 			'luckperms_actions',

@@ -263,12 +263,7 @@ const pickPayload = (
 const syncProfileSection = (
 	nextProfile: EditableProfile,
 	section:
-		| 'username'
-		| 'basic'
-		| 'social'
-		| 'preferences'
-		| 'privacy'
-		| 'media',
+		'username' | 'basic' | 'social' | 'preferences' | 'privacy' | 'media',
 ): void => {
 	const nextForm = createEmptyProfileForm()
 	assignProfileForm(nextForm, nextProfile)
@@ -305,12 +300,7 @@ const syncProfileSection = (
 const applyProfileResponse = (
 	response: ProfileResponse,
 	section:
-		| 'username'
-		| 'basic'
-		| 'social'
-		| 'preferences'
-		| 'privacy'
-		| 'media',
+		'username' | 'basic' | 'social' | 'preferences' | 'privacy' | 'media',
 ): void => {
 	skipProfileWatchSync.value = true
 	data.value = response

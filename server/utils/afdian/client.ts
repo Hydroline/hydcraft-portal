@@ -221,6 +221,8 @@ export const fetchAfdianSponsorStats =
 				sponsorPageUrl: DEFAULT_SPONSOR_PAGE_URL,
 			}
 		} catch (error) {
-			throw new Error(`AFDIAN_STATS_FETCH_FAILED:${toErrorMessage(error)}`)
+			throw new Error(`AFDIAN_STATS_FETCH_FAILED:${toErrorMessage(error)}`, {
+				cause: error,
+			})
 		}
 	}

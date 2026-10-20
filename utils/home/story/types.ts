@@ -3,11 +3,7 @@ export type HomeStoryDirection = 1 | -1
 export type HomeStoryInputSource = 'wheel' | 'touch' | 'keyboard' | 'card'
 
 export type HomeStoryPhase =
-	| 'hero'
-	| 'scene'
-	| 'players'
-	| 'community'
-	| 'outro'
+	'hero' | 'scene' | 'players' | 'community' | 'outro'
 
 export type HomeStoryNavigationStatus = 'idle' | 'transitioning'
 

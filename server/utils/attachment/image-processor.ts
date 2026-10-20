@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
 import sharp from 'sharp'
+import type { Sharp } from 'sharp'
 import { createBadRequestError } from '../errors'
 import type {
 	AttachmentPolicy,
@@ -55,7 +56,7 @@ const validateCropAspectRatio = (
 }
 
 const buildSourceVariant = async (
-	source: sharp.Sharp,
+	source: Sharp,
 	variant: AttachmentSourceVariantPolicy,
 ): Promise<ProcessedImageVariant> => {
 	const { data, info } = await source
@@ -77,7 +78,7 @@ const buildSourceVariant = async (
 }
 
 const buildResizeVariant = async (
-	source: sharp.Sharp,
+	source: Sharp,
 	variant: AttachmentResizeVariantPolicy,
 ): Promise<ProcessedImageVariant> => {
 	const pipeline = source

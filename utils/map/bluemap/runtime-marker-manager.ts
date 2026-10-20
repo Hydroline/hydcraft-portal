@@ -44,8 +44,7 @@ export class BlueMapRuntimeMarkerManager {
 	private readonly worldPlayerMarkerExitTimers = new Map<string, number>()
 	private worldPlayerMarkerHitTestCleanup: (() => void) | null = null
 	private onWorldPlayerMarkerClick:
-		| ((payload: BlueMapWorldPlayerMarkerClickEventPayload) => void)
-		| null = null
+		((payload: BlueMapWorldPlayerMarkerClickEventPayload) => void) | null = null
 	playerMarker: PlayerPresenceMarker | null = null
 	playerPresence: BlueMapPlayerMarker | null = null
 	worldPlayerMarkerDefinitions: readonly BlueMapWorldPlayerMarker[] = []
@@ -72,8 +71,7 @@ export class BlueMapRuntimeMarkerManager {
 
 	setWorldPlayerMarkerClickHandler(
 		handler:
-			| ((payload: BlueMapWorldPlayerMarkerClickEventPayload) => void)
-			| null,
+			((payload: BlueMapWorldPlayerMarkerClickEventPayload) => void) | null,
 	): void {
 		this.onWorldPlayerMarkerClick = handler
 	}

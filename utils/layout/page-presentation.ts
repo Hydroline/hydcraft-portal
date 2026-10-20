@@ -1,10 +1,7 @@
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
 
 export type PageContainerVariant =
-	| 'auth'
-	| 'fullBleed'
-	| 'immersive'
-	| 'minecraftAccounts'
+	'auth' | 'fullBleed' | 'immersive' | 'minecraftAccounts'
 
 export type HeaderVariant = 'hero' | 'minecraftAccounts' | 'solid'
 export type PageBackground = 'none' | 'map'
@@ -56,8 +53,7 @@ export const resolvePageContainerVariant = (
 	route: RouteLocationNormalizedLoaded,
 ): Exclude<PageContainerVariant, 'minecraftAccounts'> | undefined => {
 	const variant = route.meta.pageContainerVariant as
-		| PageContainerVariant
-		| undefined
+		PageContainerVariant | undefined
 
 	if (variant === 'minecraftAccounts') {
 		return isMinecraftAccountsImmersiveView(route) ? 'immersive' : undefined

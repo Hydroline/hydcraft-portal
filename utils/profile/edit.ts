@@ -9,11 +9,7 @@ export type ProfileCountryOrRegionKey =
 	| 'MACAU_CHINA'
 	| 'OVERSEAS_REGION'
 export type ProfileCountryOrRegion =
-	| '中国内地'
-	| '中国香港'
-	| '中国台湾'
-	| '中国澳门'
-	| '海外地区'
+	'中国内地' | '中国香港' | '中国台湾' | '中国澳门' | '海外地区'
 export type LocaleCode = 'zh-CN' | 'zh-TW' | 'ja-JP' | 'en-US'
 export type TimezoneMode = 'AUTO' | 'MANUAL'
 export type PrivacyKey =

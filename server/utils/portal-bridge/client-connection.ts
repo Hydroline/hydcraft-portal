@@ -908,9 +908,7 @@ export class PortalBridgeConnection implements PortalBridgeCoreSyncRuntime {
 			const position =
 				player && typeof player === 'object'
 					? ((player as Record<string, unknown>)['position'] as
-							| Record<string, unknown>
-							| null
-							| undefined)
+							Record<string, unknown> | null | undefined)
 					: null
 
 			return [

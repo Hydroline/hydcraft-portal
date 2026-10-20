@@ -60,15 +60,13 @@ export abstract class OfficialBlueMapRuntimeBase implements BlueMapRuntime {
 		dispose(): void
 	} | null = null
 	protected onViewChanged:
-		| ((view: BlueMapViewChangedEventPayload) => void)
-		| null = null
+		((view: BlueMapViewChangedEventPayload) => void) | null = null
 	private _createPlayerMarker: BlueMapRuntimePlayerMarkerFactory | null = null
 	private _loadPlayerSkin: BlueMapRuntimePlayerSkinLoader | null = null
 	private _createWorldPlayerMarker: BlueMapRuntimeWorldMarkerFactory | null =
 		null
 	private _onWorldPlayerMarkerClick:
-		| ((payload: BlueMapWorldPlayerMarkerClickEventPayload) => void)
-		| null = null
+		((payload: BlueMapWorldPlayerMarkerClickEventPayload) => void) | null = null
 	protected readonly markerManager: BlueMapRuntimeMarkerManager
 	protected readonly viewController: BlueMapRuntimeViewController
 
@@ -132,14 +130,12 @@ export abstract class OfficialBlueMapRuntimeBase implements BlueMapRuntime {
 		return this.markerManager.playerPresence
 	}
 	protected get onWorldPlayerMarkerClick():
-		| ((payload: BlueMapWorldPlayerMarkerClickEventPayload) => void)
-		| null {
+		((payload: BlueMapWorldPlayerMarkerClickEventPayload) => void) | null {
 		return this._onWorldPlayerMarkerClick
 	}
 	protected set onWorldPlayerMarkerClick(
 		handler:
-			| ((payload: BlueMapWorldPlayerMarkerClickEventPayload) => void)
-			| null,
+			((payload: BlueMapWorldPlayerMarkerClickEventPayload) => void) | null,
 	) {
 		this._onWorldPlayerMarkerClick = handler
 		this.markerManager.setWorldPlayerMarkerClickHandler(handler)

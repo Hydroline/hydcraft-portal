@@ -679,8 +679,7 @@ export const useHomeStoryProgress = (options: {
 				)
 
 			const scrollTrigger = timeline.scrollTrigger as
-				| HomeStoryScrollTrigger
-				| undefined
+				HomeStoryScrollTrigger | undefined
 			if (scrollTrigger) {
 				storyScrollTrigger = scrollTrigger
 				syncStoryInputActive(scrollTrigger)

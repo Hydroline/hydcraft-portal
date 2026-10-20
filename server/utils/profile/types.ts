@@ -9,9 +9,7 @@ import type {
 import type { MinecraftServerLocalizedName } from '~/utils/minecraft/server-name'
 
 export type ProfileActivityOnlineStatus =
-	| 'ONLINE'
-	| 'OFFLINE'
-	| 'RECENTLY_ACTIVE'
+	'ONLINE' | 'OFFLINE' | 'RECENTLY_ACTIVE'
 
 export interface UserProfileBadgeSummary {
 	id: string

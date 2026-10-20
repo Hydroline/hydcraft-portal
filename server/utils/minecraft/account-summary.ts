@@ -301,9 +301,7 @@ export const extractCustomStats = (stats: unknown): CustomStatsSummary => {
  */
 const resolveLuckPermsPrimaryGroup = (
 	luckPermsResolver:
-		| ReturnType<typeof createLuckPermsPrimaryGroupResolver>
-		| null
-		| undefined,
+		ReturnType<typeof createLuckPermsPrimaryGroupResolver> | null | undefined,
 	input: {
 		uuid?: string | null
 		normalizedUsername?: string | null

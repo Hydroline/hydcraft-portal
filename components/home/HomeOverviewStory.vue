@@ -421,11 +421,7 @@ import { useHomeHorizontalSwipe } from '~/composables/home/useHomeHorizontalSwip
 import { HOME_DETAIL_MOTION } from '~/utils/home/detail-motion'
 
 export type HomeOverviewPhase =
-	| 'hidden'
-	| 'scene'
-	| 'players'
-	| 'community'
-	| 'outro'
+	'hidden' | 'scene' | 'players' | 'community' | 'outro'
 
 export interface HomeOverviewPerson {
 	id: string
