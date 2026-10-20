@@ -231,10 +231,18 @@
 									{{ birthdayAgeText }}
 								</span>
 								<span
-									v-if="birthdayMetaText"
+									v-if="birthdayMetaText || genderSymbol"
 									class="text-sm text-slate-950 dark:text-white"
 								>
-									{{ birthdayMetaText }}
+									{{ birthdayMetaText
+									}}<template v-if="birthdayMetaText && genderSymbol">{{
+										locale === 'en-US' ? ' / ' : ' '
+									}}</template
+									><span
+										v-if="genderSymbol"
+										class="[font-family:system-ui,sans-serif]"
+										>{{ genderSymbol }}</span
+									>
 								</span>
 							</div>
 							<p
@@ -339,6 +347,8 @@
 								:label="item.label"
 								:value="item.value"
 								:href="item.href"
+								:copyable="item.copyable"
+								marquee
 							/>
 						</div>
 					</section>
@@ -546,6 +556,7 @@ interface ProfileInfoItem {
 	label: string
 	value: string
 	href?: string
+	copyable?: boolean
 }
 
 interface SocialAction {
@@ -638,7 +649,7 @@ const birthdayMetaText = computed(() => {
 	const summary = birthdaySummary.value
 
 	if (!summary) {
-		return genderSymbol.value
+		return ''
 	}
 
 	const constellationText = summary.constellationKey
@@ -649,9 +660,7 @@ const birthdayMetaText = computed(() => {
 		: summary.zodiacRaw
 
 	if (locale.value === 'en-US') {
-		return [constellationText, zodiacText, genderSymbol.value]
-			.filter(Boolean)
-			.join(' / ')
+		return [constellationText, zodiacText].filter(Boolean).join(' / ')
 	}
 
 	const parts: string[] = []
@@ -662,10 +671,6 @@ const birthdayMetaText = computed(() => {
 			zodiac: zodiacText,
 		}),
 	)
-
-	if (genderSymbol.value) {
-		parts.push(genderSymbol.value)
-	}
 
 	return parts.join(' ')
 })
@@ -776,6 +781,7 @@ const aboutItems = computed<ProfileInfoItem[]>(() => {
 		items.push({
 			label: t('profile.public.fields.schoolOrCompany'),
 			value: profile.value.schoolOrCompany,
+			copyable: true,
 		})
 	}
 
@@ -783,6 +789,7 @@ const aboutItems = computed<ProfileInfoItem[]>(() => {
 		items.push({
 			label: t('profile.public.fields.occupationOrMajor'),
 			value: profile.value.occupationOrMajor,
+			copyable: true,
 		})
 	}
 
@@ -790,6 +797,7 @@ const aboutItems = computed<ProfileInfoItem[]>(() => {
 		items.push({
 			label: t('profile.public.social.website'),
 			value: stripProtocol(social.websiteUrl),
+			copyable: true,
 			href: social.websiteUrl,
 		})
 	}
@@ -798,6 +806,7 @@ const aboutItems = computed<ProfileInfoItem[]>(() => {
 		items.push({
 			label: t('profile.public.social.publicEmail'),
 			value: social.publicEmail,
+			copyable: true,
 			href: `mailto:${social.publicEmail}`,
 		})
 	}

@@ -252,6 +252,7 @@
 			"savedDescription": "Header 使用者資訊已同步更新。",
 			"saveFailed": "儲存資料失敗",
 			"saveFailedDescription": "請檢查登入狀態與輸入內容。",
+			"copyField": "複製{label}",
 			"copyEmail": "複製電子郵件地址",
 			"copyFailed": "複製失敗，請重試",
 			"copied": "已複製",

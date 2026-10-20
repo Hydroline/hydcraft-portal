@@ -253,6 +253,7 @@
 			"savedDescription": "The Header user state has been updated.",
 			"saveFailed": "Failed to save profile",
 			"saveFailedDescription": "Check your login status and fields.",
+			"copyField": "Copy {label}",
 			"copyEmail": "Copy email address",
 			"copyFailed": "Failed to copy. Please try again.",
 			"copied": "Copied",

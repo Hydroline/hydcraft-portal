@@ -12,6 +12,11 @@ pnpm dev
   排除依赖、隐藏目录、构建产物和类型声明。
 - `include` / `exclude` 调整扫描范围；`extraEmoji` 可补充不能从源码中扫描出的
   固定运行时内容。不会扫描数据库、接口响应或访问页面来收集字符。
+- `excludeCodepoints` 指定独立显示时交由系统字体处理的码位。目前排除性别符号
+  `U+2640` / `U+2642`：不收集它们的独立序列，也不写入网页字体的
+  `unicode-range`；组合 Emoji 仍保留所需字形及布局规则。公开页性别符号另用
+  `system-ui` 显示，避免旧字体缓存接管。修改配置或构建器会触发 Nuxt Dev 重启，
+  重新载入配置。
 - 识别完整 Unicode Emoji 序列，并处理 Unicode 转义和数字 HTML 实体。
   子集化保留 GSUB 布局规则与彩色位图，并将相同 PNG 嵌入 OpenType SVG。
   Chromium 使用 CBDT / CBLC；Firefox 可使用 SVG，兼容 Windows / macOS 下

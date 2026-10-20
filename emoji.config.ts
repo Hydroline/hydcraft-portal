@@ -16,6 +16,8 @@ export default {
 		'**/*.d.ts',
 	],
 	extraEmoji: [],
+	// Gender symbols on public profiles should keep their system-font appearance.
+	excludeCodepoints: [0x2640, 0x2642],
 	source: {
 		// This release has CBDT/CBLC and GSUB; newer Linux builds use AAT.
 		url: 'https://github.com/samuelngs/apple-emoji-ttf/releases/download/v18.4/AppleColorEmoji.ttf',

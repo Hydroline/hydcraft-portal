@@ -61,7 +61,18 @@ export async function scanEmoji(rootDir: string, options: EmojiFontOptions) {
 	for (const text of options.extraEmoji) {
 		for (const match of text.matchAll(emojiRegex())) sequences.add(match[0])
 	}
-	return { sequences: [...sequences].sort(), files }
+	const excluded = new Set(options.excludeCodepoints ?? [])
+	return {
+		sequences: [...sequences]
+			.filter((sequence) =>
+				[...sequence].some((char) => {
+					const code = char.codePointAt(0)!
+					return code !== 0xfe0f && code !== 0xfe0e && !excluded.has(code)
+				}),
+			)
+			.sort(),
+		files,
+	}
 }
 
 async function download(
@@ -129,6 +140,7 @@ export async function generateEmojiFont(
 			version: 3,
 			source: options.source.sha256,
 			family: options.family,
+			excludeCodepoints: options.excludeCodepoints ?? [],
 			sequences,
 		}),
 	)
@@ -217,7 +229,12 @@ export async function generateEmojiFont(
 			const format = (code: number) => `U+${code.toString(16).toUpperCase()}`
 			// Do not let a bitmap font replace normal digits or punctuation.
 			unicodeRange = codes
-				.filter((code) => code > 0x7f && cmap.has(code))
+				.filter(
+					(code) =>
+						code > 0x7f &&
+						cmap.has(code) &&
+						!options.excludeCodepoints?.includes(code),
+				)
 				.map(format)
 				.join(', ')
 			missingCodepoints = codes
