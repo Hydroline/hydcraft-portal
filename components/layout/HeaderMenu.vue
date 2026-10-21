@@ -316,12 +316,7 @@ onBeforeUnmount(() => {
 			@click="openMobileMenu"
 		>
 			<span
-				class="header-menu-current-marker pointer-events-none absolute inset-x-px -z-10 rounded-xl bg-sky-300/28 transition-colors duration-180 dark:bg-sky-300/16"
-				:class="
-					activeDisplayNavItem.badgeType
-						? 'top-1/2 h-6 -translate-y-1/2'
-						: 'inset-y-1'
-				"
+				class="pointer-events-none absolute top-[calc(50%+0.24em)] left-1/2 -z-10 h-[0.95em] w-[96%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-[rgba(125,211,252,0.16)] opacity-100 shadow-[0_0_10px_rgba(125,211,252,0.12)]"
 				aria-hidden="true"
 			/>
 			<Transition name="header-current-page-label" mode="out-in">
@@ -377,12 +372,7 @@ onBeforeUnmount(() => {
 							@click="closeMobileMenu"
 						>
 							<span
-								class="header-menu-current-marker pointer-events-none absolute inset-x-px -z-10 rounded-xl bg-sky-300/28 transition-colors duration-180 dark:bg-sky-300/16"
-								:class="
-									activeDisplayNavItem.badgeType
-										? 'top-1/2 h-6 -translate-y-1/2'
-										: 'inset-y-1'
-								"
+								class="pointer-events-none absolute top-[calc(50%+0.24em)] left-1/2 -z-10 h-[0.95em] w-[96%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-[rgba(125,211,252,0.16)] opacity-100 shadow-[0_0_10px_rgba(125,211,252,0.12)]"
 								aria-hidden="true"
 							/>
 							<Transition name="header-current-page-label" mode="out-in">
@@ -506,16 +496,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-/* Match the full marker on the collapsed mobile control and its modal copy. */
-@media (hover: hover) {
-	.group:hover > .header-menu-current-marker {
-		background: color-mix(in srgb, var(--color-sky-300) 40%, transparent);
-	}
-}
-.group:active > .header-menu-current-marker {
-	background: color-mix(in srgb, var(--color-sky-300) 40%, transparent);
-}
-
 .mobile-menu-pop {
 	animation: mobile-menu-pop-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
