@@ -290,5 +290,32 @@
 			"scrollLeft": "Scroll images left",
 			"scrollRight": "Scroll images right"
 		}
+	},
+	"newspapers": {
+		"title": "Newspaper Cabinet",
+		"shortTitle": "Newspapers",
+		"view": "View newspapers",
+		"empty": "No newspapers yet",
+		"emptyIssues": "No published issues yet",
+		"issue": "Issue {number}",
+		"readIssue": "Read {title}, issue {number}",
+		"frontPage": "{title}, issue {number}, front page",
+		"previousIssues": "Scroll gallery backward",
+		"nextIssues": "Scroll gallery forward",
+		"reader": {
+			"previous": "Previous page",
+			"next": "Next page",
+			"zoomIn": "Zoom in",
+			"zoomOut": "Zoom out",
+			"close": "Close newspaper",
+			"reset": "Reset zoom",
+			"toolbar": "Newspaper controls",
+			"pageCount": "{current} / {total}",
+			"pageAlt": "{title}, issue {number}, page {page}",
+			"loading": "Loading newspaper",
+			"loadFailed": "The newspaper image could not load. Please retry.",
+			"retry": "Retry",
+			"help": "Swipe to turn pages, pinch to zoom, and drag to read when zoomed in."
+		}
 	}
 }

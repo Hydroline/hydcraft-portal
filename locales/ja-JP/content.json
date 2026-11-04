@@ -290,5 +290,32 @@
 			"scrollLeft": "画像を左へスクロール",
 			"scrollRight": "画像を右へスクロール"
 		}
+	},
+	"newspapers": {
+		"title": "新聞コーナー",
+		"shortTitle": "新聞",
+		"view": "新聞を見る",
+		"empty": "新聞はまだありません",
+		"emptyIssues": "発行済みの号はまだありません",
+		"issue": "第 {number} 号",
+		"readIssue": "「{title}」第 {number} 号を読む",
+		"frontPage": "「{title}」第 {number} 号の一面",
+		"previousIssues": "ギャラリーを前に移動",
+		"nextIssues": "ギャラリーを次に移動",
+		"reader": {
+			"previous": "前のページ",
+			"next": "次のページ",
+			"zoomIn": "拡大",
+			"zoomOut": "縮小",
+			"close": "新聞を閉じる",
+			"reset": "倍率をリセット",
+			"toolbar": "新聞の操作",
+			"pageCount": "{current} / {total}",
+			"pageAlt": "「{title}」第 {number} 号 {page} ページ",
+			"loading": "新聞を読み込み中",
+			"loadFailed": "新聞の画像を読み込めませんでした。再試行してください。",
+			"retry": "再試行",
+			"help": "左右にスワイプしてページをめくり、ピンチで拡大・縮小できます。拡大後はドラッグして読めます。"
+		}
 	}
 }

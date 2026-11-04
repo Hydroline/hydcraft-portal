@@ -37,7 +37,8 @@
 		"adminAchievements": "成就",
 		"adminBuilderRanks": "建築職階",
 		"adminOAuthClients": "OAuth 用戶端",
-		"adminSite": "站點"
+		"adminSite": "站點",
+		"newspapers": "報刊櫥"
 	},
 	"main": {
 		"contentFooter": {

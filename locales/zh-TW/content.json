@@ -290,5 +290,32 @@
 			"scrollLeft": "向左捲動圖片",
 			"scrollRight": "向右捲動圖片"
 		}
+	},
+	"newspapers": {
+		"title": "報刊櫥",
+		"shortTitle": "報刊",
+		"view": "查看報刊",
+		"empty": "暫無報刊",
+		"emptyIssues": "暫無已出版的期刊",
+		"issue": "第 {number} 期",
+		"readIssue": "閱讀《{title}》第 {number} 期",
+		"frontPage": "《{title}》第 {number} 期頭版",
+		"previousIssues": "向前查看期刊",
+		"nextIssues": "向後查看期刊",
+		"reader": {
+			"previous": "上一版",
+			"next": "下一版",
+			"zoomIn": "放大",
+			"zoomOut": "縮小",
+			"close": "關閉電子報",
+			"reset": "恢復原始大小",
+			"toolbar": "電子報工具列",
+			"pageCount": "{current} / {total}",
+			"pageAlt": "《{title}》第 {number} 期第 {page} 版",
+			"loading": "正在載入報紙",
+			"loadFailed": "報紙圖片載入失敗，請重試",
+			"retry": "重試",
+			"help": "左右滑動翻版，雙指縮放，放大後拖動閱讀。"
+		}
 	}
 }

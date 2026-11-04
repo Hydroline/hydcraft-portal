@@ -27,6 +27,10 @@
 							' [--gap:--spacing(3)] h-full',
 					}"
 				>
+					<IntroNewspapersItem
+						v-if="showNewspapers && columnIndex === 1"
+						compact
+					/>
 					<figure v-for="image in column" :key="image.src" class="m-0 w-full">
 						<button
 							type="button"
@@ -66,6 +70,7 @@
 							' [--gap:--spacing(10)]',
 					}"
 				>
+					<IntroNewspapersItem v-if="showNewspapers && rowIndex === 1" />
 					<figure v-for="image in row" :key="image.src" class="m-0">
 						<button
 							type="button"
@@ -101,6 +106,7 @@ import type { NormalizedContentImageItem } from '~/components/content/utils/cont
 interface IntroMarqueeProps {
 	title: string
 	images: NormalizedContentImageItem[]
+	showNewspapers?: boolean
 }
 
 const props = defineProps<IntroMarqueeProps>()
