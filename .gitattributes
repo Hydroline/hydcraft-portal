@@ -46,3 +46,6 @@ vendor/bluemap-webapp/** linguist-vendored
 
 # Page-specific media sources. Keep this after the general binary rules.
 assets/media/** filter=lfs diff=lfs merge=lfs -text
+
+# Historical newspaper location, moved into assets/media in the follow-up.
+public/newspapers/** filter=lfs diff=lfs merge=lfs -text

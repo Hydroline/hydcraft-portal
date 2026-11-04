@@ -37,7 +37,8 @@
 		"adminAchievements": "Achievements",
 		"adminBuilderRanks": "Builder Ranks",
 		"adminOAuthClients": "OAuth Clients",
-		"adminSite": "Site"
+		"adminSite": "Site",
+		"newspapers": "Newspaper Cabinet"
 	},
 	"main": {
 		"contentFooter": {
