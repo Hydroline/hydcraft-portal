@@ -17,7 +17,9 @@
 				class="relative h-dvh overflow-hidden text-slate-950 dark:text-slate-50"
 				@keydown="onKeydown"
 			>
-				<h2 class="absolute top-4 left-4 right-16 truncate text-sm sm:left-6">
+				<h2
+					class="absolute top-4 left-4 right-16 z-20 truncate text-sm sm:left-6"
+				>
 					{{ readerTitle }}
 				</h2>
 				<UButton
@@ -28,77 +30,103 @@
 					:aria-label="t('newspapers.reader.close')"
 					@click="close"
 				/>
-				<div
-					ref="viewport"
-					class="absolute inset-x-3 top-16 bottom-28 flex touch-none select-none items-center justify-center overflow-hidden sm:inset-x-6 sm:bottom-24"
-					:class="scale > 1 ? 'cursor-grab active:cursor-grabbing' : ''"
-					@pointerdown="onPointerDown"
-					@pointermove="onPointerMove"
-					@pointerup="onPointerEnd"
-					@pointercancel="cancelPointers"
-					@lostpointercapture="
-						pointers.has($event.pointerId) && cancelPointers()
-					"
-					@wheel.prevent="onWheel"
-					@dblclick="zoom(scale > 1 ? 1 : 2)"
-				>
-					<AnimatePresence :initial="false" mode="wait" :custom="pageDirection">
-						<motion.div
-							:key="src"
-							class="absolute inset-0 flex items-center justify-center"
+				<div class="absolute inset-x-3 inset-y-0 overflow-hidden sm:inset-x-6">
+					<div
+						ref="viewport"
+						class="absolute inset-x-0 top-16 bottom-28 flex touch-none select-none items-center justify-center sm:bottom-24"
+						:class="scale > 1 ? 'cursor-grab active:cursor-grabbing' : ''"
+						@pointerdown="onPointerDown"
+						@pointermove="onPointerMove"
+						@pointerup="onPointerEnd"
+						@pointercancel="cancelPointers"
+						@lostpointercapture="
+							pointers.has($event.pointerId) && cancelPointers()
+						"
+						@wheel.prevent="onWheel"
+						@dblclick="zoom(scale > 1 ? 1 : 2)"
+					>
+						<AnimatePresence
+							:initial="false"
+							mode="wait"
 							:custom="pageDirection"
-							:variants="pageVariants"
-							initial="enter"
-							:animate="loading || failed ? 'enter' : 'visible'"
-							exit="exit"
-							:transition="{
-								duration: reducedMotion ? 0 : 0.22,
-								ease: 'easeOut',
-							}"
 						>
-							<motion.img
-								:src="src"
-								:alt="
-									t('newspapers.reader.pageAlt', {
-										title,
-										number: issue.number,
-										page: pageIndex + 1,
-									})
-								"
-								class="max-h-full max-w-full object-contain"
-								:class="loading || failed ? 'invisible' : ''"
-								:initial="false"
-								:animate="{ x: offset.x, y: offset.y, scale }"
+							<motion.div
+								:key="src"
+								class="absolute inset-0 flex items-center justify-center"
+								:custom="pageDirection"
+								:variants="pageVariants"
+								initial="enter"
+								:animate="loading || failed ? 'enter' : 'visible'"
+								exit="exit"
 								:transition="{
-									duration: reducedMotion || !animateZoom ? 0 : 0.22,
+									duration: reducedMotion ? 0 : 0.22,
 									ease: 'easeOut',
 								}"
-								draggable="false"
-								@load="onLoad"
-								@error="onError"
-							/>
-						</motion.div>
-					</AnimatePresence>
-					<div
-						v-if="loading"
-						class="absolute inset-0 flex items-center justify-center"
-						role="status"
-					>
-						<span>{{ t('newspapers.reader.loading') }}</span>
-					</div>
-					<div
-						v-if="failed"
-						class="absolute inset-0 flex flex-col items-center justify-center gap-4"
-						role="alert"
-					>
-						<p>{{ t('newspapers.reader.loadFailed') }}</p>
-						<UButton color="neutral" variant="soft" @click="retry">{{
-							t('newspapers.reader.retry')
-						}}</UButton>
+							>
+								<motion.img
+									:src="src"
+									:alt="
+										t('newspapers.reader.pageAlt', {
+											title,
+											number: issue.number,
+											page: pageIndex + 1,
+										})
+									"
+									class="max-h-full max-w-full object-contain"
+									:class="loading || failed ? 'invisible' : ''"
+									:initial="false"
+									:animate="{ x: offset.x, y: offset.y, scale }"
+									:transition="{
+										duration: reducedMotion || !animateZoom ? 0 : 0.22,
+										ease: 'easeOut',
+									}"
+									draggable="false"
+									@load="onLoad"
+									@error="onError"
+								/>
+							</motion.div>
+						</AnimatePresence>
+						<div
+							v-if="loading"
+							class="absolute inset-0 flex items-center justify-center"
+							role="status"
+						>
+							<span>{{ t('newspapers.reader.loading') }}</span>
+						</div>
+						<div
+							v-if="failed"
+							class="absolute inset-0 flex flex-col items-center justify-center gap-4"
+							role="alert"
+						>
+							<p>{{ t('newspapers.reader.loadFailed') }}</p>
+							<UButton color="neutral" variant="soft" @click="retry">{{
+								t('newspapers.reader.retry')
+							}}</UButton>
+						</div>
 					</div>
 				</div>
 				<div
-					class="absolute inset-x-2 bottom-[max(1rem,env(safe-area-inset-bottom))] flex justify-center sm:inset-x-6"
+					aria-hidden="true"
+					class="pointer-events-none absolute inset-x-0 top-0 z-10 h-32"
+				>
+					<div
+						class="absolute inset-0"
+						:class="[gradientChromeBlurClass, gradientChromeMaskClass]"
+					/>
+					<div class="absolute inset-0" :class="gradientChromeScrimClass" />
+				</div>
+				<div
+					aria-hidden="true"
+					class="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-44 rotate-180 sm:h-40"
+				>
+					<div
+						class="absolute inset-0"
+						:class="[gradientChromeBlurClass, gradientChromeMaskClass]"
+					/>
+					<div class="absolute inset-0" :class="gradientChromeScrimClass" />
+				</div>
+				<div
+					class="absolute inset-x-2 bottom-[max(1rem,env(safe-area-inset-bottom))] z-20 flex justify-center sm:inset-x-6"
 				>
 					<div
 						role="toolbar"
@@ -183,6 +211,11 @@
 <script setup lang="ts">
 import { AnimatePresence, motion, useReducedMotion } from 'motion-v'
 import type { NewspaperIssue } from '~/data/newspapers'
+import {
+	gradientChromeBlurClass,
+	gradientChromeMaskClass,
+	gradientChromeScrimClass,
+} from '~/utils/layout/gradient-chrome'
 
 interface Point {
 	x: number

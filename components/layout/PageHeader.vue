@@ -4,6 +4,7 @@ import { useThemeTransition } from '~/composables/useThemeTransition'
 import hydcraftLogo from '~/assets/resources/brands/logo_HydCraft.png'
 import { getPortalRedirectQuery } from '~/utils/auth/redirect'
 import { normalizeHeaderMenuPath } from '~/utils/layout/header-menu'
+import { gradientChromeMaskClass } from '~/utils/layout/gradient-chrome'
 import { resolvePageContainerVariant } from '~/utils/layout/page-presentation'
 
 interface LocaleItem {
@@ -200,8 +201,8 @@ onMounted(() => {
 		]"
 	>
 		<div
-			class="pointer-events-none absolute top-0 right-0 -bottom-4/5 left-0 z-10 mask-[linear-gradient(to_bottom,black_0%,rgba(0,0,0,0.95)_18%,rgba(0,0,0,0.82)_32%,rgba(0,0,0,0.6)_46%,rgba(0,0,0,0.35)_60%,rgba(0,0,0,0.14)_72%,rgba(0,0,0,0.03)_84%,transparent_92%)] lg:-bottom-3/5"
-			:class="headerBlurClass"
+			class="pointer-events-none absolute top-0 right-0 -bottom-4/5 left-0 z-10 lg:-bottom-3/5"
+			:class="[headerBlurClass, gradientChromeMaskClass]"
 		/>
 		<div
 			class="pointer-events-none absolute top-0 right-0 -bottom-4/5 left-0 z-10 lg:-bottom-3/5"
