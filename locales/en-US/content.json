@@ -316,6 +316,20 @@
 			"loadFailed": "The newspaper image could not load. Please retry.",
 			"retry": "Retry",
 			"help": "Swipe to turn pages, pinch to zoom, and drag to read when zoomed in."
+		},
+		"publications": {
+			"central-daily": {
+				"title": "HydCraft Central Daily"
+			},
+			"nanbu-gulf-daily": {
+				"title": "HydCraft Nanbu Gulf Daily"
+			},
+			"wenyan": {
+				"title": "Wenyan"
+			}
+		},
+		"sourceNotes": {
+			"centralIssue2": "The source file is labeled issue 2, but its masthead says issue 3."
 		}
 	}
 }

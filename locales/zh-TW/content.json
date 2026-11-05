@@ -316,6 +316,20 @@
 			"loadFailed": "報紙圖片載入失敗，請重試",
 			"retry": "重試",
 			"help": "左右滑動翻版，雙指縮放，放大後拖動閱讀。"
+		},
+		"publications": {
+			"central-daily": {
+				"title": "氫氣中央日報"
+			},
+			"nanbu-gulf-daily": {
+				"title": "南部灣日報"
+			},
+			"wenyan": {
+				"title": "文眼"
+			}
+		},
+		"sourceNotes": {
+			"centralIssue2": "原檔案標為第二期，報頭印為第三期。"
 		}
 	}
 }

@@ -6,7 +6,7 @@
 			{{ t('newspapers.title') }}
 		</h1>
 		<div v-if="newspaperPublications.length" class="flex flex-col gap-12">
-			<NewspapersPressCard
+			<PressCard
 				v-for="publication in newspaperPublications"
 				:key="publication.id"
 				:publication="publication"
@@ -23,6 +23,7 @@
 
 <script setup lang="ts">
 import { newspaperPublications } from '~/data/newspapers'
+import PressCard from '~/components/newspapers/PressCard.vue'
 
 definePageMeta({ headerVariant: 'solid' })
 const { t } = useI18n()

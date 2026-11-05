@@ -44,7 +44,7 @@ const { t } = useI18n()
 const localePath = useLocalePath()
 const covers = newspaperPublications.flatMap((publication) =>
 	publication.issues.flatMap((issue) =>
-		issue.pages[0] ? [issue.pages[0]] : [],
+		issue.pages[0] ? [issue.coverSrc ?? issue.pages[0]] : [],
 	),
 )
 const cover = ref(covers[0])
