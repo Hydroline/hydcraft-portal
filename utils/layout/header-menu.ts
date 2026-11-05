@@ -181,6 +181,7 @@ export const headerMenuFallbackLabelKeys: Record<string, string> = {
 	'/links': 'routes.links',
 	'/partners': 'routes.partners',
 	'/newspapers': 'routes.newspapers',
+	'/newspapers/': 'routes.newspapers',
 	'/admin': 'routes.admin',
 	'/admin/overview': 'routes.adminOverview',
 	'/admin/servers': 'routes.adminServers',

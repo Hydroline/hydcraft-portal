@@ -18,16 +18,25 @@
 			/>
 			<div class="relative flex flex-col gap-6 p-6 sm:p-8">
 				<div class="flex items-start justify-between gap-4">
-					<div>
-						<h2
-							:id="`press-${publication.id}`"
-							class="font-arkpixel text-3xl text-white"
-						>
-							{{ t(publication.titleKey) }}
-						</h2>
+					<div class="min-w-0 flex-1">
+						<div class="flex items-center gap-4">
+							<img
+								v-if="publication.logoSrc"
+								:src="publication.logoSrc"
+								:alt="t(publication.logoAltKey ?? publication.titleKey)"
+								class="h-16 max-w-24 shrink-0 object-contain sm:max-w-40"
+								loading="lazy"
+							/>
+							<h2
+								:id="`press-${publication.id}`"
+								class="font-arkpixel text-3xl text-white"
+							>
+								{{ t(publication.titleKey) }}
+							</h2>
+						</div>
 						<p
 							v-if="publication.descriptionKey"
-							class="mt-3 max-w-3xl text-white/80"
+							class="mt-5 max-w-3xl text-base text-white/88"
 						>
 							{{ t(publication.descriptionKey) }}
 						</p>
@@ -72,7 +81,7 @@
 						@click="activeIssue = issue"
 					>
 						<SkeletonImage
-							:src="issue.pages[0]!"
+							:src="issue.coverSrc ?? issue.pages[0]!"
 							:alt="
 								t('newspapers.frontPage', {
 									title: t(publication.titleKey),
@@ -89,6 +98,12 @@
 								class="mt-1 block text-sm text-white/70"
 								>{{ formatDate(issue.publishedAt) }}</time
 							>
+							<p
+								v-if="issue.noteKey"
+								class="mt-2 text-xs leading-5 text-white/70"
+							>
+								{{ t(issue.noteKey) }}
+							</p>
 						</div>
 					</button>
 				</div>
@@ -97,7 +112,7 @@
 				</p>
 			</div>
 		</div>
-		<NewspapersReader
+		<NewspaperReader
 			v-if="activeIssue"
 			:open="true"
 			:issue="activeIssue"
@@ -109,6 +124,7 @@
 
 <script setup lang="ts">
 import type { NewspaperIssue, NewspaperPublication } from '~/data/newspapers'
+import NewspaperReader from './NewspaperReader.vue'
 
 const props = defineProps<{ publication: NewspaperPublication }>()
 const { t, locale } = useI18n()

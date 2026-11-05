@@ -16,6 +16,8 @@
 		"lint": "eslint .",
 		"postinstall": "nuxt prepare && pnpm db:generate",
 		"preview": "nuxt preview",
+		"newspapers:optimize": "node scripts/newspapers/optimize-png.mjs",
+		"newspapers:webp": "node scripts/newspapers/convert-webp.mjs",
 		"mail:preview": "tsx scripts/preview-mail.ts",
 		"data:production-init": "tsx scripts/production-init.ts",
 		"data:production-init:artifact": "node dist-cli/scripts/production-init.js",

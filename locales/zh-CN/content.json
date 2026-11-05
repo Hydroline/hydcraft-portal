@@ -316,6 +316,20 @@
 			"loadFailed": "报纸图片加载失败，请重试",
 			"retry": "重试",
 			"help": "左右滑动翻版，双指缩放，放大后拖动阅读。"
+		},
+		"publications": {
+			"central-daily": {
+				"title": "氢气中央日报"
+			},
+			"nanbu-gulf-daily": {
+				"title": "南部湾日报"
+			},
+			"wenyan": {
+				"title": "文眼"
+			}
+		},
+		"sourceNotes": {
+			"centralIssue2": "原文件标为第二期，报头印为第三期。"
 		}
 	}
 }

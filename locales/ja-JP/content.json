@@ -316,6 +316,20 @@
 			"loadFailed": "新聞の画像を読み込めませんでした。再試行してください。",
 			"retry": "再試行",
 			"help": "左右にスワイプしてページをめくり、ピンチで拡大・縮小できます。拡大後はドラッグして読めます。"
+		},
+		"publications": {
+			"central-daily": {
+				"title": "氫氣中央日報"
+			},
+			"nanbu-gulf-daily": {
+				"title": "南部灣日報"
+			},
+			"wenyan": {
+				"title": "文眼"
+			}
+		},
+		"sourceNotes": {
+			"centralIssue2": "元ファイル名は第2号ですが、紙面の題字欄には第3号と記載されています。"
 		}
 	}
 }
