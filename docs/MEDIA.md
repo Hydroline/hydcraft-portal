@@ -4,7 +4,7 @@
 
 `assets/media/` 集中保存会随页面内容持续增删的图片、视频等媒体源文件，整个目录使用 Git LFS。保留有意义的业务子目录，不把不相关的素材平铺到根目录。
 
-当前目录包括 `routes-map/`、`routes-system/`、`meetups/`、`material/`、`livelihood/`、`homepage/`、`content/timeline/` 和 `minecraft-gallery/`。以后新增报刊等页面媒体时，可在这里增加相应目录，自动继承 LFS 规则，无需逐个扩展名配置。
+当前目录包括 `routes-map/`、`routes-system/`、`meetups/`、`material/`、`livelihood/`、`homepage/`、`content/timeline/`、`minecraft-gallery/` 和 `newspapers/`。以后新增其他页面媒体时，可在这里增加相应目录，自动继承 LFS 规则，无需逐个扩展名配置。
 
 `assets/resources/` 继续保存品牌、图标、占位图、个人资料等现有共享资源，不自动纳入 LFS。LFS 只改变 Git 的存储方式，不改变 Nuxt 的资源处理：当前直接 import 的媒体继续由 Nuxt 打包，已有图片站 URL 继续使用原地址。COS 自动上传、内容哈希 URL 和可配置图片域名属于后续独立步骤。
 
