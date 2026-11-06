@@ -4,6 +4,7 @@
 
 - 全站页面、组件、样式与交互：[UI 规范](docs/UI_GUIDELINES.md)
 - 依赖库用途、版本耦合与调整边界：[项目依赖说明](docs/DEPENDENCIES.md)
+- 页面图片、视频、`assets/media/`、Git LFS 或媒体同步：[页面媒体资源](docs/MEDIA.md)
 - Emoji 字体扫描、裁剪与浏览器兼容：[Emoji 字体构建](docs/EMOJI_FONTS.md)
 - Prisma schema、数据库结构与迁移：[数据库规范](docs/DATABASE.md)
 - API、Service、事件与领域 utils：[服务端与模块边界](docs/SERVER_ARCHITECTURE.md)

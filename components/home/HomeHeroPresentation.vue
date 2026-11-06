@@ -278,14 +278,14 @@
 </template>
 
 <script setup lang="ts">
-import guangyangScreenshots1 from '~/assets/resources/minecraft-gallery/season_8/guangyang_screenshots_1.webp'
-import guangyangScreenshots2 from '~/assets/resources/minecraft-gallery/season_8/guangyang_screenshots_2.webp'
-import owenCoastConcert1 from '~/assets/resources/minecraft-gallery/season_8/owen_coast_concert_1.webp'
-import owenWpgh1 from '~/assets/resources/minecraft-gallery/season_8/owen_wpgh_1.webp'
-import outroSpawn from '~/assets/resources/minecraft-gallery/season_8/spawnpoint_screenshots_1.webp'
-import saikongScreenshots1 from '~/assets/resources/minecraft-gallery/season_8/saikong_screenshots_1.webp'
-import xwHotelScreenshots1 from '~/assets/resources/minecraft-gallery/season_7/xw_hotel_screenshots_1.webp'
-import xwHotelScreenshots2 from '~/assets/resources/minecraft-gallery/season_7/xw_hotel_screenshots_2.webp'
+import guangyangScreenshots1 from '~/assets/media/minecraft-gallery/season_8/guangyang_screenshots_1.webp'
+import guangyangScreenshots2 from '~/assets/media/minecraft-gallery/season_8/guangyang_screenshots_2.webp'
+import owenCoastConcert1 from '~/assets/media/minecraft-gallery/season_8/owen_coast_concert_1.webp'
+import owenWpgh1 from '~/assets/media/minecraft-gallery/season_8/owen_wpgh_1.webp'
+import outroSpawn from '~/assets/media/minecraft-gallery/season_8/spawnpoint_screenshots_1.webp'
+import saikongScreenshots1 from '~/assets/media/minecraft-gallery/season_8/saikong_screenshots_1.webp'
+import xwHotelScreenshots1 from '~/assets/media/minecraft-gallery/season_7/xw_hotel_screenshots_1.webp'
+import xwHotelScreenshots2 from '~/assets/media/minecraft-gallery/season_7/xw_hotel_screenshots_2.webp'
 import type { NormalizedContentImageItem } from '~/components/content/utils/content-image'
 import type {
 	HomeImmersiveScene,

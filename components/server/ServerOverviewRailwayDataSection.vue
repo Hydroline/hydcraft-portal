@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import railwayPreviewImage from '~/assets/resources/minecraft-gallery/season_7/guangyang_screenshots_4.webp'
+import railwayPreviewImage from '~/assets/media/minecraft-gallery/season_7/guangyang_screenshots_4.webp'
 
 const { t } = useI18n()
 </script>

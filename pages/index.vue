@@ -135,10 +135,10 @@
 </template>
 
 <script setup lang="ts">
-import owenCoastConcert1 from '~/assets/resources/minecraft-gallery/season_8/owen_coast_concert_1.webp'
-import outroBackground from '~/assets/resources/minecraft-gallery/season_8/owen_screenshots_1.webp'
-import outroTerrain from '~/assets/resources/minecraft-gallery/season_8/terrain_advance_screenshots.webp'
-import outroSpawn from '~/assets/resources/minecraft-gallery/season_8/spawnpoint_screenshots_1.webp'
+import owenCoastConcert1 from '~/assets/media/minecraft-gallery/season_8/owen_coast_concert_1.webp'
+import outroBackground from '~/assets/media/minecraft-gallery/season_8/owen_screenshots_1.webp'
+import outroTerrain from '~/assets/media/minecraft-gallery/season_8/terrain_advance_screenshots.webp'
+import outroSpawn from '~/assets/media/minecraft-gallery/season_8/spawnpoint_screenshots_1.webp'
 import type {
 	HomeOverviewPerson,
 	HomeOverviewPlayerFocusPayload,

@@ -4,6 +4,8 @@ v2:
       name: 构建并部署生产环境
       docker:
         image: node:24-bookworm
+      git:
+        lfs: true
       imports:
         - https://cnb.cool/HydCraft/hydcraft-secrets/-/blob/main/hydcraft-portal-deploy.yml
       stages:
@@ -11,8 +13,12 @@ v2:
           script: |
             set -eu
             apt-get update
-            apt-get install -y --no-install-recommends openssh-client rsync
+            apt-get install -y --no-install-recommends openssh-client rsync git-lfs
             rm -rf /var/lib/apt/lists/*
+
+            git lfs install --local
+            git lfs pull
+            git lfs fsck --objects HEAD
 
             export DATABASE_URL="${DATABASE_URL:-postgresql://postgres:postgres@localhost:5432/hydcraft_portal?schema=public}"
             export NUXT_PUBLIC_SITE_URL="${NUXT_PUBLIC_SITE_URL:-https://hydcraft.example}"

@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import terrainCover from '~/assets/resources/minecraft-gallery/season_8/terrain_map_202606.webp'
+import terrainCover from '~/assets/media/minecraft-gallery/season_8/terrain_map_202606.webp'
 import { getStableAssetUrl } from '~/utils/assets/stable-asset-url'
 
 const { t } = useI18n()

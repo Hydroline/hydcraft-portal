@@ -1,6 +1,6 @@
-import guangyangScreenshots1 from '~/assets/resources/minecraft-gallery/season_7/guangyang_screenshots_1.webp'
-import guangyangScreenshots2 from '~/assets/resources/minecraft-gallery/season_7/guangyang_screenshots_2.webp'
-import owenScreenshots2 from '~/assets/resources/minecraft-gallery/season_7/owen_screenshots_2.webp'
+import guangyangScreenshots1 from '~/assets/media/minecraft-gallery/season_7/guangyang_screenshots_1.webp'
+import guangyangScreenshots2 from '~/assets/media/minecraft-gallery/season_7/guangyang_screenshots_2.webp'
+import owenScreenshots2 from '~/assets/media/minecraft-gallery/season_7/owen_screenshots_2.webp'
 import type { PartnerSummary } from './partners'
 
 const partnerFallbackCovers = [

@@ -131,9 +131,9 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import toastFrame from '~/assets/resources/material/minecraft_achievement_toast_frame.webp'
-import barrierIcon from '~/assets/resources/material/minecraft_item_barrier.webp'
-import clockIcon from '~/assets/resources/material/minecraft_item_clock.webp'
+import toastFrame from '~/assets/media/material/minecraft_achievement_toast_frame.webp'
+import barrierIcon from '~/assets/media/material/minecraft_item_barrier.webp'
+import clockIcon from '~/assets/media/material/minecraft_item_clock.webp'
 import introCover from '~/assets/resources/pages/intro_cover.webp'
 import { getStableAssetUrl } from '~/utils/assets/stable-asset-url'
 

@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import spawnpointImage from '~/assets/resources/minecraft-gallery/season_8/spawnpoint_screenshots_1.webp'
+import spawnpointImage from '~/assets/media/minecraft-gallery/season_8/spawnpoint_screenshots_1.webp'
 import { getStableAssetUrl } from '~/utils/assets/stable-asset-url'
 
 const { t } = useI18n()
