@@ -26,6 +26,7 @@
 				<UButton
 					color="neutral"
 					variant="ghost"
+					class="cursor-pointer disabled:cursor-default"
 					icon="i-lucide-chevron-left"
 					:aria-label="t('newspapers.previousIssues')"
 					:disabled="!canScrollBack"
@@ -34,6 +35,7 @@
 				<UButton
 					color="neutral"
 					variant="ghost"
+					class="cursor-pointer disabled:cursor-default"
 					icon="i-lucide-chevron-right"
 					:aria-label="t('newspapers.nextIssues')"
 					:disabled="!canScrollForward"
@@ -57,7 +59,7 @@
 					v-for="issue in issues"
 					:key="issue.id"
 					type="button"
-					class="group flex w-52 shrink-0 snap-start flex-col overflow-hidden rounded-lg border border-slate-200 bg-white text-left transition-colors duration-200 hover:bg-stone-50 motion-reduce:transition-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-sky-400 sm:w-60 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800"
+					class="group flex w-52 cursor-pointer shrink-0 snap-start flex-col overflow-hidden rounded-lg border border-slate-200 bg-white text-left transition-colors duration-200 hover:bg-stone-50 motion-reduce:transition-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-sky-400 sm:w-60 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800"
 					:aria-label="
 						t('newspapers.readIssue', {
 							title: t(publication.titleKey),

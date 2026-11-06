@@ -12,7 +12,7 @@
 		</template>
 		<NuxtLink
 			:to="localePath('/server/newspapers')"
-			class="group relative isolate grid overflow-hidden rounded-xl border border-slate-200 bg-stone-50 text-slate-950 transition-colors duration-200 hover:bg-stone-100 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-400 md:grid-cols-[1fr_1.1fr] dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 dark:hover:bg-slate-900"
+			class="group relative isolate grid cursor-pointer overflow-hidden rounded-xl border border-slate-200 bg-stone-50 text-slate-950 transition-colors duration-200 hover:bg-stone-100 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-400 md:grid-cols-[1fr_1.1fr] dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 dark:hover:bg-slate-900"
 		>
 			<div
 				class="relative z-10 flex flex-col items-start justify-center px-7 py-10 sm:px-10 md:py-12"
