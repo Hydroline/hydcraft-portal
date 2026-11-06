@@ -1,5 +1,8 @@
 const contentImageModules = import.meta.glob<string>(
-	'~/assets/resources/content/**/*.{avif,gif,jpeg,jpg,png,svg,webp}',
+	[
+		'~/assets/resources/content/**/*.{avif,gif,jpeg,jpg,png,svg,webp}',
+		'~/assets/media/content/**/*.{avif,gif,jpeg,jpg,png,svg,webp}',
+	],
 	{
 		eager: true,
 		import: 'default',
@@ -65,7 +68,7 @@ const parseAspectRatio = (
 const contentImageMap = Object.fromEntries(
 	Object.entries(contentImageModules).flatMap(([path, url]) => {
 		const normalizedPath = path
-			.replace(/^.*\/assets\/resources\/content\//, '')
+			.replace(/^.*\/assets\/(?:resources|media)\/content\//, '')
 			.replace(/^\//, '')
 		const filename = normalizedPath.split('/').at(-1) ?? normalizedPath
 
