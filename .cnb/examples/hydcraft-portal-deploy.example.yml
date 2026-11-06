@@ -4,6 +4,8 @@ allow_slugs: HydCraft/hydcraft-portal
 allow_events:
   - web_trigger_deploy
   - api_trigger_deploy
+  - web_trigger_media
+  - api_trigger_media
 allow_branches:
   - v2
 
@@ -16,3 +18,11 @@ BACKEND_DEPLOY_SSH_PRIVATE_KEY: |-
   -----END OPENSSH PRIVATE KEY-----
 BACKEND_PM2_APP_NAME: hydcraft-portal
 BACKEND_REMOTE_DEPLOY_PATH: /www/wwwroot/hydcraft-portal
+
+# Static page media only, separate from Nuxt runtime user attachments.
+COS_MEDIA_SECRET_ID: <cos-secret-id>
+COS_MEDIA_SECRET_KEY: <cos-secret-key>
+COS_MEDIA_REGION: ap-shanghai
+COS_MEDIA_BUCKET: <media-bucket-with-appid>
+COS_MEDIA_PREFIX: portal
+NUXT_PUBLIC_SITE_MEDIA_BASE_URL: https://img.hydcraft.cn/portal

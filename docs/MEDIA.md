@@ -6,7 +6,7 @@
 
 当前目录包括 `routes-map/`、`routes-system/`、`meetups/`、`material/`、`livelihood/`、`homepage/`、`content/timeline/` 和 `minecraft-gallery/`。以后新增报刊等页面媒体时，可在这里增加相应目录，自动继承 LFS 规则，无需逐个扩展名配置。
 
-`assets/resources/` 继续保存品牌、图标、占位图、个人资料等现有共享资源，不自动纳入 LFS。LFS 只改变 Git 的存储方式，不改变 Nuxt 的资源处理：当前直接 import 的媒体继续由 Nuxt 打包，已有图片站 URL 继续使用原地址。COS 自动上传、内容哈希 URL 和可配置图片域名属于后续独立步骤。
+`assets/resources/` 继续保存品牌、图标、占位图、个人资料等现有共享资源，不自动纳入 LFS。`assets/media/` 是页面媒体的唯一维护来源，不在 `public/` 保存重复副本。开发模式和没有设置 CDN 地址的构建使用本地资源，配置 CDN 地址的生产构建将媒体 import 替换为 COS 哈希地址，不再把这些媒体复制进网站部署包。
 
 ## 新增与修改素材
 
@@ -16,7 +16,7 @@
 - 修改目录或文件名时同步检查 import、数据配置和文档引用，不能只移动文件。LFS 规则覆盖整个 `assets/media/`，无需为每次新增媒体修改配置。
 - Markdown 中的 `timeline/...` 等短路径通过 `components/content/utils/content-image.ts` 解析；映射器同时扫描共享内容资源和 `assets/media/content/`，迁移内容图片时必须一并检查 glob 与路径归一化规则，不能只检查直接 import 或 Build。
 
-后续 agent 调整媒体前必须先阅读本文。保持共享资源与页面媒体的边界，不擅自取消 LFS、改写旧历史，或把指针当作图片交给构建和上传工具。本轮已完成的是目录整理、LFS 和同步流程，不能将其视为 COS 发布、图片域名配置或远端验收已经完成。
+后续 agent 调整媒体前必须先阅读本文。保持共享资源与页面媒体的边界，不擅自取消 LFS、改写旧历史，或把指针当作图片交给构建和上传工具。媒体通过 import 或 `getSiteMediaUrl()` 引用，CSS 背景使用已解析的 URL，不直接写源文件路径绕过映射。代码支持 COS 发布不代表远端上传和域名访问已经验收，必须检查实际流水线及资源响应。
 
 ## 本地使用
 
@@ -54,7 +54,30 @@ LFS 跟随 Git remote 使用 GitHub / CNB 自带的 LFS 存储，使用对应平
 
 - GitHub Actions 使用现有仓库变量 `CNB_REPOSITORY_SLUG` 和 Secret `CNB_TOKEN` 同步到 CNB。Deploy 工作流触发 CNB 构建时还使用现有的 `CNB_API_TOKEN`。
 - CNB 在 checkout 时使用平台提供的仓库读取认证取得自己的 LFS 对象，现有部署配置继续通过密钥仓库导入。
-- COS 自动上传尚未实现，现阶段不需要为了 LFS 给 GitHub、CNB 或本地新增 COS 环境变量。后续确定由哪一侧执行上传后，只给实际执行方配置所需权限和密钥；图片公共域名与 COS 私密凭据分别管理。
+- COS 上传在 CNB 执行，沿用现有密钥文件 `HydCraft/hydcraft-secrets` 的 `hydcraft-portal-deploy.yml`，不另建媒体密钥文件，不将真实凭据写入公开仓库。示例见 `.cnb/examples/hydcraft-portal-deploy.example.yml`。
+- `COS_MEDIA_SECRET_ID`、`COS_MEDIA_SECRET_KEY`、`COS_MEDIA_REGION`、`COS_MEDIA_BUCKET`、`COS_MEDIA_PREFIX` 只供媒体上传脚本使用，不复用用户附件的 `NUXT_COS_ATTACHMENTS_BUCKET` 等配置。GitHub Actions 不需要保存 COS 凭据，使用原有 CNB Token 发起任务即可。
+- `NUXT_PUBLIC_SITE_MEDIA_BASE_URL` 是构建时的媒体公共地址，例如 `https://img.hydcraft.cn/portal`，末尾路径需与 `COS_MEDIA_PREFIX=portal` 对应。更换域名后需要重新构建，不能仅修改生产服务器环境变量。不要将私密凭据放进 `NUXT_PUBLIC_*`。
+
+## COS 增量发布
+
+桶内使用 `portal/` 前缀，后面保留媒体源目录结构。`build/media/files.ts` 根据实际文件内容计算 SHA-256，生成 `<目录>/<原文件名>.<内容哈希>.<扩展名>`。上传脚本与 Vite 插件共用这套规则，目录和文件名仍便于维护，源文件不变时线上地址不变。
+
+`scripts/media-upload.ts` 逐个发送 HEAD 请求查询对象，已存在则跳过，仅对缺失的新版本执行 PUT。不下载对象正文，不做全量重传，但会产生请求次数。LFS 拉取属于 GitHub / CNB 的另一条下载链路。对象使用长期 immutable 缓存，同名源文件被替换后生成新 URL，无需刷新旧地址。只新增版本，不自动删除旧对象，避免破坏旧页面、缓存和回滚。
+
+```sh
+# 只扫描和预览，不需要 COS 凭据，不发起网络请求
+pnpm media:upload
+
+# 先验证单个真实文件
+pnpm media:upload --write --file routes-system/gtr_logo.webp
+
+# 增量同步全部媒体，再次运行应跳过已上传文件
+pnpm media:upload --write
+```
+
+CNB 的“同步页面媒体”按钮或 GitHub Actions 的 **Sync media** 工作流可单独运行上传，不部署网站。填写媒体相对路径可以先验证单个文件，留空同步全部。密钥文件的 `allow_events` 应包含 `web_trigger_media` 和 `api_trigger_media`，原有项目与分支范围保持不变。
+
+正式部署在 CNB 安装依赖后先完成媒体上传，再构建和部署网站，任一步失败即停止。构建使用 `build/media/vite-plugin.ts` 将 `assets/media/` 下的图片和视频 import 转成线上 URL；`utils/assets/site-media-url.ts` 负责逻辑路径查找，Markdown 短路径映射也沿用同一导入机制。上传脚本拒绝未还原的 LFS 指针。
 
 ## GitHub 到 CNB
 
