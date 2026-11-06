@@ -294,8 +294,10 @@
 	"newspapers": {
 		"title": "報刊櫥",
 		"shortTitle": "報刊",
-		"archiveHeadline": "翻開紙頁，\n回到那一天。",
-		"archiveSummary": "{publications} 種刊物 / {issues} 期存檔",
+		"archiveHeadline": "沒想到吧，\n我們也玩過報紙。",
+		"publicationCount": "刊物 {count}",
+		"archiveCount": "存檔 {count}",
+		"issueCount": "{count} 期",
 		"view": "查看報刊",
 		"empty": "暫無報刊",
 		"emptyIssues": "暫無已出版的期刊",
@@ -317,7 +319,7 @@
 			"loading": "正在載入報紙",
 			"loadFailed": "報紙圖片載入失敗，請重試",
 			"retry": "重試",
-			"help": "左右滑動翻版，雙指縮放，放大後拖動閱讀。"
+			"help": "左右滑動翻版，雙指縮放，放大後拖動閱讀。鍵盤左右鍵翻版，Shift 加方向鍵平移放大的版面。"
 		},
 		"publications": {
 			"central-daily": {

@@ -57,7 +57,6 @@ export const newspaperPublications: NewspaperPublication[] = [
 		titleKey: 'newspapers.publications.community.title',
 		logoSrc: getNewspaperImageUrl('community/logo.png'),
 		descriptionKey: 'newspapers.publications.community.description',
-		backgroundSrc: getNewspaperImageUrl('community/background.webp'),
 		issues: [
 			{
 				id: 'issue-001',
@@ -73,18 +72,18 @@ export const newspaperPublications: NewspaperPublication[] = [
 ]
 ```
 
-在 `locales/{zh-CN,zh-TW,en-US,ja-JP}/content.json` 的 `newspapers.publications.community` 下同步添加 `title` 和 `description` 翻译。`descriptionKey` 和 `backgroundSrc` 可省略。报纸 ID 在整个目录中唯一，期刊 ID 在同一种报纸下唯一，出版日期使用有效的 `YYYY-MM-DD` 日期。不填写页面图片的期刊不会展示。
+在 `locales/{zh-CN,zh-TW,en-US,ja-JP}/content.json` 的 `newspapers.publications.community` 下同步添加 `title` 和 `description` 翻译。`descriptionKey` 可省略。报纸 ID 在整个目录中唯一，期刊 ID 在同一种报纸下唯一，出版日期使用有效的 `YYYY-MM-DD` 日期。不填写页面图片的期刊不会展示。
 
-`logoSrc` 配置报纸 Logo，与标题并排展示，沿用铁路卡片的 64px 高度和原始比例。`logoAltKey` 可指定本地化替代文字，省略时使用报纸名称。`descriptionKey` 对应的简介显示在 Logo / 标题下方。这些字段均可选，后续补充真实 Logo 和简介即可显示，无需修改组件。
+`logoSrc` 配置报纸 Logo，与标题并排展示，使用 48px 高度和原始比例。`logoAltKey` 可指定本地化替代文字，省略时使用报纸名称。`descriptionKey` 对应的简介显示在 Logo / 标题下方。这些字段均可选，后续补充真实 Logo 和简介即可显示，无需修改组件。
 
 期刊可填写 `coverSrc` 指向独立头版缩略图，不填写时使用正文第一版。`noteKey` 可指向四种语言中同步维护的来源说明，用于保留原始资料中的编号等差异。
 
-服况入口叠放各报纸最新一期的真实头版缩略图，以衬线标题和存档数量展示报刊橱。尚未登记报刊时，卡片保留阅读入口，栏目显示空状态。新增或更新资料后重新构建并部署。
+服况入口叠放各报纸最近两期的真实头版缩略图，卡片外展示刊物与存档数量，卡片内保留衬线标题与阅读入口。尚未登记报刊时，卡片保留阅读入口，栏目显示空状态。新增或更新资料后重新构建并部署。
 
 ## 阅读操作
 
 - 底部工具栏：上一版、下一版、放大、缩小、当前版数 / 总版数。点击倍率恢复适合窗口的大小。
-- 桌面：滚轮缩放、放大后拖动、双击切换缩放。键盘左右方向键翻版，`+` / `-` 缩放，`0` 复位，`Esc` 关闭。
+- 桌面：滚轮缩放、放大后拖动、双击切换缩放。键盘左右方向键翻版，`+` / `-` 缩放，放大后 `Shift` 加方向键平移，`0` 复位，`Esc` 关闭。
 - 移动端：原始倍率下左右滑动翻版，双指缩放，放大后单指拖动。首尾版禁用对应翻版操作。
 - 翻版时重置缩放，图片加载失败时提供重试。
-- 上一版、下一版使用按方向滑动与淡入淡出，图片加载完成后入场。按钮、键盘和双击缩放使用平滑动画，拖动、滚轮和双指操作即时响应。系统启用减少动态效果时关闭这些动画。
+- 上一版、下一版在图片加载完成后短暂淡入，不叠加串行滑入滑出。按钮、键盘和双击缩放使用平滑动画，拖动、滚轮和双指操作即时响应。系统启用减少动态效果时关闭这些动画。

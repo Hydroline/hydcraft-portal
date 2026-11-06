@@ -294,8 +294,10 @@
 	"newspapers": {
 		"title": "Newspaper Cabinet",
 		"shortTitle": "Newspapers",
-		"archiveHeadline": "Turn the page.\nReturn to a moment.",
-		"archiveSummary": "{publications} publications / {issues} archived issues",
+		"archiveHeadline": "A surprise, perhaps.\nWe made newspapers, too.",
+		"publicationCount": "Publications {count}",
+		"archiveCount": "Archives {count}",
+		"issueCount": "{count} issues",
 		"view": "View newspapers",
 		"empty": "No newspapers yet",
 		"emptyIssues": "No published issues yet",
@@ -317,7 +319,7 @@
 			"loading": "Loading newspaper",
 			"loadFailed": "The newspaper image could not load. Please retry.",
 			"retry": "Retry",
-			"help": "Swipe to turn pages, pinch to zoom, and drag to read when zoomed in."
+			"help": "Swipe to turn pages, pinch to zoom, and drag when zoomed in. Use Left/Right to turn pages and Shift + arrow keys to pan a zoomed page."
 		},
 		"publications": {
 			"central-daily": {
@@ -327,7 +329,7 @@
 				"title": "HydCraft Nanbu Gulf Daily"
 			},
 			"wenyan": {
-				"title": "Wenyan"
+				"title": "Vidext"
 			}
 		},
 		"sourceNotes": {

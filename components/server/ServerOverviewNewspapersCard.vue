@@ -1,34 +1,29 @@
 <template>
 	<ServerOverviewDirectoryShell :title="t('newspapers.title')">
+		<template #titleSuffix>
+			<UBadge color="neutral" variant="soft" size="sm">{{
+				t('newspapers.publicationCount', {
+					count: newspaperPublications.length,
+				})
+			}}</UBadge>
+			<UBadge color="neutral" variant="soft" size="sm">{{
+				t('newspapers.archiveCount', { count: issueCount })
+			}}</UBadge>
+		</template>
 		<NuxtLink
 			:to="localePath('/server/newspapers')"
-			class="group relative isolate grid overflow-hidden rounded-xl border border-slate-200 bg-stone-50 text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-400 md:grid-cols-[1fr_1.1fr] dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50"
+			class="group relative isolate grid overflow-hidden rounded-xl border border-slate-200 bg-stone-50 text-slate-950 transition-colors duration-200 hover:bg-stone-100 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-400 md:grid-cols-[1fr_1.1fr] dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 dark:hover:bg-slate-900"
 		>
 			<div
-				class="relative z-10 flex flex-col items-start px-7 pt-8 pb-5 sm:px-10 sm:pt-10 md:py-12"
+				class="relative z-10 flex flex-col items-start justify-center px-7 py-10 sm:px-10 md:py-12"
 			>
-				<p
-					class="mb-6 w-full border-t border-slate-400/60 pt-3 text-xs tracking-widest text-slate-500 dark:border-slate-600 dark:text-slate-400"
-				>
-					{{
-						t('newspapers.archiveSummary', {
-							publications: newspaperPublications.length,
-							issues: issueCount,
-						})
-					}}
-				</p>
 				<h3
-					class="max-w-sm whitespace-pre-line font-serif text-4xl leading-snug tracking-wide sm:text-5xl"
+					class="max-w-md whitespace-pre-line font-serif text-3xl font-bold leading-snug tracking-wide sm:text-4xl lg:text-5xl"
 				>
 					{{ t('newspapers.archiveHeadline') }}
 				</h3>
-				<p
-					class="mt-5 max-w-sm font-serif text-sm leading-7 text-slate-600 dark:text-slate-400"
-				>
-					{{ publicationTitles }}
-				</p>
 				<span
-					class="mt-8 inline-flex items-center gap-3 border-b border-slate-400/70 pb-1.5 font-serif text-sm text-slate-700 transition-colors group-hover:text-slate-950 dark:border-slate-600 dark:text-slate-300 dark:group-hover:text-white"
+					class="mt-8 inline-flex items-center gap-3 rounded-full border border-slate-300 px-4 py-2.5 text-sm text-slate-700 transition-colors duration-200 group-hover:bg-white group-hover:text-slate-950 motion-reduce:transition-none dark:border-slate-700 dark:text-slate-300 dark:group-hover:bg-slate-800 dark:group-hover:text-white"
 				>
 					{{ t('newspapers.view') }}
 					<UIcon
@@ -38,13 +33,7 @@
 					/>
 				</span>
 			</div>
-			<div
-				class="relative min-h-64 overflow-hidden sm:min-h-80 md:min-h-96"
-				aria-hidden="true"
-			>
-				<div
-					class="absolute inset-x-8 bottom-0 h-px bg-slate-300 dark:bg-slate-700"
-				/>
+			<div class="relative min-h-64 sm:min-h-80 md:min-h-96" aria-hidden="true">
 				<img
 					v-for="(cover, index) in covers"
 					:key="cover.id"
@@ -74,23 +63,22 @@ const issueCount = newspaperPublications.reduce(
 	(total, publication) => total + publication.issues.length,
 	0,
 )
-const publicationTitles = computed(() =>
-	newspaperPublications
-		.map((publication) => t(publication.titleKey))
-		.join(' / '),
-)
 const covers: NewspaperCover[] = newspaperPublications
-	.flatMap((publication) => {
-		const issue = [...publication.issues].sort((a, b) =>
-			b.publishedAt.localeCompare(a.publishedAt),
-		)[0]
-		const src = issue?.coverSrc ?? issue?.pages[0]
-		return src ? [{ id: publication.id, src }] : []
-	})
-	.slice(0, 3)
+	.flatMap((publication) =>
+		[...publication.issues]
+			.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+			.slice(0, 2)
+			.flatMap((issue) => {
+				const src = issue.coverSrc ?? issue.pages[0]
+				return src ? [{ id: `${publication.id}/${issue.id}`, src }] : []
+			}),
+	)
+	.slice(0, 5)
 const paperPositions = [
-	'left-[8%] z-10 -rotate-12 md:left-[2%]',
-	'left-[35%] z-20 rotate-12 md:left-[42%]',
-	'left-[22%] z-30 -rotate-2 translate-y-9 md:left-[22%] md:translate-y-14',
+	'left-[4%] z-10 -rotate-15 translate-y-3',
+	'left-[24%] z-20 -rotate-6',
+	'left-[48%] z-10 rotate-12 translate-y-6',
+	'left-[12%] z-20 -rotate-3 translate-y-20',
+	'left-[36%] z-30 rotate-4 translate-y-28',
 ]
 </script>

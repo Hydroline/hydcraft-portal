@@ -294,8 +294,10 @@
 	"newspapers": {
 		"title": "新聞コーナー",
 		"shortTitle": "新聞",
-		"archiveHeadline": "紙面を開き、\nあの日へ。",
-		"archiveSummary": "{publications} 紙 / {issues} 号のアーカイブ",
+		"archiveHeadline": "意外でしょう。\n新聞も作っていました。",
+		"publicationCount": "刊行物 {count}",
+		"archiveCount": "アーカイブ {count}",
+		"issueCount": "{count} 号",
 		"view": "新聞を見る",
 		"empty": "新聞はまだありません",
 		"emptyIssues": "発行済みの号はまだありません",
@@ -317,7 +319,7 @@
 			"loading": "新聞を読み込み中",
 			"loadFailed": "新聞の画像を読み込めませんでした。再試行してください。",
 			"retry": "再試行",
-			"help": "左右にスワイプしてページをめくり、ピンチで拡大・縮小できます。拡大後はドラッグして読めます。"
+			"help": "左右にスワイプしてページをめくり、ピンチで拡大・縮小できます。拡大後はドラッグ、または Shift と方向キーで移動できます。左右キーでページをめくれます。"
 		},
 		"publications": {
 			"central-daily": {

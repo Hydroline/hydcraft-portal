@@ -3,114 +3,110 @@
 		class="flex min-w-0 flex-col gap-5"
 		:aria-labelledby="`press-${publication.id}`"
 	>
-		<div
-			class="relative overflow-hidden rounded-xl border border-slate-200/80 bg-slate-950 dark:border-slate-800"
-		>
-			<SkeletonImage
-				v-if="publication.backgroundSrc"
-				:src="publication.backgroundSrc"
-				alt=""
-				class="absolute inset-0 h-full w-full"
-				image-class="h-full w-full object-cover"
-			/>
-			<div
-				class="absolute inset-0 bg-linear-to-r from-slate-950/90 to-slate-950/60"
-			/>
-			<div class="relative flex flex-col gap-6 p-6 sm:p-8">
-				<div class="flex items-start justify-between gap-4">
-					<div class="min-w-0 flex-1">
-						<div class="flex items-center gap-4">
-							<img
-								v-if="publication.logoSrc"
-								:src="publication.logoSrc"
-								:alt="t(publication.logoAltKey ?? publication.titleKey)"
-								class="h-16 max-w-24 shrink-0 object-contain sm:max-w-40"
-								loading="lazy"
-							/>
-							<h2
-								:id="`press-${publication.id}`"
-								class="font-arkpixel text-3xl text-white"
-							>
-								{{ t(publication.titleKey) }}
-							</h2>
-						</div>
-						<p
-							v-if="publication.descriptionKey"
-							class="mt-5 max-w-3xl text-base text-white/88"
-						>
-							{{ t(publication.descriptionKey) }}
-						</p>
-					</div>
-					<div v-if="issues.length" class="flex shrink-0 gap-1">
-						<UButton
-							color="neutral"
-							variant="ghost"
-							icon="i-lucide-chevron-left"
-							class="text-white hover:bg-white/14 hover:text-white"
-							:aria-label="t('newspapers.previousIssues')"
-							:disabled="!canScrollBack"
-							@click="scrollGallery(-1)"
-						/>
-						<UButton
-							color="neutral"
-							variant="ghost"
-							icon="i-lucide-chevron-right"
-							class="text-white hover:bg-white/14 hover:text-white"
-							:aria-label="t('newspapers.nextIssues')"
-							:disabled="!canScrollForward"
-							@click="scrollGallery(1)"
-						/>
-					</div>
-				</div>
-				<div
-					ref="gallery"
-					class="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3"
-					@scroll.passive="updateScroll"
+		<div class="flex items-center justify-between gap-4">
+			<div class="flex min-w-0 flex-wrap items-center gap-3">
+				<img
+					v-if="publication.logoSrc"
+					:src="publication.logoSrc"
+					:alt="t(publication.logoAltKey ?? publication.titleKey)"
+					class="h-12 max-w-32 object-contain"
+					loading="lazy"
+				/>
+				<h2
+					:id="`press-${publication.id}`"
+					class="font-serif text-2xl font-bold text-slate-950 sm:text-3xl dark:text-slate-50"
 				>
-					<button
-						v-for="issue in issues"
-						:key="issue.id"
-						type="button"
-						class="group w-56 shrink-0 snap-start overflow-hidden rounded-xl border border-white/12 bg-white/8 text-left focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky-300 sm:w-64"
-						:aria-label="
-							t('newspapers.readIssue', {
+					{{ t(publication.titleKey) }}
+				</h2>
+				<UBadge color="neutral" variant="soft" size="sm">{{
+					t('newspapers.issueCount', { count: issues.length })
+				}}</UBadge>
+			</div>
+			<div v-if="issues.length" class="flex shrink-0 gap-1">
+				<UButton
+					color="neutral"
+					variant="ghost"
+					icon="i-lucide-chevron-left"
+					:aria-label="t('newspapers.previousIssues')"
+					:disabled="!canScrollBack"
+					@click="scrollGallery(-1)"
+				/>
+				<UButton
+					color="neutral"
+					variant="ghost"
+					icon="i-lucide-chevron-right"
+					:aria-label="t('newspapers.nextIssues')"
+					:disabled="!canScrollForward"
+					@click="scrollGallery(1)"
+				/>
+			</div>
+		</div>
+		<p
+			v-if="publication.descriptionKey"
+			class="font-serif leading-7 text-slate-600 dark:text-slate-400"
+		>
+			{{ t(publication.descriptionKey) }}
+		</p>
+		<div class="min-w-0">
+			<div
+				ref="gallery"
+				class="press-gallery flex snap-x snap-mandatory items-stretch gap-5 overflow-x-auto"
+				@scroll.passive="updateScroll"
+			>
+				<button
+					v-for="issue in issues"
+					:key="issue.id"
+					type="button"
+					class="group flex w-52 shrink-0 snap-start flex-col overflow-hidden rounded-lg border border-slate-200 bg-white text-left transition-colors duration-200 hover:bg-stone-50 motion-reduce:transition-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-sky-400 sm:w-60 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800"
+					:aria-label="
+						t('newspapers.readIssue', {
+							title: t(publication.titleKey),
+							number: issue.number,
+						})
+					"
+					@click="activeIssue = issue"
+				>
+					<SkeletonImage
+						class="aspect-[3/4] w-full overflow-hidden bg-stone-100"
+						:src="issue.coverSrc ?? issue.pages[0]!"
+						:alt="
+							t('newspapers.frontPage', {
 								title: t(publication.titleKey),
 								number: issue.number,
 							})
 						"
-						@click="activeIssue = issue"
+						loading="lazy"
+						decoding="async"
+						image-class="absolute inset-0 h-full w-full object-cover object-top"
+					/>
+					<div
+						class="flex w-full flex-1 flex-col gap-1.5 border-t border-slate-200 p-4 dark:border-slate-700"
 					>
-						<SkeletonImage
-							:src="issue.coverSrc ?? issue.pages[0]!"
-							:alt="
-								t('newspapers.frontPage', {
-									title: t(publication.titleKey),
-									number: issue.number,
-								})
-							"
-							class="h-72 w-full sm:h-80"
-							image-class="h-full w-full object-cover object-top"
-						/>
-						<div class="p-3 text-white">
-							<p>{{ t('newspapers.issue', { number: issue.number }) }}</p>
-							<time
-								:datetime="issue.publishedAt"
-								class="mt-1 block text-sm text-white/70"
-								>{{ formatDate(issue.publishedAt) }}</time
-							>
-							<p
-								v-if="issue.noteKey"
-								class="mt-2 text-xs leading-5 text-white/70"
-							>
-								{{ t(issue.noteKey) }}
-							</p>
-						</div>
-					</button>
-				</div>
-				<p v-if="!issues.length" class="text-white/70">
-					{{ t('newspapers.emptyIssues') }}
-				</p>
+						<p
+							class="font-serif text-lg font-bold text-slate-950 dark:text-slate-50"
+						>
+							{{ t('newspapers.issue', { number: issue.number }) }}
+						</p>
+						<time
+							:datetime="issue.publishedAt"
+							class="text-xs text-slate-500 dark:text-slate-400"
+							>{{ formatDate(issue.publishedAt) }}</time
+						>
+						<p
+							v-if="issue.noteKey"
+							class="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400"
+						>
+							{{ t(issue.noteKey) }}
+						</p>
+					</div>
+				</button>
 			</div>
+			<p
+				v-if="!issues.length"
+				class="py-8 text-center text-slate-500 dark:text-slate-400"
+			>
+				{{ t('newspapers.emptyIssues') }}
+			</p>
 		</div>
 		<NewspaperReader
 			v-if="activeIssue"
@@ -126,7 +122,11 @@
 import type { NewspaperIssue, NewspaperPublication } from '~/data/newspapers'
 import NewspaperReader from './NewspaperReader.vue'
 
-const props = defineProps<{ publication: NewspaperPublication }>()
+interface PressCardProps {
+	publication: NewspaperPublication
+}
+
+const props = defineProps<PressCardProps>()
 const { t, locale } = useI18n()
 const activeIssue = ref<NewspaperIssue | null>(null)
 const gallery = ref<HTMLElement | null>(null)
@@ -171,3 +171,13 @@ onMounted(() => {
 watch(issues, () => nextTick(updateScroll))
 onBeforeUnmount(() => observer?.disconnect())
 </script>
+
+<style scoped>
+.press-gallery {
+	scrollbar-width: none;
+}
+
+.press-gallery::-webkit-scrollbar {
+	display: none;
+}
+</style>

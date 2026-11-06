@@ -50,7 +50,7 @@ export const matchesServerDirectoriesGroupPath = (path: string): boolean => {
 	return (
 		normalizedPath === '/server/users' ||
 		normalizedPath === '/server/players' ||
-		normalizedPath === '/server/newspapers' ||
+		/^\/server\/newspapers\/?$/.test(normalizedPath) ||
 		normalizedPath === '/server/charter' ||
 		normalizedPath === '/server/community-covenant' ||
 		isServerDirectoryDetailPath(normalizedPath)

@@ -18,7 +18,7 @@
 				@keydown="onKeydown"
 			>
 				<h2
-					class="absolute top-4 left-4 right-16 z-20 truncate text-sm sm:left-6"
+					class="absolute top-4 left-4 right-16 z-20 truncate font-serif text-sm font-bold sm:left-6"
 				>
 					{{ readerTitle }}
 				</h2>
@@ -45,53 +45,39 @@
 						@wheel.prevent="onWheel"
 						@dblclick="zoom(scale > 1 ? 1 : 2)"
 					>
-						<AnimatePresence
+						<motion.img
+							:key="src"
+							:src="src"
+							:alt="
+								t('newspapers.reader.pageAlt', {
+									title,
+									number: issue.number,
+									page: pageIndex + 1,
+								})
+							"
+							class="max-h-full max-w-full object-contain transition-opacity duration-150 motion-reduce:transition-none"
+							:class="loading || failed ? 'opacity-0' : 'opacity-100'"
 							:initial="false"
-							mode="wait"
-							:custom="pageDirection"
-						>
-							<motion.div
-								:key="src"
-								class="absolute inset-0 flex items-center justify-center"
-								:custom="pageDirection"
-								:variants="pageVariants"
-								initial="enter"
-								:animate="loading || failed ? 'enter' : 'visible'"
-								exit="exit"
-								:transition="{
-									duration: reducedMotion ? 0 : 0.22,
-									ease: 'easeOut',
-								}"
-							>
-								<motion.img
-									:src="src"
-									:alt="
-										t('newspapers.reader.pageAlt', {
-											title,
-											number: issue.number,
-											page: pageIndex + 1,
-										})
-									"
-									class="max-h-full max-w-full object-contain"
-									:class="loading || failed ? 'invisible' : ''"
-									:initial="false"
-									:animate="{ x: offset.x, y: offset.y, scale }"
-									:transition="{
-										duration: reducedMotion || !animateZoom ? 0 : 0.22,
-										ease: 'easeOut',
-									}"
-									draggable="false"
-									@load="onLoad"
-									@error="onError"
-								/>
-							</motion.div>
-						</AnimatePresence>
+							:animate="{ x: offset.x, y: offset.y, scale }"
+							:transition="{
+								duration: reducedMotion || !animateZoom ? 0 : 0.22,
+								ease: 'easeOut',
+							}"
+							draggable="false"
+							@load="onLoad"
+							@error="onError"
+						/>
 						<div
 							v-if="loading"
 							class="absolute inset-0 flex items-center justify-center"
 							role="status"
+							:aria-label="t('newspapers.reader.loading')"
 						>
-							<span>{{ t('newspapers.reader.loading') }}</span>
+							<UIcon
+								name="i-lucide-loader-circle"
+								class="size-6 animate-spin motion-reduce:animate-none"
+								aria-hidden="true"
+							/>
 						</div>
 						<div
 							v-if="failed"
@@ -209,7 +195,7 @@
 </template>
 
 <script setup lang="ts">
-import { AnimatePresence, motion, useReducedMotion } from 'motion-v'
+import { motion, useReducedMotion } from 'motion-v'
 import type { NewspaperIssue } from '~/data/newspapers'
 import {
 	gradientChromeBlurClass,
@@ -233,20 +219,8 @@ const readerTitle = computed(
 		`${props.title} (${t('newspapers.issue', { number: props.issue.number })})`,
 )
 const pageIndex = ref(0)
-const pageDirection = ref(1)
 const reducedMotion = useReducedMotion()
 const animateZoom = ref(false)
-const pageVariants = {
-	enter: (direction: number) => ({
-		opacity: 0,
-		x: reducedMotion.value ? 0 : direction * 48,
-	}),
-	visible: { opacity: 1, x: 0 },
-	exit: (direction: number) => ({
-		opacity: 0,
-		x: reducedMotion.value ? 0 : -direction * 48,
-	}),
-}
 const retryCount = ref(0)
 const src = computed(() => {
 	const path = props.issue.pages[pageIndex.value] ?? ''
@@ -317,7 +291,6 @@ const goPage = (direction: number) => {
 		Math.min(props.issue.pages.length - 1, pageIndex.value + direction),
 	)
 	if (nextIndex === pageIndex.value) return
-	pageDirection.value = direction > 0 ? 1 : -1
 	pageIndex.value = nextIndex
 }
 const onLoad = (event: Event) => {
@@ -420,8 +393,25 @@ const onWheel = (event: WheelEvent) =>
 		},
 		false,
 	)
+const keyboardPanSteps: Record<string, Point> = {
+	ArrowLeft: { x: 64, y: 0 },
+	ArrowRight: { x: -64, y: 0 },
+	ArrowUp: { x: 0, y: 64 },
+	ArrowDown: { x: 0, y: -64 },
+}
 const onKeydown = (event: KeyboardEvent) => {
 	if (event.altKey || event.ctrlKey || event.metaKey) return
+	if (event.shiftKey && scale.value > 1 && !loading.value && !failed.value) {
+		const step = keyboardPanSteps[event.key]
+		if (step) {
+			animateZoom.value = false
+			offset.x += step.x
+			offset.y += step.y
+			constrain()
+			event.preventDefault()
+			return
+		}
+	}
 	switch (event.key) {
 		case 'ArrowLeft':
 			goPage(-1)

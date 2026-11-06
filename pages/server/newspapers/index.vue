@@ -1,11 +1,11 @@
 <template>
-	<div class="site-shell flex flex-col gap-10">
+	<div class="site-shell flex flex-col gap-12 pt-10">
 		<h1
 			class="text-center font-arkpixel text-3xl leading-tight tracking-wider text-slate-950 dark:text-slate-50 sm:text-4xl"
 		>
 			{{ t('newspapers.title') }}
 		</h1>
-		<div v-if="newspaperPublications.length" class="flex flex-col gap-12">
+		<div v-if="newspaperPublications.length" class="flex flex-col gap-14">
 			<PressCard
 				v-for="publication in newspaperPublications"
 				:key="publication.id"
