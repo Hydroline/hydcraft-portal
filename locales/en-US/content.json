@@ -294,6 +294,8 @@
 	"newspapers": {
 		"title": "Newspaper Cabinet",
 		"shortTitle": "Newspapers",
+		"archiveHeadline": "Turn the page.\nReturn to a moment.",
+		"archiveSummary": "{publications} publications / {issues} archived issues",
 		"view": "View newspapers",
 		"empty": "No newspapers yet",
 		"emptyIssues": "No published issues yet",

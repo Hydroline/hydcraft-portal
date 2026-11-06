@@ -294,6 +294,8 @@
 	"newspapers": {
 		"title": "新聞コーナー",
 		"shortTitle": "新聞",
+		"archiveHeadline": "紙面を開き、\nあの日へ。",
+		"archiveSummary": "{publications} 紙 / {issues} 号のアーカイブ",
 		"view": "新聞を見る",
 		"empty": "新聞はまだありません",
 		"emptyIssues": "発行済みの号はまだありません",

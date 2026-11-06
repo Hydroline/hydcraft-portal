@@ -294,6 +294,8 @@
 	"newspapers": {
 		"title": "報刊櫥",
 		"shortTitle": "報刊",
+		"archiveHeadline": "翻開紙頁，\n回到那一天。",
+		"archiveSummary": "{publications} 種刊物 / {issues} 期存檔",
 		"view": "查看報刊",
 		"empty": "暫無報刊",
 		"emptyIssues": "暫無已出版的期刊",
