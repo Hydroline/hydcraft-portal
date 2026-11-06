@@ -4,7 +4,7 @@
 
 `assets/media/` 集中保存会随页面内容持续增删的图片、视频等媒体源文件，整个目录使用 Git LFS。保留有意义的业务子目录，不把不相关的素材平铺到根目录。
 
-当前目录包括 `routes-map/`、`routes-system/`、`meetups/`、`material/`、`livelihood/`、`homepage/`、`content/timeline/` 和 `minecraft-gallery/`。以后新增报刊等页面媒体时，可在这里增加相应目录，自动继承 LFS 规则，无需逐个扩展名配置。
+当前目录包括 `routes-map/`、`routes-system/`、`meetups/`、`material/`、`livelihood/`、`homepage/`、`content/timeline/`、`minecraft-gallery/` 和 `newspapers/`。以后新增其他页面媒体时，可在这里增加相应目录，自动继承 LFS 规则，无需逐个扩展名配置。
 
 `assets/resources/` 继续保存品牌、图标、占位图、个人资料等现有共享资源，不自动纳入 LFS。`assets/media/` 是页面媒体的唯一维护来源，不在 `public/` 保存重复副本。开发模式和没有设置 CDN 地址的构建使用本地资源，配置 CDN 地址的生产构建将媒体 import 替换为 COS 哈希地址，不再把这些媒体复制进网站部署包。
 

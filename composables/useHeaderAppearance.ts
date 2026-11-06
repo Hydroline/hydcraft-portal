@@ -1,4 +1,8 @@
 import { computed } from 'vue'
+import {
+	gradientChromeBlurClass,
+	gradientChromeScrimClass,
+} from '~/utils/layout/gradient-chrome'
 import { hasHeroVideoBackground } from '~/utils/layout/hero-video'
 import {
 	resolveHeaderVariant,
@@ -63,13 +67,13 @@ export const useHeaderAppearance = (): HeaderAppearanceState => {
 	const headerScrimClass = computed(() =>
 		usesHeroVideoHeaderChrome.value
 			? 'bg-[linear-gradient(to_bottom,rgba(25,32,36,0.3)_0%,rgba(25,32,36,0.28)_18%,rgba(25,32,36,0.24)_32%,rgba(25,32,36,0.18)_46%,rgba(25,32,36,0.1)_60%,rgba(25,32,36,0.04)_72%,rgba(25,32,36,0.01)_84%,transparent_92%)]'
-			: 'bg-[linear-gradient(to_bottom,rgba(250,250,250,0.94)_0%,rgba(250,250,250,0.88)_18%,rgba(250,250,250,0.72)_32%,rgba(250,250,250,0.5)_46%,rgba(250,250,250,0.27)_60%,rgba(250,250,250,0.1)_72%,rgba(250,250,250,0.02)_84%,transparent_92%)] dark:bg-[linear-gradient(to_bottom,rgba(25,32,36,0.88)_0%,rgba(25,32,36,0.8)_18%,rgba(25,32,36,0.65)_32%,rgba(25,32,36,0.45)_46%,rgba(25,32,36,0.25)_60%,rgba(25,32,36,0.1)_72%,rgba(25,32,36,0.02)_84%,transparent_92%)]',
+			: gradientChromeScrimClass,
 	)
 
 	const headerBlurClass = computed(() =>
 		usesHeroVideoHeaderChrome.value
 			? 'backdrop-blur-[12px]'
-			: 'backdrop-blur-[8px] dark:backdrop-blur-[12px]',
+			: gradientChromeBlurClass,
 	)
 
 	const headerActionButtonClass = computed(() =>

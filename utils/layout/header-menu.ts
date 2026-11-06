@@ -50,6 +50,7 @@ export const matchesServerDirectoriesGroupPath = (path: string): boolean => {
 	return (
 		normalizedPath === '/server/users' ||
 		normalizedPath === '/server/players' ||
+		/^\/server\/newspapers\/?$/.test(normalizedPath) ||
 		normalizedPath === '/server/charter' ||
 		normalizedPath === '/server/community-covenant' ||
 		isServerDirectoryDetailPath(normalizedPath)
@@ -73,6 +74,11 @@ export const headerMenuGroups: HeaderMenuGroup[] = [
 				key: 'server-players',
 				labelKey: 'routes.serverPlayers',
 				to: '/server/players',
+			},
+			{
+				key: 'server-newspapers',
+				labelKey: 'routes.newspapers',
+				to: '/server/newspapers',
 			},
 			{
 				key: 'server-charter',
@@ -180,6 +186,8 @@ export const headerMenuFallbackLabelKeys: Record<string, string> = {
 	'/about': 'routes.about',
 	'/links': 'routes.links',
 	'/partners': 'routes.partners',
+	'/server/newspapers': 'routes.newspapers',
+	'/server/newspapers/': 'routes.newspapers',
 	'/admin': 'routes.admin',
 	'/admin/overview': 'routes.adminOverview',
 	'/admin/servers': 'routes.adminServers',

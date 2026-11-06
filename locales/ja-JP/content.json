@@ -290,5 +290,50 @@
 			"scrollLeft": "画像を左へスクロール",
 			"scrollRight": "画像を右へスクロール"
 		}
+	},
+	"newspapers": {
+		"title": "新聞コーナー",
+		"shortTitle": "新聞",
+		"archiveHeadline": "意外でしょう。\n新聞も作っていました。",
+		"publicationCount": "刊行物 {count}",
+		"archiveCount": "アーカイブ {count}",
+		"issueCount": "{count} 号",
+		"view": "新聞を見る",
+		"empty": "新聞はまだありません",
+		"emptyIssues": "発行済みの号はまだありません",
+		"issue": "第 {number} 号",
+		"readIssue": "「{title}」第 {number} 号を読む",
+		"frontPage": "「{title}」第 {number} 号の一面",
+		"previousIssues": "ギャラリーを前に移動",
+		"nextIssues": "ギャラリーを次に移動",
+		"reader": {
+			"previous": "前のページ",
+			"next": "次のページ",
+			"zoomIn": "拡大",
+			"zoomOut": "縮小",
+			"close": "新聞を閉じる",
+			"reset": "倍率をリセット",
+			"toolbar": "新聞の操作",
+			"pageCount": "{current} / {total}",
+			"pageAlt": "「{title}」第 {number} 号 {page} ページ",
+			"loading": "新聞を読み込み中",
+			"loadFailed": "新聞の画像を読み込めませんでした。再試行してください。",
+			"retry": "再試行",
+			"help": "左右にスワイプしてページをめくり、ピンチで拡大・縮小できます。拡大後はドラッグ、または Shift と方向キーで移動できます。左右キーでページをめくれます。"
+		},
+		"publications": {
+			"central-daily": {
+				"title": "氫氣中央日報"
+			},
+			"nanbu-gulf-daily": {
+				"title": "南部灣日報"
+			},
+			"wenyan": {
+				"title": "文眼"
+			}
+		},
+		"sourceNotes": {
+			"centralIssue2": "元ファイル名は第2号ですが、紙面の題字欄には第3号と記載されています。"
+		}
 	}
 }

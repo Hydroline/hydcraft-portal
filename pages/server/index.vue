@@ -76,6 +76,7 @@
 				:historical-count="overview.historicalPlayersCount"
 				@refresh="refreshPlayers"
 			/>
+			<ServerOverviewNewspapersCard />
 			<ServerOverviewMunicipalitySection />
 			<ServerOverviewRailwayDataSection />
 			<ServerOverviewCompanySection />

@@ -37,7 +37,8 @@
 		"adminAchievements": "実績",
 		"adminBuilderRanks": "建築ランク",
 		"adminOAuthClients": "OAuth クライアント",
-		"adminSite": "サイト"
+		"adminSite": "サイト",
+		"newspapers": "新聞コーナー"
 	},
 	"main": {
 		"contentFooter": {

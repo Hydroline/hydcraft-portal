@@ -290,5 +290,50 @@
 			"scrollLeft": "向左滚动图片",
 			"scrollRight": "向右滚动图片"
 		}
+	},
+	"newspapers": {
+		"title": "报刊橱",
+		"shortTitle": "报刊",
+		"archiveHeadline": "没想到吧，\n我们也玩过报纸。",
+		"publicationCount": "刊物 {count}",
+		"archiveCount": "存档 {count}",
+		"issueCount": "{count} 期",
+		"view": "查看报刊",
+		"empty": "暂无报刊",
+		"emptyIssues": "暂无已出版的期刊",
+		"issue": "第 {number} 期",
+		"readIssue": "阅读《{title}》第 {number} 期",
+		"frontPage": "《{title}》第 {number} 期头版",
+		"previousIssues": "向前查看期刊",
+		"nextIssues": "向后查看期刊",
+		"reader": {
+			"previous": "上一版",
+			"next": "下一版",
+			"zoomIn": "放大",
+			"zoomOut": "缩小",
+			"close": "关闭电子报",
+			"reset": "恢复原始大小",
+			"toolbar": "电子报工具栏",
+			"pageCount": "{current} / {total}",
+			"pageAlt": "《{title}》第 {number} 期第 {page} 版",
+			"loading": "正在加载报纸",
+			"loadFailed": "报纸图片加载失败，请重试",
+			"retry": "重试",
+			"help": "左右滑动翻版，双指缩放，放大后拖动阅读。键盘左右键翻版，Shift 加方向键平移放大的版面。"
+		},
+		"publications": {
+			"central-daily": {
+				"title": "氢气中央日报"
+			},
+			"nanbu-gulf-daily": {
+				"title": "南部湾日报"
+			},
+			"wenyan": {
+				"title": "文眼"
+			}
+		},
+		"sourceNotes": {
+			"centralIssue2": "原文件标为第二期，报头印为第三期。"
+		}
 	}
 }
