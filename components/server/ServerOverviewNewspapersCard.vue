@@ -1,21 +1,14 @@
 <template>
 	<NuxtLink
-		:to="localePath('/newspapers')"
-		class="relative flex shrink-0 items-center overflow-hidden border border-slate-200 bg-white/80 text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky-400 dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-50"
-		:class="
-			compact
-				? 'h-16 w-full rounded-lg sm:h-20'
-				: 'h-44 w-[19rem] rounded-xl sm:h-52 sm:w-[24rem]'
-		"
+		:to="localePath('/server/newspapers')"
+		class="h-44 w-full rounded-xl sm:h-52 relative flex shrink-0 items-center overflow-hidden border border-slate-200 bg-white/80 text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-sky-400 dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-50"
 	>
-		<div
-			class="relative z-10 flex w-1/2 flex-col items-start gap-1 pl-2 sm:gap-4 sm:pl-6"
-		>
-			<span class="font-arkpixel text-sm sm:text-3xl">{{
+		<div class="relative z-10 flex w-1/2 flex-col items-start gap-4 pl-6">
+			<span class="font-arkpixel text-2xl sm:text-3xl">{{
 				t('newspapers.shortTitle')
 			}}</span>
 			<span
-				class="flex items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400 sm:text-sm"
+				class="flex items-center gap-1 text-sm text-slate-500 dark:text-slate-400"
 				>{{ t('newspapers.view')
 				}}<UIcon name="i-lucide-arrow-right" class="shrink-0"
 			/></span>
@@ -39,7 +32,6 @@
 <script setup lang="ts">
 import { newspaperPublications } from '~/data/newspapers'
 
-defineProps<{ compact?: boolean }>()
 const { t } = useI18n()
 const localePath = useLocalePath()
 const covers = newspaperPublications.flatMap((publication) =>

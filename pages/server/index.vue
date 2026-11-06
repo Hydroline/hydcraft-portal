@@ -88,6 +88,7 @@
 			icon="i-lucide-cloud-off"
 			:title="t('content.serverOverview.states.loadFailed')"
 		/>
+		<ServerOverviewNewspapersCard class="mt-12" />
 	</div>
 </template>
 

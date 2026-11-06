@@ -29,6 +29,7 @@ v2:
             corepack enable
             corepack prepare pnpm@10.34.7 --activate
             pnpm install --frozen-lockfile
+            pnpm media:upload --write
             pnpm build:production-init-cli
             pnpm build
 
@@ -51,3 +52,35 @@ v2:
   api_trigger_deploy:
     - <<: *production_deploy
       name: API 构建并部署生产环境
+
+  web_trigger_media:
+    - &media_upload
+      name: 同步页面媒体到 COS
+      docker:
+        image: node:24-bookworm
+      git:
+        lfs: true
+      imports:
+        - https://cnb.cool/HydCraft/hydcraft-secrets/-/blob/main/hydcraft-portal-deploy.yml
+      stages:
+        - name: Upload media
+          script: |
+            set -eu
+            apt-get update
+            apt-get install -y --no-install-recommends git-lfs
+            rm -rf /var/lib/apt/lists/*
+            git lfs install --local
+            git lfs pull
+            git lfs fsck --objects HEAD
+            corepack enable
+            corepack prepare pnpm@10.34.7 --activate
+            pnpm install --frozen-lockfile --ignore-scripts
+            if [ -n "${MEDIA_UPLOAD_FILE:-}" ]; then
+              pnpm media:upload --write --file "$MEDIA_UPLOAD_FILE"
+            else
+              pnpm media:upload --write
+            fi
+
+  api_trigger_media:
+    - <<: *media_upload
+      name: API 同步页面媒体到 COS

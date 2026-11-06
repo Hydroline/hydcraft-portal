@@ -1,5 +1,6 @@
 import tailwindcss from '@tailwindcss/vite'
 import emojiFontOptions from './emoji.config'
+import { createMediaUrlPlugin } from './build/media/vite-plugin'
 
 const INVALID_MDC_OPTIMIZE_DEPS = new Set([
 	'@nuxtjs/mdc > remark-gfm',
@@ -323,7 +324,13 @@ export default defineNuxtConfig({
 		'~/assets/styles/base/tailwind.css',
 	],
 	vite: {
-		plugins: [tailwindcss()],
+		plugins: [
+			createMediaUrlPlugin({
+				rootDir: process.cwd(),
+				publicBaseUrl: process.env.NUXT_PUBLIC_SITE_MEDIA_BASE_URL ?? '',
+			}),
+			tailwindcss(),
+		],
 		resolve: {
 			// BlueMap and skinview3d must share one Three.js runtime. Loading
 			// two copies makes WebGL state and shader chunks diverge at runtime.

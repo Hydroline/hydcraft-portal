@@ -11,7 +11,6 @@
 		<IntroMarquee
 			:title="t('content.intro.ourWorks.title')"
 			:images="serverShowcaseImages"
-			show-newspapers
 		/>
 		<IntroMarquee
 			:title="t('content.intro.goodAndBad.title')"
