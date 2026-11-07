@@ -289,6 +289,9 @@
 			"openPreview": "画像プレビューを開く: {alt}",
 			"scrollLeft": "画像を左へスクロール",
 			"scrollRight": "画像を右へスクロール"
+		},
+		"imageLightbox": {
+			"closePreview": "画像プレビューを閉じる"
 		}
 	},
 	"newspapers": {

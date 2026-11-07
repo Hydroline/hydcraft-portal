@@ -289,6 +289,9 @@
 			"openPreview": "打開圖片預覽：{alt}",
 			"scrollLeft": "向左捲動圖片",
 			"scrollRight": "向右捲動圖片"
+		},
+		"imageLightbox": {
+			"closePreview": "關閉圖片預覽"
 		}
 	},
 	"newspapers": {

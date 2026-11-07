@@ -80,6 +80,7 @@ definePageMeta({
 
 ## 弹窗与列表
 
+- 正文图片预览 `ContentImageLightbox` 的遮罩显式使用 `z-[40500]`，内容使用 `z-[40510]`，确保预览覆盖页头浮层与轮播导航。关闭按钮使用 `content.imageLightbox.closePreview` 多语言文案。
 - `UModal` 一次处理一项明确任务。轻量新增可参考 `pages/admin/site/index.vue` 的字段与底部操作；危险确认参考 `pages/admin/users/[id].vue` 的明确标题、后果说明和确认动作；复杂申请参考 `components/links/FriendLinkApplicationModal.vue`。不要把某一种弹窗结构强加给所有任务。
 - 若弹窗只负责新增，已有记录的展示与编辑留在页面或对应列表中，不要把整个管理页面塞进弹窗。
 - 弹窗已经有标题时，不要在内容区重复放同义的“新增某某”小标题。保留必要字段、规则提示、错误反馈和明确的取消/确认操作。
