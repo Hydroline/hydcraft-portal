@@ -18,6 +18,8 @@ const getNewspaperImageUrl = (path: string): string => {
 export interface NewspaperIssue {
 	id: string
 	number: number
+	/** Localized special-edition label when no regular issue number is printed. */
+	labelKey?: string
 	/** Publication date in YYYY-MM-DD format. */
 	publishedAt: string
 	/** Smaller front-page image used by galleries and the intro entry. */
@@ -32,6 +34,8 @@ export interface NewspaperPublication {
 	id: string
 	/** Translation key shared by all supported locales. */
 	titleKey: string
+	languages: Array<'zh' | 'ja'>
+	internal: boolean
 	/** Publication logo, displayed beside its title. */
 	logoSrc?: string
 	/** Falls back to the localized publication title when omitted. */
@@ -46,6 +50,8 @@ export const newspaperPublications: NewspaperPublication[] = [
 	{
 		id: 'central-daily',
 		titleKey: 'newspapers.publications.central-daily.title',
+		languages: ['zh'],
+		internal: true,
 		issues: [
 			{
 				id: 'issue-001',
@@ -216,8 +222,32 @@ export const newspaperPublications: NewspaperPublication[] = [
 		],
 	},
 	{
+		id: 'wenyan',
+		titleKey: 'newspapers.publications.wenyan.title',
+		languages: ['zh', 'ja'],
+		internal: true,
+		issues: [
+			{
+				id: 'issue-001',
+				number: 1,
+				publishedAt: '2024-01-01',
+				coverSrc: getNewspaperImageUrl('wenyan/issue-001/cover.webp'),
+				pages: [
+					getNewspaperImageUrl('wenyan/issue-001/01.webp'),
+					getNewspaperImageUrl('wenyan/issue-001/02.webp'),
+					getNewspaperImageUrl('wenyan/issue-001/03.webp'),
+					getNewspaperImageUrl('wenyan/issue-001/04.webp'),
+					getNewspaperImageUrl('wenyan/issue-001/05.webp'),
+					getNewspaperImageUrl('wenyan/issue-001/06.webp'),
+				],
+			},
+		],
+	},
+	{
 		id: 'nanbu-gulf-daily',
 		titleKey: 'newspapers.publications.nanbu-gulf-daily.title',
+		languages: ['zh'],
+		internal: true,
 		issues: [
 			{
 				id: 'issue-002',
@@ -270,21 +300,74 @@ export const newspaperPublications: NewspaperPublication[] = [
 		],
 	},
 	{
-		id: 'wenyan',
-		titleKey: 'newspapers.publications.wenyan.title',
+		id: 'langchao-daily',
+		titleKey: 'newspapers.publications.langchao-daily.title',
+		languages: ['zh'],
+		internal: true,
 		issues: [
 			{
 				id: 'issue-001',
 				number: 1,
-				publishedAt: '2024-01-01',
-				coverSrc: getNewspaperImageUrl('wenyan/issue-001/cover.webp'),
+				publishedAt: '2021-08-18',
+				coverSrc: getNewspaperImageUrl('langchao-daily/issue-001/cover.webp'),
+				pages: [getNewspaperImageUrl('langchao-daily/issue-001/01.webp')],
+			},
+		],
+	},
+	{
+		id: 'nanchuan-daily',
+		titleKey: 'newspapers.publications.nanchuan-daily.title',
+		languages: ['zh'],
+		internal: true,
+		issues: [
+			{
+				id: 'issue-001',
+				number: 1,
+				publishedAt: '2021-04-15',
+				coverSrc: getNewspaperImageUrl('nanchuan-daily/issue-001/cover.webp'),
 				pages: [
-					getNewspaperImageUrl('wenyan/issue-001/01.webp'),
-					getNewspaperImageUrl('wenyan/issue-001/02.webp'),
-					getNewspaperImageUrl('wenyan/issue-001/03.webp'),
-					getNewspaperImageUrl('wenyan/issue-001/04.webp'),
-					getNewspaperImageUrl('wenyan/issue-001/05.webp'),
-					getNewspaperImageUrl('wenyan/issue-001/06.webp'),
+					getNewspaperImageUrl('nanchuan-daily/issue-001/01.webp'),
+					getNewspaperImageUrl('nanchuan-daily/issue-001/02.webp'),
+					getNewspaperImageUrl('nanchuan-daily/issue-001/03.webp'),
+					getNewspaperImageUrl('nanchuan-daily/issue-001/04.webp'),
+					getNewspaperImageUrl('nanchuan-daily/issue-001/05.webp'),
+					getNewspaperImageUrl('nanchuan-daily/issue-001/06.webp'),
+					getNewspaperImageUrl('nanchuan-daily/issue-001/07.webp'),
+					getNewspaperImageUrl('nanchuan-daily/issue-001/08.webp'),
+				],
+			},
+		],
+	},
+	{
+		id: 'dongan-daily',
+		titleKey: 'newspapers.publications.dongan-daily.title',
+		languages: ['zh'],
+		internal: false,
+		issues: [
+			{
+				id: 'issue-002',
+				number: 2,
+				publishedAt: '2021-08-26',
+				coverSrc: getNewspaperImageUrl('dongan-daily/issue-002/cover.webp'),
+				pages: [getNewspaperImageUrl('dongan-daily/issue-002/01.webp')],
+			},
+		],
+	},
+	{
+		id: 'huinan-weekly',
+		titleKey: 'newspapers.publications.huinan-weekly.title',
+		languages: ['zh'],
+		internal: false,
+		issues: [
+			{
+				id: 'may-day-2021',
+				number: 1,
+				labelKey: 'newspapers.editions.huinanMayDay2021',
+				publishedAt: '2021-05-01',
+				coverSrc: getNewspaperImageUrl('huinan-weekly/may-day-2021/cover.webp'),
+				pages: [
+					getNewspaperImageUrl('huinan-weekly/may-day-2021/01.webp'),
+					getNewspaperImageUrl('huinan-weekly/may-day-2021/02.webp'),
 				],
 			},
 		],

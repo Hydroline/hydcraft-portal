@@ -18,9 +18,21 @@
 				>
 					{{ t(publication.titleKey) }}
 				</h2>
-				<UBadge color="neutral" variant="soft" size="sm">{{
-					t('newspapers.issueCount', { count: issues.length })
-				}}</UBadge>
+				<div class="flex items-center gap-1">
+					<UBadge
+						v-if="publication.internal"
+						color="primary"
+						variant="soft"
+						size="sm"
+						>{{ t('newspapers.internalPublication') }}</UBadge
+					>
+					<UBadge color="neutral" variant="soft" size="sm">{{
+						t('newspapers.issueCount', { count: issues.length })
+					}}</UBadge>
+					<UBadge color="neutral" variant="soft" size="sm">{{
+						publicationLanguages
+					}}</UBadge>
+				</div>
 			</div>
 			<div v-if="issues.length" class="flex shrink-0 gap-1">
 				<UButton
@@ -49,60 +61,70 @@
 		>
 			{{ t(publication.descriptionKey) }}
 		</p>
-		<div class="min-w-0">
+		<div class="relative isolate min-w-0">
 			<div
 				ref="gallery"
-				class="press-gallery flex snap-x snap-mandatory items-stretch gap-5 overflow-x-auto"
+				class="press-gallery flex snap-x snap-mandatory items-start gap-5 overflow-x-auto [--press-card-min-width:13rem] sm:[--press-card-min-width:15rem]"
 				@scroll.passive="updateScroll"
 			>
-				<button
-					v-for="issue in issues"
-					:key="issue.id"
-					type="button"
-					class="group flex w-52 cursor-pointer shrink-0 snap-start flex-col overflow-hidden rounded-lg border border-slate-200 bg-white text-left transition-colors duration-200 hover:bg-stone-50 motion-reduce:transition-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-sky-400 sm:w-60 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800"
-					:aria-label="
-						t('newspapers.readIssue', {
-							title: t(publication.titleKey),
-							number: issue.number,
-						})
-					"
-					@click="activeIssue = issue"
+				<div
+					v-for="(page, pageIndex) in issuePages"
+					:key="pageIndex"
+					class="press-gallery-page grid w-full shrink-0 snap-start items-start gap-5"
+					:style="{
+						gridTemplateColumns: `repeat(${pageSize}, minmax(0, 1fr))`,
+					}"
 				>
-					<SkeletonImage
-						class="aspect-[3/4] w-full overflow-hidden bg-stone-100"
-						:src="issue.coverSrc ?? issue.pages[0]!"
-						:alt="
-							t('newspapers.frontPage', {
+					<button
+						v-for="issue in page"
+						:key="issue.id"
+						type="button"
+						class="group flex min-w-0 cursor-pointer flex-col overflow-hidden rounded-lg border border-slate-200 bg-white text-left transition-colors duration-200 hover:bg-stone-50 motion-reduce:transition-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-sky-400 dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800"
+						:aria-label="
+							t('newspapers.readIssue', {
 								title: t(publication.titleKey),
-								number: issue.number,
+								issue: getIssueLabel(issue),
 							})
 						"
-						loading="lazy"
-						decoding="async"
-						image-class="absolute inset-0 h-full w-full object-cover object-top"
-					/>
-					<div
-						class="flex w-full flex-1 flex-col gap-1.5 border-t border-slate-200 p-4 dark:border-slate-700"
+						@click="activeIssue = issue"
 					>
-						<p
-							class="font-serif text-lg font-bold text-slate-950 dark:text-slate-50"
+						<SkeletonImage
+							class="aspect-[3/4] w-full overflow-hidden bg-stone-100"
+							:src="issue.coverSrc ?? issue.pages[0]!"
+							:alt="
+								t('newspapers.frontPage', {
+									title: t(publication.titleKey),
+									issue: getIssueLabel(issue),
+								})
+							"
+							loading="lazy"
+							decoding="async"
+							image-class="absolute inset-0 h-full w-full object-cover object-top"
+						/>
+						<div
+							class="flex w-full flex-col gap-1.5 border-t border-slate-200 p-4 dark:border-slate-700"
 						>
-							{{ t('newspapers.issue', { number: issue.number }) }}
-						</p>
-						<time
-							:datetime="issue.publishedAt"
-							class="text-xs text-slate-500 dark:text-slate-400"
-							>{{ formatDate(issue.publishedAt) }}</time
-						>
-						<p
-							v-if="issue.noteKey"
-							class="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400"
-						>
-							{{ t(issue.noteKey) }}
-						</p>
-					</div>
-				</button>
+							<p
+								class="text-lg font-semibold text-slate-950 dark:text-slate-50"
+							>
+								{{ getIssueLabel(issue) }}
+							</p>
+							<time
+								:datetime="issue.publishedAt"
+								class="text-xs text-slate-500 dark:text-slate-400"
+								>{{ formatDate(issue.publishedAt) }}</time
+							>
+							<p
+								v-if="issue.noteKey"
+								class="mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400"
+							>
+								{{ t(issue.noteKey) }}
+							</p>
+						</div>
+					</button>
+				</div>
 			</div>
+
 			<p
 				v-if="!issues.length"
 				class="py-8 text-center text-slate-500 dark:text-slate-400"
@@ -140,38 +162,98 @@ const issues = computed(() =>
 				b.publishedAt.localeCompare(a.publishedAt) || b.number - a.number,
 		),
 )
-const canScrollBack = ref(false)
-const canScrollForward = ref(false)
+const pageSize = ref(1)
+const currentPage = ref(0)
+const issuePages = computed(() => {
+	const pages: NewspaperIssue[][] = []
+	for (let index = 0; index < issues.value.length; index += pageSize.value) {
+		pages.push(issues.value.slice(index, index + pageSize.value))
+	}
+	return pages
+})
+const canScrollBack = computed(() => currentPage.value > 0)
+const canScrollForward = computed(
+	() => currentPage.value < issuePages.value.length - 1,
+)
+const publicationLanguages = computed(() =>
+	props.publication.languages
+		.map((language) => t(`newspapers.languages.${language}`))
+		.join(' / '),
+)
+const getIssueLabel = (issue: NewspaperIssue): string =>
+	issue.labelKey
+		? t(issue.labelKey)
+		: t('newspapers.issue', { number: issue.number })
 const formatDate = (date: string) =>
 	new Intl.DateTimeFormat(locale.value, {
 		dateStyle: 'long',
 		timeZone: 'UTC',
 	}).format(new Date(`${date}T00:00:00Z`))
+const getPageStep = (element: HTMLElement): number =>
+	element.clientWidth + (parseFloat(getComputedStyle(element).columnGap) || 0)
 const updateScroll = () => {
 	const element = gallery.value
 	if (!element) return
-	canScrollBack.value = element.scrollLeft > 1
-	canScrollForward.value =
-		element.scrollLeft + element.clientWidth < element.scrollWidth - 1
+	currentPage.value = Math.max(
+		0,
+		Math.min(
+			issuePages.value.length - 1,
+			Math.round(element.scrollLeft / getPageStep(element)),
+		),
+	)
 }
-const scrollGallery = (direction: number) => {
+const scrollGallery = (direction: -1 | 1) => {
 	const element = gallery.value
 	if (!element) return
-	element.scrollBy({
-		left: direction * element.clientWidth * 0.85,
+	const targetPage = Math.max(
+		0,
+		Math.min(issuePages.value.length - 1, currentPage.value + direction),
+	)
+	element.scrollTo({
+		left: targetPage * getPageStep(element),
 		behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
 			? 'instant'
 			: 'smooth',
 	})
 }
+const syncLayout = async () => {
+	const element = gallery.value
+	if (!element) return
+	const firstIssueIndex = currentPage.value * pageSize.value
+	const style = getComputedStyle(element)
+	const minimumWidth =
+		parseFloat(style.getPropertyValue('--press-card-min-width')) *
+		parseFloat(getComputedStyle(document.documentElement).fontSize)
+	const gap = parseFloat(style.columnGap) || 0
+	pageSize.value = Math.max(
+		1,
+		Math.floor((element.clientWidth + gap) / (minimumWidth + gap)),
+	)
+	currentPage.value = Math.min(
+		Math.floor(firstIssueIndex / pageSize.value),
+		Math.max(0, issuePages.value.length - 1),
+	)
+	await nextTick()
+	element.scrollTo({
+		left: currentPage.value * getPageStep(element),
+		behavior: 'instant',
+	})
+	updateScroll()
+}
 let observer: ResizeObserver | undefined
 onMounted(() => {
-	observer = new ResizeObserver(updateScroll)
+	observer = new ResizeObserver(() => {
+		void syncLayout()
+	})
 	if (gallery.value) observer.observe(gallery.value)
-	updateScroll()
+	void syncLayout()
 })
-watch(issues, () => nextTick(updateScroll))
-onBeforeUnmount(() => observer?.disconnect())
+watch(issues, () => {
+	void syncLayout()
+})
+onBeforeUnmount(() => {
+	observer?.disconnect()
+})
 </script>
 
 <style scoped>

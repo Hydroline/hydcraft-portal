@@ -305,8 +305,8 @@
 		"empty": "暫無報刊",
 		"emptyIssues": "暫無已出版的期刊",
 		"issue": "第 {number} 期",
-		"readIssue": "閱讀《{title}》第 {number} 期",
-		"frontPage": "《{title}》第 {number} 期頭版",
+		"readIssue": "閱讀《{title}》{issue}",
+		"frontPage": "《{title}》{issue}頭版",
 		"previousIssues": "向前查看期刊",
 		"nextIssues": "向後查看期刊",
 		"reader": {
@@ -318,7 +318,7 @@
 			"reset": "恢復原始大小",
 			"toolbar": "電子報工具列",
 			"pageCount": "{current} / {total}",
-			"pageAlt": "《{title}》第 {number} 期第 {page} 版",
+			"pageAlt": "《{title}》{issue}第 {page} 版",
 			"loading": "正在載入報紙",
 			"loadFailed": "報紙圖片載入失敗，請重試",
 			"retry": "重試",
@@ -333,10 +333,31 @@
 			},
 			"wenyan": {
 				"title": "文眼"
+			},
+			"dongan-daily": {
+				"title": "東安日報"
+			},
+			"huinan-weekly": {
+				"title": "回南週報"
+			},
+			"nanchuan-daily": {
+				"title": "南川日報"
+			},
+			"langchao-daily": {
+				"title": "浪潮日報（前津）"
 			}
 		},
 		"sourceNotes": {
 			"centralIssue2": "原檔案標為第二期，報頭印為第三期。"
-		}
+		},
+		"languages": {
+			"zh": "中文",
+			"ja": "日文"
+		},
+		"editions": {
+			"huinanMayDay2021": "五一特刊"
+		},
+		"internalPublication": "服內報刊",
+		"archiveDisclaimer": "本欄目為遊戲社群架空創作，僅作存檔，不對外發行。轉載內容與素材保留原有權利歸屬。"
 	}
 }

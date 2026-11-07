@@ -27,5 +27,4 @@ import PressCard from '~/components/newspapers/PressCard.vue'
 
 definePageMeta({ headerVariant: 'solid' })
 const { t } = useI18n()
-useSeoMeta({ title: () => t('newspapers.title') })
 </script>

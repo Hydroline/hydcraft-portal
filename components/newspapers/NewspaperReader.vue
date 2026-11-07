@@ -51,7 +51,7 @@
 							:alt="
 								t('newspapers.reader.pageAlt', {
 									title,
-									number: issue.number,
+									issue: issueLabel,
 									page: pageIndex + 1,
 								})
 							"
@@ -214,10 +214,12 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ 'update:open': [value: boolean] }>()
 const { t } = useI18n()
-const readerTitle = computed(
-	() =>
-		`${props.title} (${t('newspapers.issue', { number: props.issue.number })})`,
+const issueLabel = computed(() =>
+	props.issue.labelKey
+		? t(props.issue.labelKey)
+		: t('newspapers.issue', { number: props.issue.number }),
 )
+const readerTitle = computed(() => `${props.title} (${issueLabel.value})`)
 const pageIndex = ref(0)
 const reducedMotion = useReducedMotion()
 const animateZoom = ref(false)

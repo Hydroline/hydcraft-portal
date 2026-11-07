@@ -35,6 +35,8 @@ environment; they are not per-server Portal records.
 
 ## Local Development
 
+Page media uses Git LFS. Install Git LFS and run `git lfs pull` after cloning (see [media setup](docs/MEDIA.md)).
+
 ```bash
 corepack enable
 pnpm install

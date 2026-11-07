@@ -305,8 +305,8 @@
 		"empty": "No newspapers yet",
 		"emptyIssues": "No published issues yet",
 		"issue": "Issue {number}",
-		"readIssue": "Read {title}, issue {number}",
-		"frontPage": "{title}, issue {number}, front page",
+		"readIssue": "Read {title}, {issue}",
+		"frontPage": "{title}, {issue}, front page",
 		"previousIssues": "Scroll gallery backward",
 		"nextIssues": "Scroll gallery forward",
 		"reader": {
@@ -318,7 +318,7 @@
 			"reset": "Reset zoom",
 			"toolbar": "Newspaper controls",
 			"pageCount": "{current} / {total}",
-			"pageAlt": "{title}, issue {number}, page {page}",
+			"pageAlt": "{title}, {issue}, page {page}",
 			"loading": "Loading newspaper",
 			"loadFailed": "The newspaper image could not load. Please retry.",
 			"retry": "Retry",
@@ -333,10 +333,31 @@
 			},
 			"wenyan": {
 				"title": "Vidext"
+			},
+			"dongan-daily": {
+				"title": "Dong’an Daily"
+			},
+			"huinan-weekly": {
+				"title": "Huinan Weekly"
+			},
+			"nanchuan-daily": {
+				"title": "Nanchuan Daily"
+			},
+			"langchao-daily": {
+				"title": "Langchao Daily (Qianjin)"
 			}
 		},
 		"sourceNotes": {
 			"centralIssue2": "The source file is labeled issue 2, but its masthead says issue 3."
-		}
+		},
+		"languages": {
+			"zh": "Chinese",
+			"ja": "Japanese"
+		},
+		"editions": {
+			"huinanMayDay2021": "May Day Special"
+		},
+		"internalPublication": "Server Publication",
+		"archiveDisclaimer": "Fictional game-community publications, archived here without public distribution. Reprinted content and assets retain their original ownership."
 	}
 }
